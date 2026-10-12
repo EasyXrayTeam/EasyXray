@@ -1257,9 +1257,13 @@ func (s *InboundService) AddInbound(inbound *model.Inbound) (*model.Inbound, boo
 		return inbound, false, err
 	}
 	s.normalizeMtprotoSecret(inbound)
+	if err := validateMtprotoSettings(inbound); err != nil {
+		return inbound, false, err
+	}
 	if err := s.normalizeMtprotoXrayPort(inbound, ""); err != nil {
 		return inbound, false, err
 	}
+	s.normalizeMtprotoPreferIP(inbound)
 	if err := s.normalizeAmneziaWGSettings(inbound, ""); err != nil {
 		return inbound, false, err
 	}
@@ -1908,6 +1912,9 @@ func (s *InboundService) UpdateInbound(inbound *model.Inbound) (*model.Inbound, 
 		return inbound, false, err
 	}
 	s.normalizeMtprotoSecret(inbound)
+	if err := validateMtprotoSettings(inbound); err != nil {
+		return inbound, false, err
+	}
 
 	oldInbound, err := s.GetInbound(inbound.Id)
 	if err != nil {
@@ -1949,6 +1956,7 @@ func (s *InboundService) UpdateInbound(inbound *model.Inbound) (*model.Inbound, 
 	if err := s.normalizeMtprotoXrayPort(inbound, oldInbound.Settings); err != nil {
 		return inbound, false, err
 	}
+	s.normalizeMtprotoPreferIP(inbound)
 
 	tag := oldInbound.Tag
 	oldBits := inboundTransports(oldInbound.Protocol, oldInbound.StreamSettings, oldInbound.Settings)

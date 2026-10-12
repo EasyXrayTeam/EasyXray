@@ -144,3 +144,110 @@ func TestNormalizeMtprotoSecretHealsClients(t *testing.T) {
 		t.Fatalf("client secret should be healed to front the inbound domain, got %q", got)
 	}
 }
+
+func TestMtprotoDCPoolSizeValidatedOnSave(t *testing.T) {
+	setupConflictDB(t)
+	s := &InboundService{}
+	settings := func(pool string) string {
+		return `{"dcPool":` + pool + `,"clients":[{"email":"pool-client","secret":"` + mtprotoTestSecretA + `","enable":true}]}`
+	}
+	const wantErr = "mtproto dcPool.size must be between 1 and 64"
+
+	for _, pool := range []string{`{"enabled":true,"size":65}`, `{"enabled":true,"size":-1}`} {
+		_, _, err := s.AddInbound(&model.Inbound{Port: 46301, Protocol: model.MTProto, Settings: settings(pool)})
+		if err == nil || err.Error() != wantErr {
+			t.Fatalf("AddInbound with dcPool %s: err = %v, want %q", pool, err, wantErr)
+		}
+	}
+
+	created, _, err := s.AddInbound(&model.Inbound{Port: 46302, Protocol: model.MTProto, Settings: settings(`{"enabled":true,"size":64}`)})
+	if err != nil {
+		t.Fatalf("AddInbound with the maximum pool size: %v", err)
+	}
+	created.Settings = settings(`{"enabled":true,"size":100}`)
+	if _, _, err := s.UpdateInbound(created); err == nil || err.Error() != wantErr {
+		t.Fatalf("UpdateInbound with an oversized pool: err = %v, want %q", err, wantErr)
+	}
+}
+
+// mtg options are checked on both save paths, so neither can store a value
+// that would make the sidecar refuse its config.
+func TestMtprotoOptionsValidatedOnSave(t *testing.T) {
+	setupConflictDB(t)
+	s := &InboundService{}
+	settings := func(opts string) string {
+		return `{` + opts + `"clients":[{"email":"opt-client","secret":"` + mtprotoTestSecretA + `","enable":true}]}`
+	}
+
+	for opts, want := range map[string]string{
+		`"web":{"bindTo":"0.0.0.0:18080","host":"proxy.example.com"},`:     "mtproto web.bindTo",
+		`"stats":{"prometheus":{"enabled":true,"bindTo":"0.0.0.0:3129"}},`: "mtproto stats.prometheus.bindTo",
+		`"extraToml":"[secrets]\nmallory = \"ee00\"\n",`:                   "mtproto extraToml",
+		`"extraToml":"concurrency = ",`:                                    "mtproto extraToml",
+		`"network":{"timeout":{"idle":"forever"}},`:                        "mtproto network.timeout.idle",
+		`"secured":true,`: "mtproto secured needs an mtg-multi build",
+		`"network":{"clientMss":92},"extraToml":"[network]\nclient-mss = 100\n",`: "mtproto extraToml may not set [network] client-mss",
+		`"web":{"bindTo":"127.0.0.1:18080","host":"proxy.example.com"},`:          "mtproto web needs an mtg-multi build",
+	} {
+		_, _, err := s.AddInbound(&model.Inbound{Port: 46311, Protocol: model.MTProto, Settings: settings(opts)})
+		if err == nil || !strings.HasPrefix(err.Error(), want) {
+			t.Fatalf("AddInbound with %s: err = %v, want prefix %q", opts, err, want)
+		}
+	}
+
+	created, _, err := s.AddInbound(&model.Inbound{Port: 46312, Protocol: model.MTProto, Settings: settings(
+		`"mtgSecuredWebBuild":true,"secured":true,"web":{"bindTo":"127.0.0.1:18080","host":"proxy.example.com"},"extraToml":"usage-state-file = \"/var/lib/mtg/u.json\"\n",`)})
+	if err != nil {
+		t.Fatalf("AddInbound with valid options: %v", err)
+	}
+	created.Settings = settings(`"secured":true,`)
+	if _, _, err := s.UpdateInbound(created); err == nil || !strings.HasPrefix(err.Error(), "mtproto secured needs an mtg-multi build") {
+		t.Fatalf("UpdateInbound with secured but no build flag: err = %v", err)
+	}
+	created.Settings = settings(`"defense":{"allowlist":{"enabled":true}},`)
+	if _, _, err := s.UpdateInbound(created); err == nil || !strings.HasPrefix(err.Error(), "mtproto defense.allowlist.urls") {
+		t.Fatalf("UpdateInbound with an empty enabled allowlist: err = %v", err)
+	}
+}
+
+// A routed inbound saved without an IP preference stores prefer-ipv4, so the form shows
+// what mtg runs with; an explicit preference and an unrouted inbound are left alone.
+func TestMtprotoRoutedPreferIPStoredOnSave(t *testing.T) {
+	setupConflictDB(t)
+	s := &InboundService{}
+	settings := func(opts string) string {
+		return `{` + opts + `"clients":[{"email":"pref-client","secret":"` + mtprotoTestSecretA + `","enable":true}]}`
+	}
+	preferIP := func(raw string) any {
+		var parsed map[string]any
+		if err := json.Unmarshal([]byte(raw), &parsed); err != nil {
+			t.Fatalf("settings do not parse: %v", err)
+		}
+		return parsed["preferIp"]
+	}
+
+	created, _, err := s.AddInbound(&model.Inbound{Port: 46321, Protocol: model.MTProto, Settings: settings(`"routeThroughXray":true,`)})
+	if err != nil {
+		t.Fatalf("AddInbound routed: %v", err)
+	}
+	if got := preferIP(created.Settings); got != "prefer-ipv4" {
+		t.Fatalf("routed inbound without a preference stored preferIp = %v, want prefer-ipv4", got)
+	}
+
+	created.Settings = settings(`"routeThroughXray":true,"preferIp":"only-ipv6",`)
+	updated, _, err := s.UpdateInbound(created)
+	if err != nil {
+		t.Fatalf("UpdateInbound routed with only-ipv6: %v", err)
+	}
+	if got := preferIP(updated.Settings); got != "only-ipv6" {
+		t.Fatalf("an explicit preference must be kept, got %v", got)
+	}
+
+	direct, _, err := s.AddInbound(&model.Inbound{Port: 46322, Protocol: model.MTProto, Settings: strings.Replace(settings(``), "pref-client", "pref-direct", 1)})
+	if err != nil {
+		t.Fatalf("AddInbound direct: %v", err)
+	}
+	if got := preferIP(direct.Settings); got != nil {
+		t.Fatalf("an unrouted inbound must keep mtg's default, stored preferIp = %v", got)
+	}
+}
