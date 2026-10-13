@@ -129,8 +129,8 @@ The site builds for two targets:
 The site is published as a **project site** at
 <https://easyxrayteam.github.io/EasyXray/>, i.e. from the `/EasyXray` sub-path:
 
-- **Enable GitHub Pages in the repository settings** (*Settings → Pages → Build and
-  deployment → Source: GitHub Actions*) before the first deploy. The workflow
+- **Enable GitHub Pages in the repository settings** (_Settings → Pages → Build and
+  deployment → Source: GitHub Actions_) before the first deploy. The workflow
   (`.github/workflows/docs-deploy.yml`) uploads `docs/out` as the Pages artifact, but
   the site will not go live until Pages is switched on there.
 - `DEPLOY_TARGET=static` also sets `basePath`/`assetPrefix` to `/EasyXray` in
