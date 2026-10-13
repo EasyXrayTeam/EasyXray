@@ -249,7 +249,10 @@ up the first time the pipeline actually ran to completion.
   `msys2/setup-msys2` annotated on every run. Migrated to `UCRT64`, its drop-in
   successor, with the matching `mingw-w64-ucrt-x86_64-*` packages; the CGO build
   needs no other change because UCRT64 ships the same `x86_64-w64-mingw32-gcc`
-  triplet, and nothing in the workflows hard-codes a `/mingw64` path.
+  triplet, and nothing in the workflows hard-codes a `/mingw64` path. Checked by
+  running `release.yml` on the branch through `workflow_dispatch` (which skips
+  every publishing step): all eight build legs green, the Windows log records
+  `msystem: UCRT64` and the string `deprecat` no longer appears anywhere in it.
 
 ---
 
