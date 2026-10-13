@@ -69,6 +69,14 @@ test('returns to the compact rail after unpinning', async () => {
   expect(localStorage.getItem('sidebar-pinned')).toBe('false');
 });
 
+// The rail is a user-visible brand surface; the upstream mark must not survive
+// there, and syncing upstream is exactly how it would come back.
+test('shows the EasyXray mark, not the upstream one, in the collapsed rail', async () => {
+  const view = await renderSidebar();
+
+  expect(view.container.querySelector('.brand-text')?.textContent).toBe('EX');
+});
+
 test('labels the palette shortcut with the modifier the platform actually uses', async () => {
   const view = await renderSidebar();
   const chip = view.container.querySelector('.sidebar-command-kbd');

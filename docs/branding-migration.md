@@ -298,6 +298,23 @@ the only release there is or was never reached.
 The published `v1.0.0` binary carries the second defect, so multi-node protocol
 assignment needs a `v1.0.1`.
 
+### 3.11 Surfaces found after the `v1.0.1` release
+
+- **The collapsed sidebar rail showed the upstream mark.** `AppSidebar` renders
+  the wordmark `EasyXray` when open and fell back to the literal `3X` when
+  collapsed — the one brand surface the rename pass missed, because `3X` is not a
+  token any sweep looked for (`3x-ui`, `x-ui`, `XUI_`, …). The rail is 72px wide,
+  so the wordmark does not fit; it now shows `EX`, the wordmark's two capitals,
+  and `frontend/src/test/app-sidebar.test.tsx` pins that. The guard earns its
+  place now that upstream is merged periodically: a sync is exactly how the old
+  literal would come back.
+- **The IP-limit surfaces still carry the upstream name.** `easyxray.sh` prints
+  `3X-IPL ban log entries:`, and the fail2ban jail, filter and action are named
+  `3x-ipl` (created by `setup_fail2ban`, duplicated in `DockerEntrypoint.sh`, and
+  queried by the CLI's `fail2ban-client status 3x-ipl`). The heading is cosmetic;
+  the jail name is not — renaming it rewrites fail2ban configuration that already
+  exists on installed hosts, so it is left as §9 item 7 rather than changed here.
+
 ---
 
 ## 4. Deliberate non-renames
@@ -406,6 +423,9 @@ was re-checked on `main` after the merge (§3.8).
 | `install.sh v1.0.0` on a clean host (§3.10)        | **PASS** — after the fix, the script installed the published `v1.0.0` on a fresh Debian 13 host: exit 0, the tarball's published `.sha256` verified, a Let's Encrypt certificate issued for the bound domain over HTTP-01 on port 80 (issuer `CN=YE1`, four-cert chain), `easyxray` active and enabled, the `xray-linux-amd64` child running against its generated `config.json`, and a real login (the SPA's `X-CSRF-Token` flow, `POST /<base>/login`) returning `{"success":true}` with an authenticated `/easyxray/api/v1/server/status` answering 200. Before the fix the same command exited 1 with `Please use a newer version (at least v2.3.5)`. No test can reach a shell installer's tag handling, so running the script against a real release is the demonstration |
 | `nodeProtocolFirstRelease` vs the panel version    | **PASS** — `TestNodeProtocolFirstReleaseIsNotNewerThanThisPanel` was RED before the fix (all four protocols reported "newer than this panel (1.0.0)") and GREEN after; the four affected test files were re-expressed in the current numbering, and PR #4's CI agrees — `go-test`, `golangci`, `race`, `node-e2e` (a real master and sub-node) and `postgres-durable-first` all pass                                                                                                                                                                                                                                                                                                                                                                                            |
 
+| `v1.0.1` published (PR #3 + PR #4) | **PASS** — the tag sits on PR #4's merge commit `9ae4de1e`; `release.yml` built all 7 Linux platforms plus Windows (8 jobs green, `Publish rolling dev release` correctly skipped on a tag push) and attached **16** assets with their `.sha256` sidecars. `/releases/latest` resolves to `v1.0.1` with `prerelease=false`, which is what PR #3's `prerelease: false` fix made possible; before it, a tag release was published as a pre-release and `/releases/latest` skipped it. The version bump rode inside PR #4 rather than in a commit of its own, because `release.yml` filters on `paths` — a version-only tag matches none of them and would publish no artifacts at all |
+| `update.sh` v1.0.0 → v1.0.1 on the live host | **PASS** — the documented update path (script from `main`, no argument, so `/releases/latest`) exited 0 and logged `easyxray v1.0.1 updating finished`: published `.sha256` verified, database migrated, and the panel's port, web base path and SSL settings plus the Let's Encrypt certificate (`CN=new.kejizero.xyz`, four-cert chain, valid to 2027-01-11) left exactly as configured — an update replaces the panel, not the TLS setup. Afterwards the binary reports `1.0.1`, `fail2ban` and `easyxray` are both active and enabled, a real login (the SPA's `X-CSRF-Token` flow) returns `{"success":true}`, and an authenticated `/easyxray/api/v1/server/status` answers 200 with the `xray-linux-amd64` child running. No test can reach a shell updater either, so running it is the demonstration |
+
 ### The 5 Go test failures
 
 Four in `internal/amneziawgnet`, one in `internal/tuic`. All fail with
@@ -428,11 +448,12 @@ development machine.
 
 1. **The rebrand is on `main`** and has been released. Merged 2026-10-13
    (rebase-and-merge, PR #1), §3.8 fixed the same day; `main` is `a4855bb7` and
-   nothing was force-pushed. Two releases now exist: `dev-latest` (rolling
+   nothing was force-pushed. Three releases now exist: `dev-latest` (rolling
    pre-release, rebuilt on every push to `main`, carries the `commit=<sha>`
-   marker the panel's Dev update channel reads) and `v1.0.0` (stable, 16 assets,
-   the target of `/releases/latest`, so `install.sh`, `update.sh` and the panel's
-   update check resolve to it). The first `main` push's release run was cancelled
+   marker the panel's Dev update channel reads), `v1.0.0`, and `v1.0.1` (§3.10's
+   fixes, shipped by PR #4 — stable, 16 assets, and the current target of
+   `/releases/latest`, so `install.sh`, `update.sh` and the panel's update check
+   resolve to it). The first `main` push's release run was cancelled
    at the `Publish rolling dev release` step; it had already force-pushed
    `dev-latest`, which was deleted and re-created by the completed run.
 2. **GitHub Pages is enabled** (`build_type: workflow`), publishing from
@@ -450,4 +471,16 @@ development machine.
    framework: the `install.sh` floor lived in `install.sh` itself, and the
    documented install command fetches that script from `main` rather than from
    the release — so a bad floor there breaks every release at once, and only a
-   fix on `main` clears it.
+   fix on `main` clears it. `v1.0.1` is now the release `/releases/latest`
+   resolves to, so this is fixed for anyone installing or updating from here on;
+   a host still on `v1.0.0` needs `update.sh` (or `easyxray update`) before it can
+   be given a sidecar-protocol inbound as a node. The `v1.0.0` release stays up
+   as published rather than being edited or withdrawn — it is a truthful record
+   of what shipped that day.
+6. **The IP-limit fail2ban names are still upstream's** (§3.11). Renaming
+   `3x-ipl` touches `setup_fail2ban` in `install.sh` and `easyxray.sh`,
+   `DockerEntrypoint.sh`, and the CLI's `fail2ban-client status` query, and needs
+   a migration that rewrites an already-installed host's `jail.d`, `filter.d` and
+   `action.d` files and reloads fail2ban. That is a deliberate, user-visible
+   change on deployed panels, so it was left for a decision instead of being
+   bundled with the rail fix.
