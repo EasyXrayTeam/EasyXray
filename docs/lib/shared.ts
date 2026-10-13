@@ -41,4 +41,5 @@ export const telegramChannelUrl = `https://t.me/${telegramChannel}`;
 // Defaults to the production domain, so the env var is optional. Use `||` (not
 // `??`) so an empty string — e.g. an unset `${{ vars.NEXT_PUBLIC_SITE_URL }}`
 // in CI — also falls back instead of shipping a blank origin.
-export const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://easyxrayteam.github.io/EasyXray';
+export const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://easyxrayteam.github.io/EasyXray';

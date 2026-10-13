@@ -13,13 +13,13 @@ other repository-level notes).
 
 ## 1. Provenance
 
-| | |
-|---|---|
-| Upstream project | [MHSanaei/3x-ui](https://github.com/MHSanaei/3x-ui) |
-| Base commit | `74c3cc38821cabd66ad316ea562851422d0b0063` — *"fix(database): blank boolean-era verifyPeerCertByName values on hosts"* (2026-10-12, upstream `3.10.0` line) |
-| This repository | [EasyXrayTeam/EasyXray](https://github.com/EasyXrayTeam/EasyXray) |
-| License | GNU GPL-3.0 — unchanged, see [`LICENSE`](../LICENSE) |
-| Relationship | **Modified derivative work.** Not endorsed by, sponsored by, or affiliated with the upstream author. See [`NOTICE`](../NOTICE). |
+|                  |                                                                                                                                                             |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Upstream project | [MHSanaei/3x-ui](https://github.com/MHSanaei/3x-ui)                                                                                                         |
+| Base commit      | `74c3cc38821cabd66ad316ea562851422d0b0063` — _"fix(database): blank boolean-era verifyPeerCertByName values on hosts"_ (2026-10-12, upstream `3.10.0` line) |
+| This repository  | [EasyXrayTeam/EasyXray](https://github.com/EasyXrayTeam/EasyXray)                                                                                           |
+| License          | GNU GPL-3.0 — unchanged, see [`LICENSE`](../LICENSE)                                                                                                        |
+| Relationship     | **Modified derivative work.** Not endorsed by, sponsored by, or affiliated with the upstream author. See [`NOTICE`](../NOTICE).                             |
 
 Git history was **not** rewritten. The full upstream commit history is intact;
 the rebrand is a single commit on top of it, on the branch `branding/easyxray`.
@@ -28,26 +28,26 @@ the rebrand is a single commit on top of it, on the branch `branding/easyxray`.
 
 ## 2. The new identity
 
-| Surface | Old | New |
-|---|---|---|
-| Product name | `3x-ui` / `X-UI` | `EasyXray` |
-| Binary | `x-ui` | `easyxray` |
-| Go module | `github.com/mhsanaei/3x-ui/v3` | `github.com/EasyXrayTeam/EasyXray/v3` |
-| Repository | `MHSanaei/3x-ui` | `EasyXrayTeam/EasyXray` |
-| Version | `3.10.0` | `1.0.0` |
-| systemd unit | `x-ui.service` | `easyxray.service` |
-| OpenRC unit | `x-ui.rc` | `easyxray.rc` |
-| Control script | `x-ui.sh` | `easyxray.sh` |
-| Install directory | `/usr/local/x-ui` | `/usr/local/easyxray` |
-| Config / DB directory | `/etc/x-ui` | `/etc/easyxray` |
-| Database file | `x-ui.db` | `EasyXray.db` |
-| Log file | `x-ui.log` | `easyxray.log` |
-| Env prefix | `XUI_*` | `EASYXRAY_*` |
-| Session cookie | `3x-ui` | `easyxray` |
-| API namespace | `/panel/api/…` | `/easyxray/api/v1/…` |
-| Panel (SPA) routes | `/panel/…` | `/easyxray/…` |
-| WebSocket | `/ws` | `/easyxray/ws` |
-| Service env file | `/etc/default/x-ui` | `/etc/default/easyxray` |
+| Surface               | Old                            | New                                   |
+| --------------------- | ------------------------------ | ------------------------------------- |
+| Product name          | `3x-ui` / `X-UI`               | `EasyXray`                            |
+| Binary                | `x-ui`                         | `easyxray`                            |
+| Go module             | `github.com/mhsanaei/3x-ui/v3` | `github.com/EasyXrayTeam/EasyXray/v3` |
+| Repository            | `MHSanaei/3x-ui`               | `EasyXrayTeam/EasyXray`               |
+| Version               | `3.10.0`                       | `1.0.0`                               |
+| systemd unit          | `x-ui.service`                 | `easyxray.service`                    |
+| OpenRC unit           | `x-ui.rc`                      | `easyxray.rc`                         |
+| Control script        | `x-ui.sh`                      | `easyxray.sh`                         |
+| Install directory     | `/usr/local/x-ui`              | `/usr/local/easyxray`                 |
+| Config / DB directory | `/etc/x-ui`                    | `/etc/easyxray`                       |
+| Database file         | `x-ui.db`                      | `EasyXray.db`                         |
+| Log file              | `x-ui.log`                     | `easyxray.log`                        |
+| Env prefix            | `XUI_*`                        | `EASYXRAY_*`                          |
+| Session cookie        | `3x-ui`                        | `easyxray`                            |
+| API namespace         | `/panel/api/…`                 | `/easyxray/api/v1/…`                  |
+| Panel (SPA) routes    | `/panel/…`                     | `/easyxray/…`                         |
+| WebSocket             | `/ws`                          | `/easyxray/ws`                        |
+| Service env file      | `/etc/default/x-ui`            | `/etc/default/easyxray`               |
 
 ---
 
@@ -176,20 +176,20 @@ the ICO).
 These old-brand strings remain on purpose. Each is either a legal requirement, a
 third-party contract, or a generic word that was never the brand.
 
-| Location | Why it stays |
-|---|---|
-| `README*.md` (all 7) — "Upgrading from 3x-ui", "modified derivative of MHSanaei/3x-ui" | GPL-3.0 requires preserving attribution and stating that this is a modified derivative. The upgrade section tells users the truth: there is no migration path. |
-| `README*.md` — ecosystem links (`terraform-provider-3x-ui`, `3X-UI Manager`) | They are third-party projects that interoperate with the *upstream* panel. Renaming them would be factually wrong. |
-| `NOTICE`, `THIRD_PARTY_NOTICES.md` | Legal attribution for upstream and for every third-party dependency. |
-| `tools/branding/README.md` — "upstream 3x-ui icon set" | Provenance: names which icon set the new mark replaces. Attribution, not a brand reference. |
-| `docs/content/docs/*/help/migration.mdx`, `help/faq.mdx`, `guide/installation.mdx` | These pages *exist* to explain that EasyXray does not adopt, detect, or migrate a `3x-ui` install. The comparison table needs the old name. |
-| `docs/content/docs/*/reference/api/index.mdx` | The "no aliases" callout names `/panel/api/…` to tell integrators exactly which prefix no longer answers. |
-| `internal/xray/*`, `internal/config/*` — Xray core configuration field names, protocol identifiers, share-link schemes (`vless://`, `vmess://`, `trojan://`, `ss://`), `reality`, `xhttp`, `xtls` | Third-party protocol contracts. Renaming these would break client compatibility. |
-| `panelOutbound`, `panelVersion`, `panelGuid` (JSON fields, DB columns, settings keys) | Generic domain concepts — "the panel's outbound route", "the version a node's panel reports". They never contained the old brand, and they are persisted/migrated data. Renaming them would require a data migration for no benefit. |
-| `frontend/src/lib/panel-version.ts`, `formatPanelVersion`, `isPanelUpdateAvailable` | Same as above: "panel" as a noun, not a brand. |
-| `internal/web/service/client_update_rename_test.go` — the literal `"Sanaei"` | Test *data*, not branding: it is a client e-mail used to prove the email-rename path is case-insensitive. |
-| Test hostnames like `panel.example.com` | RFC-2606-style reserved example hostnames in fixtures. |
-| "panel" throughout UI copy and translations (`internal/web/translation/*.json`) | The English word for the admin panel. Verified: no `/panel/…` *path* survives in any locale file. |
+| Location                                                                                                                                                                                          | Why it stays                                                                                                                                                                                                                         |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `README*.md` (all 7) — "Upgrading from 3x-ui", "modified derivative of MHSanaei/3x-ui"                                                                                                            | GPL-3.0 requires preserving attribution and stating that this is a modified derivative. The upgrade section tells users the truth: there is no migration path.                                                                       |
+| `README*.md` — ecosystem links (`terraform-provider-3x-ui`, `3X-UI Manager`)                                                                                                                      | They are third-party projects that interoperate with the _upstream_ panel. Renaming them would be factually wrong.                                                                                                                   |
+| `NOTICE`, `THIRD_PARTY_NOTICES.md`                                                                                                                                                                | Legal attribution for upstream and for every third-party dependency.                                                                                                                                                                 |
+| `tools/branding/README.md` — "upstream 3x-ui icon set"                                                                                                                                            | Provenance: names which icon set the new mark replaces. Attribution, not a brand reference.                                                                                                                                          |
+| `docs/content/docs/*/help/migration.mdx`, `help/faq.mdx`, `guide/installation.mdx`                                                                                                                | These pages _exist_ to explain that EasyXray does not adopt, detect, or migrate a `3x-ui` install. The comparison table needs the old name.                                                                                          |
+| `docs/content/docs/*/reference/api/index.mdx`                                                                                                                                                     | The "no aliases" callout names `/panel/api/…` to tell integrators exactly which prefix no longer answers.                                                                                                                            |
+| `internal/xray/*`, `internal/config/*` — Xray core configuration field names, protocol identifiers, share-link schemes (`vless://`, `vmess://`, `trojan://`, `ss://`), `reality`, `xhttp`, `xtls` | Third-party protocol contracts. Renaming these would break client compatibility.                                                                                                                                                     |
+| `panelOutbound`, `panelVersion`, `panelGuid` (JSON fields, DB columns, settings keys)                                                                                                             | Generic domain concepts — "the panel's outbound route", "the version a node's panel reports". They never contained the old brand, and they are persisted/migrated data. Renaming them would require a data migration for no benefit. |
+| `frontend/src/lib/panel-version.ts`, `formatPanelVersion`, `isPanelUpdateAvailable`                                                                                                               | Same as above: "panel" as a noun, not a brand.                                                                                                                                                                                       |
+| `internal/web/service/client_update_rename_test.go` — the literal `"Sanaei"`                                                                                                                      | Test _data_, not branding: it is a client e-mail used to prove the email-rename path is case-insensitive.                                                                                                                            |
+| Test hostnames like `panel.example.com`                                                                                                                                                           | RFC-2606-style reserved example hostnames in fixtures.                                                                                                                                                                               |
+| "panel" throughout UI copy and translations (`internal/web/translation/*.json`)                                                                                                                   | The English word for the admin panel. Verified: no `/panel/…` _path_ survives in any locale file.                                                                                                                                    |
 
 ### 4.1 One retained behavior worth flagging
 
@@ -207,27 +207,27 @@ so the call is a no-op. It was **kept** rather than deleted because:
 
 ## 5. Deletions
 
-| Path | Reason |
-|---|---|
-| `docs/public/CNAME` | Declared a custom documentation domain. The user chose the GitHub Pages address instead; a `CNAME` pointing at a domain we do not control would break the site. Add one back when a domain is registered. |
-| `frontend/public/icons/3x-ui-{16,24,32,64,192,512}.png` | Superseded by the new EasyXray icon set. |
-| All 131 git tags, local and on `origin` | Removed on the user's explicit instruction. `gh api repos/EasyXrayTeam/EasyXray/git/refs/tags` confirmed **0 releases** were attached to any of them before deletion; all 131 were then deleted through the API (`deleted=131 failed=0`, 0 remaining). |
-| `.gitignore` entry `dist/` | Replaced with `**/dist/*` plus `!internal/web/dist/.gitkeep`. The bare `dist/` pattern excluded the directory itself, which made the negation ineffective and would also have excluded `docs/dist`. |
+| Path                                                    | Reason                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `docs/public/CNAME`                                     | Declared a custom documentation domain. The user chose the GitHub Pages address instead; a `CNAME` pointing at a domain we do not control would break the site. Add one back when a domain is registered.                                              |
+| `frontend/public/icons/3x-ui-{16,24,32,64,192,512}.png` | Superseded by the new EasyXray icon set.                                                                                                                                                                                                               |
+| All 131 git tags, local and on `origin`                 | Removed on the user's explicit instruction. `gh api repos/EasyXrayTeam/EasyXray/git/refs/tags` confirmed **0 releases** were attached to any of them before deletion; all 131 were then deleted through the API (`deleted=131 failed=0`, 0 remaining). |
+| `.gitignore` entry `dist/`                              | Replaced with `**/dist/*` plus `!internal/web/dist/.gitkeep`. The bare `dist/` pattern excluded the directory itself, which made the negation ineffective and would also have excluded `docs/dist`.                                                    |
 
 ---
 
 ## 6. New files
 
-| Path | What |
-|---|---|
-| `NOTICE` | Derivative-work statement, upstream base commit, GPL-3.0 terms, non-affiliation clause. |
-| `THIRD_PARTY_NOTICES.md` | Licenses for all 39 direct Go modules and 45 frontend packages, read from the actual installed module/package metadata rather than guessed; MPL-2.0 notice for `xtls/xray-core` and `pgregory.net/rapid`; trademark section. |
-| `tools/branding/` | Vector source of truth for the mark (`easyxray-mark.svg`, `easyxray-mark-compact.svg`, lockups), the `generate-icons.mjs` script (sharp + a hand-rolled ICO container), and its README with the measured geometry table. |
-| `frontend/public/favicon.ico`, `apple-touch-icon.png`, `icons/easyxray-*.png` | Generated from the SVG sources — a trace of the supplied artwork (§3.4.1), not a redraw from description. |
-| `SECURITY.md` | Rewritten for this project: GitHub private advisories first, with `2519840456@qq.com` as the monitored fallback contact. The upstream maintainer's personal address is gone. |
-| `media/easyxray-{light,dark}.png` | README hero images (renamed from `media/3x-ui-*.png`). |
-| `sponsors/sponsors.json`, `sponsors/logos/` | Sponsor data consumed by the panel's sponsor surface, served from this repository's `main` branch. |
-| `docs/branding-migration.md` | This file. |
+| Path                                                                          | What                                                                                                                                                                                                                         |
+| ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `NOTICE`                                                                      | Derivative-work statement, upstream base commit, GPL-3.0 terms, non-affiliation clause.                                                                                                                                      |
+| `THIRD_PARTY_NOTICES.md`                                                      | Licenses for all 39 direct Go modules and 45 frontend packages, read from the actual installed module/package metadata rather than guessed; MPL-2.0 notice for `xtls/xray-core` and `pgregory.net/rapid`; trademark section. |
+| `tools/branding/`                                                             | Vector source of truth for the mark (`easyxray-mark.svg`, `easyxray-mark-compact.svg`, lockups), the `generate-icons.mjs` script (sharp + a hand-rolled ICO container), and its README with the measured geometry table.     |
+| `frontend/public/favicon.ico`, `apple-touch-icon.png`, `icons/easyxray-*.png` | Generated from the SVG sources — a trace of the supplied artwork (§3.4.1), not a redraw from description.                                                                                                                    |
+| `SECURITY.md`                                                                 | Rewritten for this project: GitHub private advisories first, with `2519840456@qq.com` as the monitored fallback contact. The upstream maintainer's personal address is gone.                                                 |
+| `media/easyxray-{light,dark}.png`                                             | README hero images (renamed from `media/3x-ui-*.png`).                                                                                                                                                                       |
+| `sponsors/sponsors.json`, `sponsors/logos/`                                   | Sponsor data consumed by the panel's sponsor surface, served from this repository's `main` branch.                                                                                                                           |
+| `docs/branding-migration.md`                                                  | This file.                                                                                                                                                                                                                   |
 
 ---
 
@@ -242,7 +242,7 @@ so the call is a no-op. It was **kept** rather than deleted because:
   differ, and no migration path is provided. An upgrade in place is not
   supported; users are told to keep both panels running, export what they need,
   and recreate it.
-- **No data-migration code was added**, because no persisted *brand* field was
+- **No data-migration code was added**, because no persisted _brand_ field was
   renamed — the persisted names that contain "panel" (`panelOutbound`,
   `panelVersion`) are generic and were left alone (§4).
 - GPL-3.0 obligations are met: the license is intact, upstream copyright and
@@ -255,20 +255,20 @@ so the call is a no-op. It was **kept** rather than deleted because:
 
 Run against the working tree on branch `branding/easyxray`.
 
-| Check | Result |
-|---|---|
-| `gofmt -l` over every changed `.go` file | **PASS** — clean (four files needed realignment after the renames and were formatted) |
-| `go vet ./...` | **PASS** — exit 0 |
-| `go test ./...` | **5 failures, all pre-existing** — see below |
-| `npm run typecheck` (frontend) | **PASS** |
-| `npm run lint` (frontend) | **PASS** |
-| `npm run test` (frontend) | **PASS** — 189 files, 1841 tests |
-| `npm run build` (frontend) | **PASS** — dist repopulated with the new icons, `favicon.ico`, `apple-touch-icon.png`, regenerated `openapi.json` |
-| `pnpm run typecheck` (docs site) | **PASS** |
-| `pnpm run gen:api` (docs site) | **PASS** — 13 tag pages regenerated from the new spec |
+| Check                                             | Result                                                                                                                                                                                                                                                           |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `gofmt -l` over every changed `.go` file          | **PASS** — clean (four files needed realignment after the renames and were formatted)                                                                                                                                                                            |
+| `go vet ./...`                                    | **PASS** — exit 0                                                                                                                                                                                                                                                |
+| `go test ./...`                                   | **5 failures, all pre-existing** — see below                                                                                                                                                                                                                     |
+| `npm run typecheck` (frontend)                    | **PASS**                                                                                                                                                                                                                                                         |
+| `npm run lint` (frontend)                         | **PASS**                                                                                                                                                                                                                                                         |
+| `npm run test` (frontend)                         | **PASS** — 189 files, 1841 tests                                                                                                                                                                                                                                 |
+| `npm run build` (frontend)                        | **PASS** — dist repopulated with the new icons, `favicon.ico`, `apple-touch-icon.png`, regenerated `openapi.json`                                                                                                                                                |
+| `pnpm run typecheck` (docs site)                  | **PASS**                                                                                                                                                                                                                                                         |
+| `pnpm run gen:api` (docs site)                    | **PASS** — 13 tag pages regenerated from the new spec                                                                                                                                                                                                            |
 | `DEPLOY_TARGET=static pnpm run build` (docs site) | **PASS** — static export prerenders every page in all four locales; spot-checking the built HTML confirms the API pages carry the `/easyxray/api/v1/…` namespace and that `/panel/api/…` survives only on the migration and "no aliases" pages, where it belongs |
-| Old-brand residue scan | Only the intentional references in §4 — **0** remaining `panel/api` hits anywhere, **0** old-brand hits in `.github/` or `install.sh` |
-| `npm run generate` (branding tools) | **PASS** — 14 files regenerated from the four SVGs; the 512px icon, the 180px apple-touch-icon, the four-entry ICO and the two lockups were each rendered and inspected against the source artwork |
+| Old-brand residue scan                            | Only the intentional references in §4 — **0** remaining `panel/api` hits anywhere, **0** old-brand hits in `.github/` or `install.sh`                                                                                                                            |
+| `npm run generate` (branding tools)               | **PASS** — 14 files regenerated from the four SVGs; the 512px icon, the 180px apple-touch-icon, the four-entry ICO and the two lockups were each rendered and inspected against the source artwork                                                               |
 
 ### The 5 Go test failures
 
