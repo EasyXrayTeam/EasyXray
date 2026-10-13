@@ -136,7 +136,7 @@ Web kök yolu varsayılan değeri olan `/` iken panel şu adreslerden sunulur:
 Bu adreslerin tümü yapılandırdığınız web kök yolunun **altında** yer alır; kök yolu `/panelim` olan bir panelde arayüz `/panelim/easyxray/…`, API ise `/panelim/easyxray/api/v1/…` olur.
 
 > [!WARNING]
-> Bu sürüm API ad alanının tamamını yeniden adlandırıyor. Eski `/easyxray/api/v1/…` yolları geriye dönük uyumluluk için **takma ad olarak korunmuyor** — bu yollara yapılan istekler yanıtlanmaz. 3x-ui dönemine ait API'ye göre yazılmış her harici entegrasyonun, çalışmaya devam etmesi için `/easyxray/api/v1/…` yollarına güncellenmesi gerekir.
+> Bu sürüm API ad alanının tamamını yeniden adlandırıyor. Eski `/panel/api/…` yolları geriye dönük uyumluluk için **takma ad olarak korunmuyor** — bu yollara yapılan istekler yanıtlanmaz. 3x-ui dönemine ait API'ye göre yazılmış her harici entegrasyonun, çalışmaya devam etmesi için `/easyxray/api/v1/…` yollarına güncellenmesi gerekir.
 
 ## 3x-ui'den geçiş
 

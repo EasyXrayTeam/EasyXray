@@ -7,7 +7,7 @@ export interface ReverseProxyOptions {
   server: ProxyServer;
   domain: string;
   panelPort: string;
-  /** Web base path the panel is served under, e.g. `/panel`. */
+  /** Web base path the panel is served under, e.g. `/mypanel`. */
   panelPath: string;
   certTool: CertTool;
 }

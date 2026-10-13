@@ -58,7 +58,7 @@ export function InstallCommandBuilder() {
               label="Web base path"
               value={webBasePath}
               onChange={setWebBasePath}
-              placeholder="/panel"
+              placeholder="/mypanel"
             />
           </>
         ) : null}

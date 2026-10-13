@@ -136,7 +136,7 @@ Con la ruta base web configurada en `/` (su valor por defecto), el panel se sirv
 Todas estas rutas quedan **debajo** de la ruta base web que configures: un panel con ruta base `/mipanel` sirve su interfaz en `/mipanel/easyxray/…` y su API en `/mipanel/easyxray/api/v1/…`.
 
 > [!WARNING]
-> Esta versión renombra por completo el espacio de nombres de la API. Las rutas antiguas `/easyxray/api/v1/…` **no** se conservan como alias compatibles: las peticiones a esas rutas no recibirán respuesta. Cualquier integración externa escrita contra la API de la época de 3x-ui deberá actualizarse a las rutas `/easyxray/api/v1/…` antes de volver a funcionar.
+> Esta versión renombra por completo el espacio de nombres de la API. Las rutas antiguas `/panel/api/…` **no** se conservan como alias compatibles: las peticiones a esas rutas no recibirán respuesta. Cualquier integración externa escrita contra la API de la época de 3x-ui deberá actualizarse a las rutas `/easyxray/api/v1/…` antes de volver a funcionar.
 
 ## Actualizar desde 3x-ui
 

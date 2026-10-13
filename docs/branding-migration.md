@@ -22,7 +22,8 @@ other repository-level notes).
 | Relationship     | **Modified derivative work.** Not endorsed by, sponsored by, or affiliated with the upstream author. See [`NOTICE`](../NOTICE).                             |
 
 Git history was **not** rewritten. The full upstream commit history is intact;
-the rebrand is a single commit on top of it, on the branch `branding/easyxray`.
+the rebrand is a short linear series of commits on top of it, on the branch
+`branding/easyxray`.
 
 ---
 
@@ -169,6 +170,42 @@ the ICO).
   `frontend/package-lock.json` directly. No sibling-repository bridge, no
   `EASYXRAY_FRONTEND` / `EASYXRAY_BACKEND` variables.
 
+### 3.7 Corrections found after the first verification pass
+
+The first pass renamed the router basename and the API prefix but missed some
+sites that _consume_ them, and it never ran the docs test suite. Five defects
+were found and fixed on this branch; none of them was cosmetic.
+
+- **The settings page redirected to a route that no longer exists.**
+  `frontend/src/pages/settings/SettingsPage.tsx` still built
+  `/<basePath>panel/settings` for the post-restart redirect. `routes.tsx` had
+  moved the router basename to `<basePath>/easyxray`, so "Restart panel" landed
+  on a 404: the rename reached the router but not its only hard-coded consumer.
+  The path now comes from `frontend/src/lib/panel-url.ts`, and
+  `frontend/src/test/panel-restart-redirect.test.tsx` resolves it against the
+  real route table with `matchRoutes`, so the two cannot drift apart silently
+  again.
+- **The "old namespace" callout in all 7 READMEs named `/easyxray/api/v1/…` as
+  the prefix that no longer answers** — the substitution had rewritten the very
+  string it was describing, leaving a self-contradictory warning. It now reads
+  `/panel/api/…`, matching `docs/content/docs/*/help/migration.mdx` and
+  `docs/content/docs/*/reference/api/index.mdx`.
+- **`CONTRIBUTING.md` documented the pre-rename SPA routing:** `/panel` as the
+  router basename, `/panel/*` as the dev-proxy rule, and `/easyxray/api/v1-docs`
+  as a route name. All three now match `routes.tsx` and `vite.config.js`;
+  `docs/architecture.md`'s `spa.go` annotation carried the same stale label.
+- **`docs/lib/xray/api-client.test.ts` kept `panel/api/inbounds/list` as a
+  `joinUrl` input** while its expected value had been renamed, so the docs suite
+  failed. The substitution was anchored on a leading `/` and skipped the
+  unanchored form. The missed gate is as much the defect as the string: `pnpm
+  test` was never run over `docs/` in the first pass; it is now recorded in §8.
+- **Base-path examples still used the retired `/panel` default** in
+  `.env.example`, all four `reference/env-vars.mdx` locales, the reverse-proxy
+  generator default, the install-command placeholder, and the
+  `ReverseProxyOptions` doc comment. They now use `/mypanel`, the example the
+  READMEs already use. Test fixtures that merely need _a_ base path were left
+  alone.
+
 ---
 
 ## 4. Deliberate non-renames
@@ -255,20 +292,22 @@ so the call is a no-op. It was **kept** rather than deleted because:
 
 Run against the working tree on branch `branding/easyxray`.
 
-| Check                                             | Result                                                                                                                                                                                                                                                           |
-| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `gofmt -l` over every changed `.go` file          | **PASS** — clean (four files needed realignment after the renames and were formatted)                                                                                                                                                                            |
-| `go vet ./...`                                    | **PASS** — exit 0                                                                                                                                                                                                                                                |
-| `go test ./...`                                   | **5 failures, all pre-existing** — see below                                                                                                                                                                                                                     |
-| `npm run typecheck` (frontend)                    | **PASS**                                                                                                                                                                                                                                                         |
-| `npm run lint` (frontend)                         | **PASS**                                                                                                                                                                                                                                                         |
-| `npm run test` (frontend)                         | **PASS** — 189 files, 1841 tests                                                                                                                                                                                                                                 |
-| `npm run build` (frontend)                        | **PASS** — dist repopulated with the new icons, `favicon.ico`, `apple-touch-icon.png`, regenerated `openapi.json`                                                                                                                                                |
-| `pnpm run typecheck` (docs site)                  | **PASS**                                                                                                                                                                                                                                                         |
-| `pnpm run gen:api` (docs site)                    | **PASS** — 13 tag pages regenerated from the new spec                                                                                                                                                                                                            |
-| `DEPLOY_TARGET=static pnpm run build` (docs site) | **PASS** — static export prerenders every page in all four locales; spot-checking the built HTML confirms the API pages carry the `/easyxray/api/v1/…` namespace and that `/panel/api/…` survives only on the migration and "no aliases" pages, where it belongs |
-| Old-brand residue scan                            | Only the intentional references in §4 — **0** remaining `panel/api` hits anywhere, **0** old-brand hits in `.github/` or `install.sh`                                                                                                                            |
-| `npm run generate` (branding tools)               | **PASS** — 14 files regenerated from the four SVGs; the 512px icon, the 180px apple-touch-icon, the four-entry ICO and the two lockups were each rendered and inspected against the source artwork                                                               |
+| Check                                             | Result                                                                                                                                                                                                                                                                                                                |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `gofmt -l` over every changed `.go` file          | **PASS** — clean (four files needed realignment after the renames and were formatted)                                                                                                                                                                                                                                 |
+| `go vet ./...`                                    | **PASS** — exit 0                                                                                                                                                                                                                                                                                                     |
+| `go test ./...`                                   | **5 failures, all pre-existing** — see below                                                                                                                                                                                                                                                                          |
+| `npm run typecheck` (frontend)                    | **PASS**                                                                                                                                                                                                                                                                                                              |
+| `npm run lint` (frontend)                         | **PASS**                                                                                                                                                                                                                                                                                                              |
+| `npm run test` (frontend)                         | **PASS** — 190 files, 1843 tests (162 unit/components + 28 Storybook browser stories)                                                                                                                                                                                                                                 |
+| `npm run build` (frontend)                        | **PASS** — dist repopulated with the new icons, `favicon.ico`, `apple-touch-icon.png`, regenerated `openapi.json`; re-run after §3.7 with no generated-file drift                                                                                                                                                     |
+| `pnpm run typecheck` (docs site)                  | **PASS**                                                                                                                                                                                                                                                                                                              |
+| `pnpm test` (docs site)                           | **PASS** — 12 files, 107 tests. Added after §3.7: this suite was missing from the first pass and is what the `joinUrl` defect escaped through                                                                                                                                                                         |
+| `pnpm run format:check` (docs site)               | **PASS** — `oxfmt --check .`, 117 files                                                                                                                                                                                                                                                                               |
+| `pnpm run gen:api` (docs site)                    | **PASS** — 13 tag pages regenerated from the new spec                                                                                                                                                                                                                                                                 |
+| `DEPLOY_TARGET=static pnpm run build` (docs site) | **PASS** — static export prerenders every page in all four locales; spot-checking the built HTML confirms the API pages carry the `/easyxray/api/v1/…` namespace and that `/panel/api/…` survives only on the migration and "no aliases" pages, where it belongs                                                      |
+| Old-brand residue scan                            | After §3.7, `panel/api` survives only where it names the retired prefix: all 7 READMEs, the four `help/migration.mdx`, the four `reference/api/index.mdx`, this ledger. No `/panel/…` UI route remains in `frontend/src`, in any locale file, or on any docs page; **0** old-brand hits in `.github/` or `install.sh` |
+| `npm run generate` (branding tools)               | **PASS** — 14 files regenerated from the four SVGs; the 512px icon, the 180px apple-touch-icon, the four-entry ICO and the two lockups were each rendered and inspected against the source artwork                                                                                                                    |
 
 ### The 5 Go test failures
 
@@ -290,11 +329,11 @@ development machine.
 
 ## 9. Outstanding items
 
-1. **The rebrand is committed but not pushed.** It is the single commit at the
-   tip of the branch `branding/easyxray`, directly on top of upstream
-   `74c3cc38`. Nothing has been pushed, force-pushed, or released — see §1. The
-   commit hash is deliberately not written down here: naming it would need a
-   re-amend to correct, and that changes the hash.
+1. **The rebrand lives on the branch `branding/easyxray`, not on `main`.**
+   The branch sits directly on top of upstream `74c3cc38` and is open as a pull
+   request; `main` is untouched and nothing was force-pushed or released — see
+   §1. Commit hashes are deliberately not written down here: naming one would
+   need a re-amend to correct, which changes it.
 2. **GitHub Pages must be enabled manually** in the repository settings for the
    docs workflow to publish.
 3. **Non-English API reference TOC anchors** drift on two operations — see

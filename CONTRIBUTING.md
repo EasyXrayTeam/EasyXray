@@ -139,7 +139,7 @@ The panel UI is a **React 19 + Ant Design 6 + TypeScript** app under `frontend/`
 
 The frontend ships **three Vite bundles**, each emitted into `internal/web/dist/` and embedded into the Go binary at compile time via `embed.FS`:
 
-- **`index.html`** — the admin panel, a **single-page app**. `src/main.tsx` mounts a `react-router` `createBrowserRouter` (see `src/routes.tsx`) under the `/panel` basename; every route (`/panel`, `/panel/inbounds`, `/panel/clients`, `/panel/groups`, `/panel/nodes`, `/panel/settings`, `/panel/xray`, `/easyxray/api/v1-docs`) is lazy-loaded inside a shared `PanelLayout` (sidebar + header + `<Outlet>`).
+- **`index.html`** — the admin panel, a **single-page app**. `src/main.tsx` mounts a `react-router` `createBrowserRouter` (see `src/routes.tsx`) under the `/easyxray` basename (itself nested under whatever web base path is configured); every route (`/easyxray`, `/easyxray/inbounds`, `/easyxray/clients`, `/easyxray/groups`, `/easyxray/nodes`, `/easyxray/hosts`, `/easyxray/settings`, `/easyxray/xray`, `/easyxray/api-docs`) is lazy-loaded inside a shared `PanelLayout` (sidebar + header + `<Outlet>`).
 - **`login.html`** — the login + 2FA screen (`src/entries/login.tsx`), a standalone bundle.
 - **`subpage.html`** — the public subscription viewer (`src/entries/subpage.tsx`), a standalone bundle.
 
@@ -161,11 +161,11 @@ Locale strings live in `internal/web/translation/<locale>.json`, **not** under `
 
 | Goal | Command |
 |------|---------|
-| Iterate on UI changes with HMR | `cd frontend && npm run dev` (Vite on `:5173`, proxies `/panel/*` and the WebSocket to the Go panel on `:2053`). Start the Go panel first. |
+| Iterate on UI changes with HMR | `cd frontend && npm run dev` (Vite on `:5173`, serves the SPA shell for `/easyxray/*` and proxies the API and the WebSocket to the Go panel on `:2053`). Start the Go panel first. |
 | Verify what end users actually see | `cd frontend && npm run build`, then `go run .`. The Go binary serves the built bundle — embedded in release mode, off disk in debug mode. |
 | Develop/preview a reusable component in isolation | `cd frontend && npm run storybook` (Storybook workbench + autodocs on `:6006`). |
 
-The Vite dev proxy serves the admin SPA for any `/panel/*` URL — `bypassMigratedRoute` in `vite.config.js` rewrites those requests to `index.html` and lets React Router take over — while forwarding `/easyxray/api/v1/*`, `/easyxray/api/v1/setting/*`, `/easyxray/api/v1/xray/*`, and the WebSocket to the Go panel. Because routing is now client-side, new panel routes need no proxy or allowlist changes.
+The Vite dev proxy serves the admin SPA for any `/easyxray/*` URL — `bypassMigratedRoute` in `vite.config.js` rewrites those requests to `index.html` and lets React Router take over — while forwarding `/easyxray/api/v1/*`, `/easyxray/csrf-token`, and the WebSocket to the Go panel. Because routing is now client-side, new panel routes need no proxy or allowlist changes.
 
 > **`EASYXRAY_DEBUG=true` gotcha** — in debug mode the panel serves HTML from the embedded FS (frozen at the last `go build` / `go run`) but JS/CSS off disk. Re-running `npm run build` without restarting Go leaves the embedded HTML pointing at the *old* hashed asset names, producing a blank page with 404s in the console. Always restart `go run .` after a frontend rebuild.
 
@@ -174,7 +174,7 @@ The Vite dev proxy serves the admin SPA for any `/panel/*` URL — `bypassMigrat
 Most new screens are **admin-panel routes** and need no new HTML or Vite entry:
 
 1. Create the page component under `src/pages/<page>/<Page>.tsx` (kebab-case folder, PascalCase component).
-2. Register it in `src/routes.tsx` under the `/panel` tree (lazy-import it like the others).
+2. Register it in `src/routes.tsx` under the `/easyxray` tree (lazy-import it like the others).
 3. Add a sidebar link in `src/layouts/AppSidebar.tsx` if it should be reachable from the nav.
 
 Only a genuinely **standalone bundle** (like `login` or `subpage`, reachable without the panel shell) needs the full entry treatment: add `frontend/<page>.html`, a `src/entries/<page>.tsx` bootstrap, register it in `rollupOptions.input` inside `vite.config.js`, and wire a Go controller route that calls `serveDistPage(c, "<page>.html")` to serve the embedded HTML in production.
@@ -207,7 +207,7 @@ frontend/
 ├── scripts/               — build-openapi.mjs (endpoints.ts → openapi.json)
 └── src/
     ├── main.tsx           — admin SPA bootstrap (router + providers)
-    ├── routes.tsx         — react-router routes mounted under /panel
+    ├── routes.tsx         — react-router routes mounted under /easyxray
     ├── entries/           — bootstrap for the standalone bundles (login, subpage)
     ├── layouts/           — PanelLayout + AppSidebar
     ├── pages/             — one folder per route (index, inbounds, clients, groups, nodes, settings, xray, api-docs) plus login, sub

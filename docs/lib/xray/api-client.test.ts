@@ -13,7 +13,7 @@ describe('normalizeBase', () => {
 
 describe('joinUrl', () => {
   it('joins with exactly one slash regardless of input slashes', () => {
-    expect(joinUrl('https://x.com/', 'panel/api/inbounds/list')).toBe(
+    expect(joinUrl('https://x.com/', 'easyxray/api/v1/inbounds/list')).toBe(
       'https://x.com/easyxray/api/v1/inbounds/list',
     );
     expect(joinUrl('https://x.com', '/easyxray/api/v1/inbounds/list')).toBe(
