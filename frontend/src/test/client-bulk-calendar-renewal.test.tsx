@@ -11,7 +11,7 @@ vi.mock('@/hooks/useClients', () => ({ useClients: () => ({ bulkCreate }) }));
 it('keeps bulk renewal disabled by default and requires explicit cutoff selection without changing first-use duration', async () => {
   bulkCreate.mockResolvedValue(new Msg(true, '', { created: 1, skipped: [] }));
   const post = vi.spyOn(HttpUtil, 'post').mockImplementation(async (url, body) => {
-    if (url !== '/panel/api/clients/renewalPreview')
+    if (url !== '/easyxray/api/v1/clients/renewalPreview')
       return new Msg(true, '', { datepicker: 'gregorian' });
     const request = body as { expiryTime: number };
     return new Msg(true, '', {
@@ -43,7 +43,7 @@ it('keeps bulk renewal disabled by default and requires explicit cutoff selectio
     fireEvent.click(screen.getByRole('button', { name: 'Select all' }));
     const mode = screen.getByLabelText('Auto renewal');
     expect(mode.closest('.ant-select')?.textContent).toContain('Disabled');
-    expect(post.mock.calls.some(([url]) => url === '/panel/api/clients/renewalPreview')).toBe(
+    expect(post.mock.calls.some(([url]) => url === '/easyxray/api/v1/clients/renewalPreview')).toBe(
       false,
     );
     await submit();

@@ -93,7 +93,7 @@ export default function NodesPage() {
   const { data: latestVersion = '' } = useQuery({
     queryKey: ['server', 'panelUpdateInfo'],
     queryFn: async () => {
-      const msg = await HttpUtil.get<PanelUpdateInfo>('/panel/api/server/getPanelUpdateInfo');
+      const msg = await HttpUtil.get<PanelUpdateInfo>('/easyxray/api/v1/server/getPanelUpdateInfo');
       return msg?.obj?.latestVersion || '';
     },
     staleTime: 5 * 60 * 1000,
@@ -111,7 +111,7 @@ export default function NodesPage() {
   const onCopyNodeCa = useCallback(async () => {
     setCopyingCa(true);
     try {
-      const msg = await HttpUtil.post<{ caCert: string }>('/panel/api/nodes/mtls/ca');
+      const msg = await HttpUtil.post<{ caCert: string }>('/easyxray/api/v1/nodes/mtls/ca');
       const ca = msg?.obj?.caCert;
       if (msg?.success && ca) {
         await navigator.clipboard.writeText(ca);
@@ -129,7 +129,7 @@ export default function NodesPage() {
   const onSaveTrustCa = useCallback(async () => {
     setSavingTrustCa(true);
     try {
-      const msg = await HttpUtil.post('/panel/api/nodes/mtls/trustCA', { caCert: trustCa });
+      const msg = await HttpUtil.post('/easyxray/api/v1/nodes/mtls/trustCA', { caCert: trustCa });
       if (msg?.success) {
         messageApi.success(t('pages.nodes.mtls.saved'));
         setMtlsOpen(false);

@@ -16,23 +16,23 @@ import (
 	xraygeodata "github.com/xtls/xray-core/common/geodata"
 	"google.golang.org/protobuf/proto"
 
-	xuilogger "github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray/geodata"
+	easyxraylogger "github.com/EasyXrayTeam/EasyXray/v3/internal/logger"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/service"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/xray/geodata"
 )
 
 func newGeodataEngine(t *testing.T) *gin.Engine {
 	t.Helper()
-	xuilogger.InitLogger(logging.ERROR)
+	easyxraylogger.InitLogger(logging.ERROR)
 	gin.SetMode(gin.TestMode)
 
 	dir := t.TempDir()
-	t.Setenv("XUI_BIN_FOLDER", dir)
+	t.Setenv("EASYXRAY_BIN_FOLDER", dir)
 	writeGeositeDB(t, dir)
 	writeGeoipDB(t, dir)
 
 	engine := gin.New()
-	NewXraySettingController(engine.Group("/panel/api"))
+	NewXraySettingController(engine.Group("/easyxray/api/v1"))
 	return engine
 }
 
@@ -104,7 +104,7 @@ func doGeodataReq(t *testing.T, engine *gin.Engine, req *http.Request) geodataEn
 func TestGeodataFiles(t *testing.T) {
 	engine := newGeodataEngine(t)
 
-	env := doGeodataGet(t, engine, "/panel/api/xray/geodata/files")
+	env := doGeodataGet(t, engine, "/easyxray/api/v1/xray/geodata/files")
 	if !env.Success {
 		t.Fatalf("files not successful: %s", env.Msg)
 	}
@@ -130,7 +130,7 @@ func TestGeodataFiles(t *testing.T) {
 func TestGeodataCategoriesAndEntries(t *testing.T) {
 	engine := newGeodataEngine(t)
 
-	env := doGeodataGet(t, engine, "/panel/api/xray/geodata/categories?file=geosite.dat&q=goo&limit=10")
+	env := doGeodataGet(t, engine, "/easyxray/api/v1/xray/geodata/categories?file=geosite.dat&q=goo&limit=10")
 	var categories geodata.GeoCategoryPage
 	if err := json.Unmarshal(env.Obj, &categories); err != nil {
 		t.Fatalf("decode categories: %v", err)
@@ -139,7 +139,7 @@ func TestGeodataCategoriesAndEntries(t *testing.T) {
 		t.Fatalf("categories = %+v, want only google", categories)
 	}
 
-	env = doGeodataGet(t, engine, "/panel/api/xray/geodata/entries?file=geosite.dat&code=google&limit=1&offset=1")
+	env = doGeodataGet(t, engine, "/easyxray/api/v1/xray/geodata/entries?file=geosite.dat&code=google&limit=1&offset=1")
 	var entries geodata.GeoEntryPage
 	if err := json.Unmarshal(env.Obj, &entries); err != nil {
 		t.Fatalf("decode entries: %v", err)
@@ -159,10 +159,10 @@ func TestGeodataRejectsBadRequests(t *testing.T) {
 		name string
 		path string
 	}{
-		{name: "missing code", path: "/panel/api/xray/geodata/entries?file=geosite.dat"},
-		{name: "unknown category", path: "/panel/api/xray/geodata/entries?file=geosite.dat&code=nope"},
-		{name: "path traversal", path: "/panel/api/xray/geodata/categories?file=../../etc/passwd.dat"},
-		{name: "non dat file", path: "/panel/api/xray/geodata/categories?file=x-ui.db"},
+		{name: "missing code", path: "/easyxray/api/v1/xray/geodata/entries?file=geosite.dat"},
+		{name: "unknown category", path: "/easyxray/api/v1/xray/geodata/entries?file=geosite.dat&code=nope"},
+		{name: "path traversal", path: "/easyxray/api/v1/xray/geodata/categories?file=../../etc/passwd.dat"},
+		{name: "non dat file", path: "/easyxray/api/v1/xray/geodata/categories?file=EasyXray.db"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -231,7 +231,7 @@ func TestGeodataValidate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			env := doGeodataPost(t, engine, "/panel/api/xray/geodata/validate", url.Values{
+			env := doGeodataPost(t, engine, "/easyxray/api/v1/xray/geodata/validate", url.Values{
 				"kind":   {tt.kind},
 				"tokens": {tt.tokens},
 			})
@@ -264,7 +264,7 @@ func TestGeodataFollowsXrayAssetLocation(t *testing.T) {
 	writeGeositeDB(t, shared)
 	t.Setenv("XRAY_LOCATION_ASSET", shared)
 
-	env := doGeodataGet(t, engine, "/panel/api/xray/geodata/files")
+	env := doGeodataGet(t, engine, "/easyxray/api/v1/xray/geodata/files")
 	var files []geodata.GeoFile
 	if err := json.Unmarshal(env.Obj, &files); err != nil {
 		t.Fatalf("decode files: %v", err)

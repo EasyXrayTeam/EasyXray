@@ -38,7 +38,7 @@ export default function EmailTab({ allSetting, updateSetting }: EmailTabProps) {
     setTestLoading(true);
     setTestResult(null);
     try {
-      const res = (await HttpUtil.post('/panel/api/setting/testSmtp')) as SmtpTestResult;
+      const res = (await HttpUtil.post('/easyxray/api/v1/setting/testSmtp')) as SmtpTestResult;
       setTestResult(res);
     } catch (e: unknown) {
       setTestResult({
@@ -147,7 +147,7 @@ export default function EmailTab({ allSetting, updateSetting }: EmailTabProps) {
               >
                 <Input
                   value={allSetting.smtpFromName}
-                  placeholder="3x-ui"
+                  placeholder="EasyXray"
                   onChange={(e) => updateSetting({ smtpFromName: e.target.value })}
                 />
               </SettingListItem>

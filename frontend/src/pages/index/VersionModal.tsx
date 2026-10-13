@@ -39,7 +39,7 @@ export default function VersionModal({ open, status, onClose, onBusy }: VersionM
 
   const fetchVersions = useCallback(async () => {
     try {
-      const msg = await HttpUtil.get<string[]>('/panel/api/server/getXrayVersion');
+      const msg = await HttpUtil.get<string[]>('/easyxray/api/v1/server/getXrayVersion');
       if (msg?.success) setVersions(msg.obj || []);
     } finally {
       setLoading(false);
@@ -66,7 +66,7 @@ export default function VersionModal({ open, status, onClose, onBusy }: VersionM
         onClose();
         onBusy({ busy: true, tip: t('pages.index.dontRefresh') });
         try {
-          await HttpUtil.post(`/panel/api/server/installXray/${version}`);
+          await HttpUtil.post(`/easyxray/api/v1/server/installXray/${version}`);
         } finally {
           onBusy({ busy: false });
         }
@@ -87,8 +87,8 @@ export default function VersionModal({ open, status, onClose, onBusy }: VersionM
         onClose();
         onBusy({ busy: true, tip: t('pages.index.dontRefresh') });
         const url = isSingle
-          ? `/panel/api/server/updateGeofile/${fileName}`
-          : '/panel/api/server/updateGeofile';
+          ? `/easyxray/api/v1/server/updateGeofile/${fileName}`
+          : '/easyxray/api/v1/server/updateGeofile';
         try {
           await HttpUtil.post(url);
         } finally {

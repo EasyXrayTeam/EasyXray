@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
 )
 
 // TestRemoteDo_RejectsOversizeResponse: a node streaming a body larger than
@@ -59,9 +59,9 @@ func TestRemoteSetInboundSubSortIndexSendsOnlyNarrowField(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		switch req.URL.Path {
-		case "/panel/api/inbounds/list":
+		case "/easyxray/api/v1/inbounds/list":
 			_, _ = w.Write([]byte(`{"success":true,"obj":[{"id":42,"tag":"remote-tag"}]}`))
-		case "/panel/api/inbounds/42/subSortIndex":
+		case "/easyxray/api/v1/inbounds/42/subSortIndex":
 			if err := req.ParseForm(); err != nil {
 				t.Fatalf("ParseForm: %v", err)
 			}
@@ -455,7 +455,7 @@ func TestSanitizeStreamSettingsForRemote(t *testing.T) {
 func TestRemoteAdoptedAliasSurvivesRefresh(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		if req.URL.Path == "/panel/api/inbounds/list" {
+		if req.URL.Path == "/easyxray/api/v1/inbounds/list" {
 			_, _ = w.Write([]byte(`{"success":true,"obj":[{"id":5,"tag":"legacy-in"},{"id":6,"tag":"in-2"}]}`))
 			return
 		}
@@ -486,7 +486,7 @@ func TestRemoteAdoptedAliasSurvivesRefresh(t *testing.T) {
 func TestRemoteAdoptedAliasYieldsToNodeReportedTag(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		if req.URL.Path == "/panel/api/inbounds/list" {
+		if req.URL.Path == "/easyxray/api/v1/inbounds/list" {
 			_, _ = w.Write([]byte(`{"success":true,"obj":[{"id":5,"tag":"central-in"},{"id":7,"tag":"legacy-in"},{"id":9,"tag":"in-2"}]}`))
 			return
 		}

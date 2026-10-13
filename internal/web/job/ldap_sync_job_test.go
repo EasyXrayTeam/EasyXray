@@ -4,17 +4,17 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/dbtest"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/service"
 )
 
 func initLdapJobDB(t *testing.T) {
 	t.Helper()
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("EASYXRAY_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "EasyXray.db"))
 }
 
 func TestBuildClient_ConvertsDefaultTotalGBToBytes(t *testing.T) {

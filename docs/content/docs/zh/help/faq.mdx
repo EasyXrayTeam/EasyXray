@@ -1,13 +1,13 @@
 ---
 title: 常见问题
-description: 关于 3x-ui 的常见问题 —— 许可协议、受支持的系统、数据库以及客户端。
+description: 关于 EasyXray 的常见问题 —— 许可协议、受支持的系统、数据库、客户端，以及从哪里获取帮助。
 icon: CircleQuestionMark
 ---
 
-## 3x-ui 是免费且开源的吗？
+## EasyXray 是免费且开源的吗？
 
-是的。3x-ui 基于 GPL-3.0 许可协议开源，源代码托管在
-[GitHub](https://github.com/MHSanaei/3x-ui) 上。
+是的。EasyXray 基于 GPL-3.0 许可协议开源，源代码托管在
+[GitHub](https://github.com/EasyXrayTeam/EasyXray) 上。
 
 ## 它能运行在哪些系统上？
 
@@ -18,7 +18,7 @@ Fedora、Arch、Alpine 等），并支持 `amd64`、`arm64` 以及其他架构�
 ## 选 SQLite 还是 PostgreSQL？
 
 SQLite 是默认选项，适用于大多数部署场景。对于规模更大的部署，可以通过
-`XUI_DB_TYPE=postgres` 和 `XUI_DB_DSN` 启用 PostgreSQL —— 参见
+`EASYXRAY_DB_TYPE=postgres` 和 `EASYXRAY_DB_DSN` 启用 PostgreSQL —— 参见
 [环境变量](/docs/reference/env-vars)。
 
 ## 哪些客户端应用可以配合使用？
@@ -27,19 +27,23 @@ SQLite 是默认选项，适用于大多数部署场景。对于规模更大的�
 导入客户端的分享链接或 QR 码，或者使用
 [订阅](/docs/config/subscription)。
 
-## 3x-ui 与 x-ui 有什么区别？
+## EasyXray 与 X-UI 有什么区别？
 
-3x-ui 是原版 X-UI 项目的增强分支。它增加了更广泛的协议支持、更佳的稳定性、
+EasyXray 是原版 X-UI 项目的增强分支。它增加了更广泛的协议支持、更佳的稳定性、
 按客户端的流量统计、多节点管理、13 种语言的界面，以及众多提升使用体验的功能。
+
+由于它是分支而非原项目的延续，它在系统上拥有自己的一套标识：`easyxray` 服务与命令、`/etc/easyxray` 配置目录、`EASYXRAY_*` 环境变量前缀，以及 `/easyxray/…` HTTP 命名空间。旧路径没有任何别名——参见[迁移](/docs/help/migration)。
+
+## 能从现有的 3x-ui 安装迁移过来吗？
+
+不能。EasyXray 不会检测、导入或升级现有的 X-UI / 3x-ui 安装。服务名、安装路径、环境变量前缀和数据库文件全都不同，也不存在就地转换。请全新安装 EasyXray 并重新创建入站与客户端——参见[迁移](/docs/help/migration)。
 
 ## 我该如何更新？
 
 重新运行安装脚本（它会原地更新），或者拉取新的 Docker 镜像。
-参见[安装](/docs/guide/installation)以及
-[发布页面](https://github.com/MHSanaei/3x-ui/releases)。
+参见[更新与卸载](/docs/guide/update-uninstall)以及
+[发布页面](https://github.com/EasyXrayTeam/EasyXray/releases)。
 
 ## 我可以在哪里获取帮助？
 
-加入官方 Telegram 频道 [@XrayUI](https://t.me/XrayUI) 获取公告与社区支持，
-或在 [GitHub](https://github.com/MHSanaei/3x-ui/issues) 上提交 issue。遇到常见问题时，
-请先查看[故障排查](/docs/help/troubleshooting)。
+在 [GitHub](https://github.com/EasyXrayTeam/EasyXray/issues) 上提交 issue——这是报告 bug 和提出功能请求的主要渠道。EasyXray 用户也会使用上游 X-UI 项目的社区频道 [@XrayUI](https://t.me/XrayUI)。遇到常见问题时，请先查看[故障排查](/docs/help/troubleshooting)。

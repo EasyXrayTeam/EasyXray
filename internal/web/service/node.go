@@ -18,15 +18,15 @@ import (
 	"sync"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/crypto/nodetoken"
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/common"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/json_util"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/netsafe"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/runtime"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/crypto/nodetoken"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/logger"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/util/common"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/util/json_util"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/util/netsafe"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/runtime"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/xray"
 
 	"gorm.io/gorm"
 )
@@ -46,7 +46,7 @@ type HeartbeatPatch struct {
 	NetUp     uint64
 	NetDown   uint64
 	LastError string
-	// XrayState and XrayError come from the remote /panel/api/server/status when the
+	// XrayState and XrayError come from the remote /easyxray/api/v1/server/status when the
 	// panel API is reachable. They allow distinguishing panel connectivity from
 	// Xray core health on the node.
 	XrayState string
@@ -76,7 +76,7 @@ func (s *NodeService) FetchCertFingerprint(ctx context.Context, n *model.Node) (
 	probeURL := &url.URL{
 		Scheme: scheme,
 		Host:   net.JoinHostPort(addr, strconv.Itoa(n.Port)),
-		Path:   normalizeBasePath(n.BasePath) + "panel/api/server/status",
+		Path:   normalizeBasePath(n.BasePath) + "easyxray/api/v1/server/status",
 	}
 	req, err := http.NewRequestWithContext(
 		netsafe.ContextWithAllowPrivate(ctx, n.AllowPrivateAddress),
@@ -1285,7 +1285,7 @@ func (s *NodeService) probe(ctx context.Context, n *model.Node, proxyURL string)
 	probeURL := &url.URL{
 		Scheme: scheme,
 		Host:   net.JoinHostPort(addr, strconv.Itoa(n.Port)),
-		Path:   normalizeBasePath(n.BasePath) + "panel/api/server/status",
+		Path:   normalizeBasePath(n.BasePath) + "easyxray/api/v1/server/status",
 	}
 
 	req, err := http.NewRequestWithContext(

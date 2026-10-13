@@ -42,7 +42,7 @@ export default function RouteTester({ inboundTags, isMobile }: RouteTesterProps)
     setTesting(true);
     setResult(null);
     try {
-      const msg = await HttpUtil.post('/panel/api/xray/routeTest', {
+      const msg = await HttpUtil.post('/easyxray/api/v1/xray/routeTest', {
         domain: isIp ? '' : value,
         ip: isIp ? value : '',
         port: port ?? 0,

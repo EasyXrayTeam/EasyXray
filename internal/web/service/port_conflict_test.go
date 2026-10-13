@@ -10,11 +10,11 @@ import (
 
 	"github.com/op/go-logging"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/amneziawgnet"
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	xuilogger "github.com/mhsanaei/3x-ui/v3/internal/logger"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/amneziawgnet"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/dbtest"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	easyxraylogger "github.com/EasyXrayTeam/EasyXray/v3/internal/logger"
 )
 
 // the panel logger is a process-wide singleton. init it once per test
@@ -26,11 +26,11 @@ var portConflictLoggerOnce sync.Once
 // doesn't refuse to remove the file.
 func setupConflictDB(t *testing.T) {
 	t.Helper()
-	portConflictLoggerOnce.Do(func() { xuilogger.InitLogger(logging.ERROR) })
+	portConflictLoggerOnce.Do(func() { easyxraylogger.InitLogger(logging.ERROR) })
 
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("EASYXRAY_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "EasyXray.db"))
 }
 
 func seedInboundConflict(t *testing.T, tag, listen string, port int, protocol model.Protocol, streamSettings, settings string) {

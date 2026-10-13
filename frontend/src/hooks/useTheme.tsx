@@ -109,7 +109,7 @@ const LIGHT_BUTTON_TOKENS = {
 // token block under a new class instead of reusing the one already in the head.
 const SHARED_STYLE_CONFIG = {
   hashed: false,
-  cssVar: { key: 'xui' },
+  cssVar: { key: 'easyxray' },
 } as const;
 
 export function buildAntdThemeConfig(isDark: boolean, isUltra: boolean): ThemeConfig {

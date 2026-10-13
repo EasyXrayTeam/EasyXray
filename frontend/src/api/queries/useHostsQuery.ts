@@ -9,7 +9,7 @@ import { keys } from '@/api/queryKeys';
 export type { HostRecord };
 
 async function fetchHosts(): Promise<HostRecord[]> {
-  const msg = await HttpUtil.get('/panel/api/hosts/list', undefined, { silent: true });
+  const msg = await HttpUtil.get('/easyxray/api/v1/hosts/list', undefined, { silent: true });
   if (!msg?.success) throw new Error(msg?.msg || 'Failed to fetch hosts');
   const validated = parseMsg(msg, HostListSchema, 'hosts/list');
   return Array.isArray(validated.obj) ? validated.obj : [];

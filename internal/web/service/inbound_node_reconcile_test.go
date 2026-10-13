@@ -14,9 +14,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/runtime"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/runtime"
 )
 
 // fakeNodePanel serves just enough of the node API for ReconcileNode: the
@@ -31,7 +31,7 @@ func fakeNodePanel(t *testing.T, tagToID map[string]int) (*httptest.Server, func
 		_ = json.NewEncoder(w).Encode(map[string]any{"success": true, "msg": "", "obj": obj})
 	}
 	mux := http.NewServeMux()
-	mux.HandleFunc("/panel/api/inbounds/list", func(w http.ResponseWriter, _ *http.Request) {
+	mux.HandleFunc("/easyxray/api/v1/inbounds/list", func(w http.ResponseWriter, _ *http.Request) {
 		type row struct {
 			Id  int    `json:"id"`
 			Tag string `json:"tag"`
@@ -42,11 +42,11 @@ func fakeNodePanel(t *testing.T, tagToID map[string]int) (*httptest.Server, func
 		}
 		writeOK(w, rows)
 	})
-	mux.HandleFunc("/panel/api/inbounds/update/", func(w http.ResponseWriter, _ *http.Request) {
+	mux.HandleFunc("/easyxray/api/v1/inbounds/update/", func(w http.ResponseWriter, _ *http.Request) {
 		writeOK(w, nil)
 	})
-	mux.HandleFunc("/panel/api/inbounds/del/", func(w http.ResponseWriter, r *http.Request) {
-		id, err := strconv.Atoi(strings.TrimPrefix(r.URL.Path, "/panel/api/inbounds/del/"))
+	mux.HandleFunc("/easyxray/api/v1/inbounds/del/", func(w http.ResponseWriter, r *http.Request) {
+		id, err := strconv.Atoi(strings.TrimPrefix(r.URL.Path, "/easyxray/api/v1/inbounds/del/"))
 		if err != nil {
 			http.Error(w, "bad id", http.StatusBadRequest)
 			return
@@ -187,7 +187,7 @@ func TestReconcileNode_ContinuesPastFailedInbound(t *testing.T) {
 		_ = json.NewEncoder(w).Encode(map[string]any{"success": true, "msg": "", "obj": obj})
 	}
 	mux := http.NewServeMux()
-	mux.HandleFunc("/panel/api/inbounds/list", func(w http.ResponseWriter, _ *http.Request) {
+	mux.HandleFunc("/easyxray/api/v1/inbounds/list", func(w http.ResponseWriter, _ *http.Request) {
 		type row struct {
 			Id  int    `json:"id"`
 			Tag string `json:"tag"`
@@ -198,8 +198,8 @@ func TestReconcileNode_ContinuesPastFailedInbound(t *testing.T) {
 		}
 		writeOK(w, rows)
 	})
-	mux.HandleFunc("/panel/api/inbounds/update/", func(w http.ResponseWriter, r *http.Request) {
-		id, err := strconv.Atoi(strings.TrimPrefix(r.URL.Path, "/panel/api/inbounds/update/"))
+	mux.HandleFunc("/easyxray/api/v1/inbounds/update/", func(w http.ResponseWriter, r *http.Request) {
+		id, err := strconv.Atoi(strings.TrimPrefix(r.URL.Path, "/easyxray/api/v1/inbounds/update/"))
 		if err != nil {
 			http.Error(w, "bad id", http.StatusBadRequest)
 			return
@@ -213,8 +213,8 @@ func TestReconcileNode_ContinuesPastFailedInbound(t *testing.T) {
 		mu.Unlock()
 		writeOK(w, nil)
 	})
-	mux.HandleFunc("/panel/api/inbounds/del/", func(w http.ResponseWriter, r *http.Request) {
-		id, err := strconv.Atoi(strings.TrimPrefix(r.URL.Path, "/panel/api/inbounds/del/"))
+	mux.HandleFunc("/easyxray/api/v1/inbounds/del/", func(w http.ResponseWriter, r *http.Request) {
+		id, err := strconv.Atoi(strings.TrimPrefix(r.URL.Path, "/easyxray/api/v1/inbounds/del/"))
 		if err != nil {
 			http.Error(w, "bad id", http.StatusBadRequest)
 			return
@@ -263,10 +263,10 @@ func TestReconcileNode_AdoptsCompatibleOriginInboundWithoutRemoteMutation(t *tes
 		_ = json.NewEncoder(w).Encode(map[string]any{"success": true, "msg": "", "obj": obj})
 	}
 	mux := http.NewServeMux()
-	mux.HandleFunc("/panel/api/inbounds/list", func(w http.ResponseWriter, _ *http.Request) {
+	mux.HandleFunc("/easyxray/api/v1/inbounds/list", func(w http.ResponseWriter, _ *http.Request) {
 		writeOK(w, []map[string]any{{"id": 41, "tag": "already-deployed", "listen": "", "port": 8443, "protocol": "vless"}})
 	})
-	mux.HandleFunc("/panel/api/inbounds/", func(w http.ResponseWriter, _ *http.Request) {
+	mux.HandleFunc("/easyxray/api/v1/inbounds/", func(w http.ResponseWriter, _ *http.Request) {
 		mu.Lock()
 		mutations++
 		mu.Unlock()
@@ -332,10 +332,10 @@ func TestReconcileNode_IncompatiblePortOccupantRemainsLoud(t *testing.T) {
 		_ = json.NewEncoder(w).Encode(map[string]any{"success": true, "msg": "", "obj": obj})
 	}
 	mux := http.NewServeMux()
-	mux.HandleFunc("/panel/api/inbounds/list", func(w http.ResponseWriter, _ *http.Request) {
+	mux.HandleFunc("/easyxray/api/v1/inbounds/list", func(w http.ResponseWriter, _ *http.Request) {
 		writeOK(w, []map[string]any{{"id": 42, "tag": "port-owner", "listen": "", "port": 9443, "protocol": "trojan"}})
 	})
-	mux.HandleFunc("/panel/api/inbounds/add", func(w http.ResponseWriter, _ *http.Request) {
+	mux.HandleFunc("/easyxray/api/v1/inbounds/add", func(w http.ResponseWriter, _ *http.Request) {
 		_ = json.NewEncoder(w).Encode(map[string]any{"success": false, "msg": "port already occupied", "obj": nil})
 	})
 	ts := httptest.NewServer(mux)

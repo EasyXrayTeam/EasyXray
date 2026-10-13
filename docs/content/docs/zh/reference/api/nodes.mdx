@@ -1,7 +1,7 @@
 ---
 title: 节点
 description: >-
-  管理作为中心面板节点的远程 3x-ui 面板。所有端点均位于 /panel/api/nodes 之下。
+  管理作为中心面板节点的远程 EasyXray 面板。所有端点均位于 /easyxray/api/v1/nodes 之下。
 full: true
 _openapi:
   preload:
@@ -176,7 +176,7 @@ export default function Layout(props) {
   return (
     <>
       {props.children}
-      <Comp document="./public/openapi.json" webhooks={[]} operations={[{"path":"/panel/api/nodes/list","method":"get"},{"path":"/panel/api/nodes/mtls/ca","method":"post"},{"path":"/panel/api/nodes/mtls/trustCA","method":"post"},{"path":"/panel/api/nodes/get/{id}","method":"get"},{"path":"/panel/api/nodes/webCert/{id}","method":"get"},{"path":"/panel/api/nodes/add","method":"post"},{"path":"/panel/api/nodes/update/{id}","method":"post"},{"path":"/panel/api/nodes/del/{id}","method":"post"},{"path":"/panel/api/nodes/setEnable/{id}","method":"post"},{"path":"/panel/api/nodes/test","method":"post"},{"path":"/panel/api/nodes/certFingerprint","method":"post"},{"path":"/panel/api/nodes/inbounds","method":"post"},{"path":"/panel/api/nodes/probe/{id}","method":"post"},{"path":"/panel/api/nodes/updatePanel","method":"post"},{"path":"/panel/api/nodes/history/{id}/{metric}/{bucket}","method":"get"}]} showTitle />
+      <Comp document="./public/openapi.json" webhooks={[]} operations={[{"path":"/easyxray/api/v1/nodes/list","method":"get"},{"path":"/easyxray/api/v1/nodes/mtls/ca","method":"post"},{"path":"/easyxray/api/v1/nodes/mtls/trustCA","method":"post"},{"path":"/easyxray/api/v1/nodes/get/{id}","method":"get"},{"path":"/easyxray/api/v1/nodes/webCert/{id}","method":"get"},{"path":"/easyxray/api/v1/nodes/add","method":"post"},{"path":"/easyxray/api/v1/nodes/update/{id}","method":"post"},{"path":"/easyxray/api/v1/nodes/del/{id}","method":"post"},{"path":"/easyxray/api/v1/nodes/setEnable/{id}","method":"post"},{"path":"/easyxray/api/v1/nodes/test","method":"post"},{"path":"/easyxray/api/v1/nodes/certFingerprint","method":"post"},{"path":"/easyxray/api/v1/nodes/inbounds","method":"post"},{"path":"/easyxray/api/v1/nodes/probe/{id}","method":"post"},{"path":"/easyxray/api/v1/nodes/updatePanel","method":"post"},{"path":"/easyxray/api/v1/nodes/history/{id}/{metric}/{bucket}","method":"get"}]} showTitle />
     </>
   );
 }

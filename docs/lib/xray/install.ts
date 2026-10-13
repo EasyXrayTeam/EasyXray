@@ -1,18 +1,18 @@
-// Pure builders for 3x-ui install commands (script + Docker). No React/DOM.
+// Pure builders for EasyXray install commands (script + Docker). No React/DOM.
 
 export type InstallMethod = 'script' | 'docker';
 
 export interface InstallOptions {
   method: InstallMethod;
-  /** A release tag like `v3.4.1`, or empty/`latest` for the latest release. */
+  /** A release tag like `v1.0.1`, or empty/`latest` for the latest release. */
   version: string;
   enableFail2ban: boolean;
   panelPort: string;
   webBasePath: string;
 }
 
-const REPO_RAW = 'https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh';
-const IMAGE = 'ghcr.io/mhsanaei/3x-ui:latest';
+const REPO_RAW = 'https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh';
+const IMAGE = 'ghcr.io/easyxrayteam/easyxray:latest';
 
 function isLatest(version: string): boolean {
   const v = version.trim().toLowerCase();
@@ -22,7 +22,7 @@ function isLatest(version: string): boolean {
 /**
  * The one-line script install command. The master install script reads the
  * version as its first argument: empty = latest stable release, a tag like
- * `v3.4.0` = that release, and `dev-latest` = the rolling per-commit dev build.
+ * `v1.0.0` = that release, and `dev-latest` = the rolling per-commit dev build.
  */
 export function buildScriptCommand(options: InstallOptions): string {
   if (isLatest(options.version)) {
@@ -35,15 +35,15 @@ export function buildScriptCommand(options: InstallOptions): string {
 export function buildDockerRun(options: InstallOptions): string {
   const lines = ['docker run -itd'];
   lines.push(`  -e XRAY_VMESS_AEAD_FORCED=false`);
-  lines.push(`  -e XUI_ENABLE_FAIL2BAN=${options.enableFail2ban ? 'true' : 'false'}`);
-  if (options.panelPort.trim()) lines.push(`  -e XUI_PORT=${options.panelPort.trim()}`);
+  lines.push(`  -e EASYXRAY_ENABLE_FAIL2BAN=${options.enableFail2ban ? 'true' : 'false'}`);
+  if (options.panelPort.trim()) lines.push(`  -e EASYXRAY_PORT=${options.panelPort.trim()}`);
   if (options.webBasePath.trim())
-    lines.push(`  -e XUI_INIT_WEB_BASE_PATH=${options.webBasePath.trim()}`);
-  lines.push(`  -v $PWD/db/:/etc/x-ui/`);
+    lines.push(`  -e EASYXRAY_INIT_WEB_BASE_PATH=${options.webBasePath.trim()}`);
+  lines.push(`  -v $PWD/db/:/etc/easyxray/`);
   lines.push(`  -v $PWD/cert/:/root/cert/`);
   lines.push(`  --network=host`);
   lines.push(`  --restart=unless-stopped`);
-  lines.push(`  --name 3x-ui`);
+  lines.push(`  --name EasyXray`);
   lines.push(`  ${IMAGE}`);
   return lines.join(' \\\n');
 }
@@ -52,19 +52,19 @@ export function buildDockerRun(options: InstallOptions): string {
 export function buildDockerCompose(options: InstallOptions): string {
   const env: string[] = [
     `      XRAY_VMESS_AEAD_FORCED: 'false'`,
-    `      XUI_ENABLE_FAIL2BAN: '${options.enableFail2ban ? 'true' : 'false'}'`,
+    `      EASYXRAY_ENABLE_FAIL2BAN: '${options.enableFail2ban ? 'true' : 'false'}'`,
   ];
-  if (options.panelPort.trim()) env.push(`      XUI_PORT: '${options.panelPort.trim()}'`);
+  if (options.panelPort.trim()) env.push(`      EASYXRAY_PORT: '${options.panelPort.trim()}'`);
   if (options.webBasePath.trim())
-    env.push(`      XUI_INIT_WEB_BASE_PATH: '${options.webBasePath.trim()}'`);
+    env.push(`      EASYXRAY_INIT_WEB_BASE_PATH: '${options.webBasePath.trim()}'`);
 
   return [
     `services:`,
-    `  3x-ui:`,
+    `  EasyXray:`,
     `    image: ${IMAGE}`,
-    `    container_name: 3x-ui`,
+    `    container_name: EasyXray`,
     `    volumes:`,
-    `      - ./db/:/etc/x-ui/`,
+    `      - ./db/:/etc/easyxray/`,
     `      - ./cert/:/root/cert/`,
     `    environment:`,
     ...env,

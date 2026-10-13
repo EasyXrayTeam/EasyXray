@@ -1,0 +1,35 @@
+EasyXray
+Copyright (C) 2026 EasyXrayTeam
+
+This product is a modified derivative work. It is based on 3x-ui
+(https://github.com/MHSanaei/3x-ui), Copyright (C) MHSanaei and the 3x-ui
+contributors, which is itself derived from the original X-UI project by
+alireza0 (https://github.com/alireza0/x-ui).
+
+Upstream base commit: 74c3cc38821cabd66ad316ea562851422d0b0063
+                        ("fix(database): blank boolean-era verifyPeerCertByName
+                        values on hosts", 2026-10-12, upstream version 3.10.0)
+
+EasyXray is licensed under the GNU General Public License, version 3 or later.
+The full license text is in the LICENSE file at the root of this repository,
+and a copy also ships in docs/LICENSE. Because 3x-ui is distributed under the
+GPL-3.0, EasyXray is distributed under the same license, and the corresponding
+source for every published binary is this repository.
+
+What EasyXray changed relative to the upstream base commit: the project, binary,
+service, install/config/log directory, database file, environment-variable
+prefix, HTTP-API namespace, OpenAPI document, container image, documentation
+site and CI artifact identities were renamed; the panel branding, logo and
+localized UI strings were replaced; and the updates previously pointed at
+upstream infrastructure now point at this repository. The functional behaviour
+of the panel — inbound, client, node, host, subscription and Xray configuration
+handling — is unchanged. Full detail, including every intentional
+non-renamed upstream reference, is recorded in docs/branding-migration.md.
+
+EasyXray is not endorsed by, sponsored by, or affiliated with the 3x-ui
+maintainers or the original X-UI author. The upstream copyright notices and
+attribution are retained in full and are not modified or removed by this
+derivative work.
+
+Third-party components bundled with or linked into EasyXray, together with
+their licenses, are listed in THIRD_PARTY_NOTICES.md.

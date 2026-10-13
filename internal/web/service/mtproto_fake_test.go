@@ -13,10 +13,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/mtproto"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/mtproto"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/xray"
 )
 
 const (
@@ -142,7 +142,7 @@ func installFakeMtg(t *testing.T) string {
 		t.Fatalf("install fake mtg: %v", err)
 	}
 	pidFile := filepath.Join(binDir, "mtg-pids.txt")
-	t.Setenv("XUI_BIN_FOLDER", binDir)
+	t.Setenv("EASYXRAY_BIN_FOLDER", binDir)
 	t.Setenv("MTG_FAKE_CHILD", "1")
 	t.Setenv("MTG_FAKE_PIDFILE", pidFile)
 	return pidFile

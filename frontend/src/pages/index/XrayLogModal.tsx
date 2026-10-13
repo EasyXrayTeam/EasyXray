@@ -78,7 +78,7 @@ export default function XrayLogModal({ open, onClose }: XrayLogModalProps) {
 
   const runRefresh = useCallback(async () => {
     try {
-      const msg = await HttpUtil.post<XrayLogEntry[]>(`/panel/api/server/xraylogs/${rows}`, {
+      const msg = await HttpUtil.post<XrayLogEntry[]>(`/easyxray/api/v1/server/xraylogs/${rows}`, {
         filter,
         showDirect,
         showBlocked,
@@ -128,7 +128,7 @@ export default function XrayLogModal({ open, onClose }: XrayLogModalProps) {
 
   function download() {
     if (!Array.isArray(logs) || logs.length === 0) {
-      FileManager.downloadTextFile('', 'x-ui.log');
+      FileManager.downloadTextFile('', 'easyxray.log');
       return;
     }
     const lines = logs
@@ -144,7 +144,7 @@ export default function XrayLogModal({ open, onClose }: XrayLogModalProps) {
         }
       })
       .join('\n');
-    FileManager.downloadTextFile(lines, 'x-ui.log');
+    FileManager.downloadTextFile(lines, 'easyxray.log');
   }
 
   return (

@@ -13,11 +13,11 @@ import (
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/crypto"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/session"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/dbtest"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/util/crypto"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/session"
 )
 
 // newAPIAuthTestEngine builds a gin engine that mirrors the production auth
@@ -30,11 +30,11 @@ func newAPIAuthTestEngine(t *testing.T) (*gin.Engine, *APIController) {
 	t.Helper()
 	gin.SetMode(gin.TestMode)
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("EASYXRAY_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "EasyXray.db"))
 	engine := gin.New()
 	store := cookie.NewStore([]byte("api-auth-test-secret"))
-	engine.Use(sessions.Sessions("3x-ui", store))
+	engine.Use(sessions.Sessions("easyxray", store))
 
 	a := &APIController{}
 
@@ -53,7 +53,7 @@ func newAPIAuthTestEngine(t *testing.T) (*gin.Engine, *APIController) {
 		c.Status(http.StatusOK)
 	})
 
-	api := engine.Group("/panel/api")
+	api := engine.Group("/easyxray/api/v1")
 	api.Use(a.checkAPIAuth)
 	api.Use(a.enforceTokenScope)
 	api.GET("/ping", func(c *gin.Context) {
@@ -94,7 +94,7 @@ func TestCheckAPIAuth_BearerSuccess(t *testing.T) {
 		t.Fatalf("seed token: %v", err)
 	}
 
-	req := httptest.NewRequest(http.MethodGet, "/panel/api/ping", nil)
+	req := httptest.NewRequest(http.MethodGet, "/easyxray/api/v1/ping", nil)
 	req.Header.Set("Authorization", "Bearer "+plaintext)
 	w := httptest.NewRecorder()
 	engine.ServeHTTP(w, req)
@@ -112,7 +112,7 @@ func TestCheckAPIAuth_BearerSuccess(t *testing.T) {
 func TestCheckAPIAuth_AcceptsVerifiedClientCert(t *testing.T) {
 	engine, _ := newAPIAuthTestEngine(t)
 
-	req := httptest.NewRequest(http.MethodGet, "/panel/api/server/status", nil)
+	req := httptest.NewRequest(http.MethodGet, "/easyxray/api/v1/server/status", nil)
 	req.TLS = &tls.ConnectionState{
 		VerifiedChains: [][]*x509.Certificate{{&x509.Certificate{}}},
 	}
@@ -126,7 +126,7 @@ func TestCheckAPIAuth_AcceptsVerifiedClientCert(t *testing.T) {
 		t.Fatalf("body = %s, want node-sync scope", got)
 	}
 
-	forbidden := httptest.NewRequest(http.MethodPost, "/panel/api/server/updatePanel", nil)
+	forbidden := httptest.NewRequest(http.MethodPost, "/easyxray/api/v1/server/updatePanel", nil)
 	forbidden.TLS = &tls.ConnectionState{
 		VerifiedChains: [][]*x509.Certificate{{&x509.Certificate{}}},
 	}
@@ -145,10 +145,10 @@ func TestNodeSyncScopeUsesFullPathPatterns(t *testing.T) {
 		path   string
 		want   int
 	}{
-		{"detach email parameter", http.MethodPost, "/panel/api/clients/alice@example.com/detach", http.StatusOK},
-		{"reset inbound id parameter", http.MethodPost, "/panel/api/inbounds/42/resetTraffic", http.StatusOK},
-		{"client IP by guid endpoint", http.MethodPost, "/panel/api/clients/clientIpsByGuid", http.StatusOK},
-		{"update panel forbidden", http.MethodPost, "/panel/api/server/updatePanel", http.StatusForbidden},
+		{"detach email parameter", http.MethodPost, "/easyxray/api/v1/clients/alice@example.com/detach", http.StatusOK},
+		{"reset inbound id parameter", http.MethodPost, "/easyxray/api/v1/inbounds/42/resetTraffic", http.StatusOK},
+		{"client IP by guid endpoint", http.MethodPost, "/easyxray/api/v1/clients/clientIpsByGuid", http.StatusOK},
+		{"update panel forbidden", http.MethodPost, "/easyxray/api/v1/server/updatePanel", http.StatusForbidden},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
@@ -172,7 +172,7 @@ func TestNodeSyncScopeUsesFullPathPatterns(t *testing.T) {
 func TestCheckAPIAuth_EmptyVerifiedChainsFallsThrough(t *testing.T) {
 	engine, _ := newAPIAuthTestEngine(t)
 
-	req := httptest.NewRequest(http.MethodGet, "/panel/api/ping", nil)
+	req := httptest.NewRequest(http.MethodGet, "/easyxray/api/v1/ping", nil)
 	req.TLS = &tls.ConnectionState{} // handshake done, but no client cert verified
 	req.Header.Set("X-Requested-With", "XMLHttpRequest")
 	w := httptest.NewRecorder()
@@ -202,7 +202,7 @@ func TestCheckAPIAuth_RejectsUnauthenticated(t *testing.T) {
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			req := httptest.NewRequest(http.MethodGet, "/panel/api/ping", nil)
+			req := httptest.NewRequest(http.MethodGet, "/easyxray/api/v1/ping", nil)
 			if c.xhr {
 				req.Header.Set("X-Requested-With", "XMLHttpRequest")
 			}
@@ -251,7 +251,7 @@ func TestCheckAPIAuth_SessionLoginPasses(t *testing.T) {
 		t.Fatalf("login status = %d, want 200", loginResp.StatusCode)
 	}
 
-	pingResp, err := client.Get(ts.URL + "/panel/api/ping")
+	pingResp, err := client.Get(ts.URL + "/easyxray/api/v1/ping")
 	if err != nil {
 		t.Fatalf("ping: %v", err)
 	}

@@ -259,8 +259,8 @@ func TestEnvKeySource(t *testing.T) {
 	for i := range key {
 		key[i] = byte(i)
 	}
-	t.Setenv("XUI_NODE_TOKEN_KEY_TEST", base64.StdEncoding.EncodeToString(key))
-	kr, err := (EnvKeySource{Var: "XUI_NODE_TOKEN_KEY_TEST"}).Load()
+	t.Setenv("EASYXRAY_NODE_TOKEN_KEY_TEST", base64.StdEncoding.EncodeToString(key))
+	kr, err := (EnvKeySource{Var: "EASYXRAY_NODE_TOKEN_KEY_TEST"}).Load()
 	if err != nil {
 		t.Fatal(err)
 	}

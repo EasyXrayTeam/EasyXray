@@ -8,8 +8,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/config"
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/config"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
 )
 
 var migrated struct {
@@ -45,7 +45,7 @@ func InitDB(t testing.TB, path string) {
 
 func migratedTemplate() ([]byte, error) {
 	migrated.once.Do(func() {
-		dir, err := os.MkdirTemp("", "xui-dbtest-")
+		dir, err := os.MkdirTemp("", "easyxray-dbtest-")
 		if err != nil {
 			migrated.err = err
 			return

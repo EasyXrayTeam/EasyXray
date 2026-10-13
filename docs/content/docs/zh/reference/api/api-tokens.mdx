@@ -2,7 +2,7 @@
 title: API 令牌
 description: >-
   管理用于程序化认证的 Bearer 令牌（机器人、代表本节点操作的中心面板、CI）。每个令牌都有唯一的名称和一个启用标志——禁用即可在不删除的情况下吊销，删除则为永久吊销。令牌以
-  SHA-256 哈希形式存储，明文仅在创建响应中返回一次——此后无法再次获取，因此请当场复制保存。在任意 /panel/api/* 请求中以
+  SHA-256 哈希形式存储，明文仅在创建响应中返回一次——此后无法再次获取，因此请当场复制保存。在任意 /easyxray/api/v1/* 请求中以
   <code>Authorization: Bearer &lt;token&gt;</code> 的形式发送令牌——该令牌是一份完全管理员凭据。
 full: true
 _openapi:
@@ -69,7 +69,7 @@ export default function Layout(props) {
   return (
     <>
       {props.children}
-      <Comp document="./public/openapi.json" webhooks={[]} operations={[{"path":"/panel/api/setting/apiTokens","method":"get"},{"path":"/panel/api/setting/apiTokens/create","method":"post"},{"path":"/panel/api/setting/apiTokens/delete/{id}","method":"post"},{"path":"/panel/api/setting/apiTokens/setEnabled/{id}","method":"post"}]} showTitle />
+      <Comp document="./public/openapi.json" webhooks={[]} operations={[{"path":"/easyxray/api/v1/setting/apiTokens","method":"get"},{"path":"/easyxray/api/v1/setting/apiTokens/create","method":"post"},{"path":"/easyxray/api/v1/setting/apiTokens/delete/{id}","method":"post"},{"path":"/easyxray/api/v1/setting/apiTokens/setEnabled/{id}","method":"post"}]} showTitle />
     </>
   );
 }

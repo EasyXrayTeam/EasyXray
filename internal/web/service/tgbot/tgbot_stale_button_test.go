@@ -8,8 +8,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/dbtest"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
 
 	"github.com/mymmrac/telego"
 )
@@ -58,7 +58,7 @@ func swapTestBot(t *testing.T, url string) {
 
 func newStaleButtonTgbot(t *testing.T) *Tgbot {
 	t.Helper()
-	dbtest.InitDB(t, filepath.Join(t.TempDir(), "x-ui.db"))
+	dbtest.InitDB(t, filepath.Join(t.TempDir(), "EasyXray.db"))
 	return &Tgbot{}
 }
 

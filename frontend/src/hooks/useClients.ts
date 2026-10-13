@@ -139,7 +139,7 @@ function buildQS(p: ClientQueryParams): string {
 
 async function fetchClientPage(params: ClientQueryParams): Promise<ClientPageResponse> {
   const qs = buildQS(params);
-  const msg = await HttpUtil.get(`/panel/api/clients/list/paged?${qs}`, undefined, {
+  const msg = await HttpUtil.get(`/easyxray/api/v1/clients/list/paged?${qs}`, undefined, {
     silent: true,
   });
   if (!msg?.success || !msg.obj) throw new Error(msg?.msg || 'Failed to fetch clients');
@@ -149,14 +149,14 @@ async function fetchClientPage(params: ClientQueryParams): Promise<ClientPageRes
 }
 
 async function fetchInboundOptions(): Promise<InboundOption[]> {
-  const msg = await HttpUtil.get('/panel/api/inbounds/options', undefined, { silent: true });
+  const msg = await HttpUtil.get('/easyxray/api/v1/inbounds/options', undefined, { silent: true });
   if (!msg?.success) throw new Error(msg?.msg || 'Failed to fetch inbound options');
   const validated = parseMsg(msg, InboundOptionsSchema, 'inbounds/options');
   return Array.isArray(validated.obj) ? validated.obj : [];
 }
 
 async function fetchDefaults(): Promise<Record<string, unknown>> {
-  const msg = await HttpUtil.post('/panel/api/setting/defaultSettings', undefined, {
+  const msg = await HttpUtil.post('/easyxray/api/v1/setting/defaultSettings', undefined, {
     silent: true,
   });
   if (!msg?.success) throw new Error(msg?.msg || 'Failed to fetch defaults');
@@ -238,7 +238,9 @@ export function useClients(options: UseClientsOptions = {}) {
   const onlinesQuery = useQuery({
     queryKey: keys.clients.onlines(),
     queryFn: async () => {
-      const msg = await HttpUtil.post('/panel/api/clients/onlines', undefined, { silent: true });
+      const msg = await HttpUtil.post('/easyxray/api/v1/clients/onlines', undefined, {
+        silent: true,
+      });
       if (!msg?.success) throw new Error(msg?.msg || 'Failed to fetch onlines');
       const validated = parseMsg(msg, OnlinesSchema, 'clients/onlines');
       return Array.isArray(validated.obj) ? validated.obj : [];
@@ -343,7 +345,7 @@ export function useClients(options: UseClientsOptions = {}) {
 
   const hydrate = useCallback(async (email: string): Promise<ClientHydrate | null> => {
     if (!email) return null;
-    const msg = await HttpUtil.get(`/panel/api/clients/get/${encodeURIComponent(email)}`);
+    const msg = await HttpUtil.get(`/easyxray/api/v1/clients/get/${encodeURIComponent(email)}`);
     if (!msg?.success || !msg.obj) return null;
     const validated = parseMsg(msg, ClientHydrateSchema, 'clients/get');
     return validated.obj;
@@ -351,7 +353,7 @@ export function useClients(options: UseClientsOptions = {}) {
 
   const createMut = useMutation({
     mutationFn: (payload: unknown) =>
-      HttpUtil.post('/panel/api/clients/add', payload, JSON_HEADERS),
+      HttpUtil.post('/easyxray/api/v1/clients/add', payload, JSON_HEADERS),
     onSuccess: (msg) => {
       if (msg?.success) invalidateAll();
     },
@@ -359,7 +361,7 @@ export function useClients(options: UseClientsOptions = {}) {
 
   const bulkAddToGroupMut = useMutation({
     mutationFn: (body: { emails: string[]; group: string }) =>
-      HttpUtil.post('/panel/api/clients/groups/bulkAdd', body, JSON_HEADERS),
+      HttpUtil.post('/easyxray/api/v1/clients/groups/bulkAdd', body, JSON_HEADERS),
     onSuccess: (msg) => {
       if (msg?.success) invalidateAll();
     },
@@ -367,7 +369,7 @@ export function useClients(options: UseClientsOptions = {}) {
 
   const bulkRemoveFromGroupMut = useMutation({
     mutationFn: (body: { emails: string[] }) =>
-      HttpUtil.post('/panel/api/clients/groups/bulkRemove', body, JSON_HEADERS),
+      HttpUtil.post('/easyxray/api/v1/clients/groups/bulkRemove', body, JSON_HEADERS),
     onSuccess: (msg) => {
       if (msg?.success) invalidateAll();
     },
@@ -375,7 +377,11 @@ export function useClients(options: UseClientsOptions = {}) {
 
   const updateMut = useMutation({
     mutationFn: ({ email, client }: { email: string; client: unknown }) =>
-      HttpUtil.post(`/panel/api/clients/update/${encodeURIComponent(email)}`, client, JSON_HEADERS),
+      HttpUtil.post(
+        `/easyxray/api/v1/clients/update/${encodeURIComponent(email)}`,
+        client,
+        JSON_HEADERS,
+      ),
     onSuccess: (msg) => {
       if (msg?.success) invalidateAll();
     },
@@ -384,8 +390,8 @@ export function useClients(options: UseClientsOptions = {}) {
   const removeMut = useMutation({
     mutationFn: ({ email, keepTraffic }: { email: string; keepTraffic?: boolean }) => {
       const url = keepTraffic
-        ? `/panel/api/clients/del/${encodeURIComponent(email)}?keepTraffic=1`
-        : `/panel/api/clients/del/${encodeURIComponent(email)}`;
+        ? `/easyxray/api/v1/clients/del/${encodeURIComponent(email)}?keepTraffic=1`
+        : `/easyxray/api/v1/clients/del/${encodeURIComponent(email)}`;
       return HttpUtil.post(url);
     },
     onSuccess: (msg) => {
@@ -398,7 +404,7 @@ export function useClients(options: UseClientsOptions = {}) {
       emails: string[];
       keepTraffic?: boolean;
     }): Promise<Msg<BulkDeleteResult>> => {
-      const raw = await HttpUtil.post('/panel/api/clients/bulkDel', payload, JSON_HEADERS);
+      const raw = await HttpUtil.post('/easyxray/api/v1/clients/bulkDel', payload, JSON_HEADERS);
       return parseMsg(raw, BulkDeleteResultSchema, 'clients/bulkDel');
     },
     onSuccess: (msg) => {
@@ -408,7 +414,11 @@ export function useClients(options: UseClientsOptions = {}) {
 
   const bulkCreateMut = useMutation({
     mutationFn: async (payloads: unknown[]): Promise<Msg<BulkCreateResult>> => {
-      const raw = await HttpUtil.post('/panel/api/clients/bulkCreate', payloads, JSON_HEADERS);
+      const raw = await HttpUtil.post(
+        '/easyxray/api/v1/clients/bulkCreate',
+        payloads,
+        JSON_HEADERS,
+      );
       return parseMsg(raw, BulkCreateResultSchema, 'clients/bulkCreate');
     },
     onSuccess: (msg) => {
@@ -425,7 +435,7 @@ export function useClients(options: UseClientsOptions = {}) {
       limitHwid?: number | null;
       adTag?: string;
     }): Promise<Msg<BulkAdjustResult>> => {
-      const raw = await HttpUtil.post('/panel/api/clients/bulkAdjust', payload, JSON_HEADERS);
+      const raw = await HttpUtil.post('/easyxray/api/v1/clients/bulkAdjust', payload, JSON_HEADERS);
       return parseMsg(raw, BulkAdjustResultSchema, 'clients/bulkAdjust');
     },
     onSuccess: (msg) => {
@@ -439,8 +449,8 @@ export function useClients(options: UseClientsOptions = {}) {
       enable: boolean;
     }): Promise<Msg<BulkSetEnableResult>> => {
       const path = payload.enable
-        ? '/panel/api/clients/bulkEnable'
-        : '/panel/api/clients/bulkDisable';
+        ? '/easyxray/api/v1/clients/bulkEnable'
+        : '/easyxray/api/v1/clients/bulkDisable';
       const raw = await HttpUtil.post(path, { emails: payload.emails }, JSON_HEADERS);
       return parseMsg(
         raw,
@@ -456,7 +466,7 @@ export function useClients(options: UseClientsOptions = {}) {
   const attachMut = useMutation({
     mutationFn: ({ email, inboundIds }: { email: string; inboundIds: number[] }) =>
       HttpUtil.post(
-        `/panel/api/clients/${encodeURIComponent(email)}/attach`,
+        `/easyxray/api/v1/clients/${encodeURIComponent(email)}/attach`,
         { inboundIds },
         { ...JSON_HEADERS, silentSuccess: true },
       ),
@@ -468,7 +478,7 @@ export function useClients(options: UseClientsOptions = {}) {
   const setExternalLinksMut = useMutation({
     mutationFn: ({ email, externalLinks }: { email: string; externalLinks: ExternalLinkInput[] }) =>
       HttpUtil.post(
-        `/panel/api/clients/${encodeURIComponent(email)}/externalLinks`,
+        `/easyxray/api/v1/clients/${encodeURIComponent(email)}/externalLinks`,
         { externalLinks },
         { ...JSON_HEADERS, silentSuccess: true },
       ),
@@ -482,7 +492,7 @@ export function useClients(options: UseClientsOptions = {}) {
       emails: string[];
       inboundIds: number[];
     }): Promise<Msg<BulkAttachResult>> => {
-      const raw = await HttpUtil.post('/panel/api/clients/bulkAttach', payload, JSON_HEADERS);
+      const raw = await HttpUtil.post('/easyxray/api/v1/clients/bulkAttach', payload, JSON_HEADERS);
       return parseMsg(raw, BulkAttachResultSchema, 'clients/bulkAttach');
     },
     onSuccess: (msg) => {
@@ -493,7 +503,7 @@ export function useClients(options: UseClientsOptions = {}) {
   const detachMut = useMutation({
     mutationFn: ({ email, inboundIds }: { email: string; inboundIds: number[] }) =>
       HttpUtil.post(
-        `/panel/api/clients/${encodeURIComponent(email)}/detach`,
+        `/easyxray/api/v1/clients/${encodeURIComponent(email)}/detach`,
         { inboundIds },
         { ...JSON_HEADERS, silentSuccess: true },
       ),
@@ -507,7 +517,7 @@ export function useClients(options: UseClientsOptions = {}) {
       emails: string[];
       inboundIds: number[];
     }): Promise<Msg<BulkDetachResult>> => {
-      const raw = await HttpUtil.post('/panel/api/clients/bulkDetach', payload, JSON_HEADERS);
+      const raw = await HttpUtil.post('/easyxray/api/v1/clients/bulkDetach', payload, JSON_HEADERS);
       return parseMsg(raw, BulkDetachResultSchema, 'clients/bulkDetach');
     },
     onSuccess: (msg) => {
@@ -517,14 +527,14 @@ export function useClients(options: UseClientsOptions = {}) {
 
   const resetTrafficMut = useMutation({
     mutationFn: (email: string) =>
-      HttpUtil.post(`/panel/api/clients/resetTraffic/${encodeURIComponent(email)}`),
+      HttpUtil.post(`/easyxray/api/v1/clients/resetTraffic/${encodeURIComponent(email)}`),
     onSuccess: (msg) => {
       if (msg?.success) invalidateAll();
     },
   });
 
   const resetAllTrafficsMut = useMutation({
-    mutationFn: () => HttpUtil.post('/panel/api/clients/resetAllTraffics'),
+    mutationFn: () => HttpUtil.post('/easyxray/api/v1/clients/resetAllTraffics'),
     onSuccess: (msg) => {
       if (msg?.success) invalidateAll();
     },
@@ -532,7 +542,7 @@ export function useClients(options: UseClientsOptions = {}) {
 
   const delDepletedMut = useMutation({
     mutationFn: async () => {
-      const raw = await HttpUtil.post('/panel/api/clients/delDepleted');
+      const raw = await HttpUtil.post('/easyxray/api/v1/clients/delDepleted');
       return parseMsg(raw, DelDepletedResultSchema, 'clients/delDepleted');
     },
     onSuccess: (msg) => {
@@ -542,7 +552,7 @@ export function useClients(options: UseClientsOptions = {}) {
 
   const delOrphansMut = useMutation({
     mutationFn: async () => {
-      const raw = await HttpUtil.post('/panel/api/clients/delOrphans');
+      const raw = await HttpUtil.post('/easyxray/api/v1/clients/delOrphans');
       return parseMsg(raw, DelDepletedResultSchema, 'clients/delOrphans');
     },
     onSuccess: (msg) => {
@@ -552,7 +562,7 @@ export function useClients(options: UseClientsOptions = {}) {
 
   const importClientsMut = useMutation({
     mutationFn: async (data: string): Promise<Msg<BulkCreateResult>> => {
-      const raw = await HttpUtil.post('/panel/api/clients/import', { data }, JSON_HEADERS);
+      const raw = await HttpUtil.post('/easyxray/api/v1/clients/import', { data }, JSON_HEADERS);
       return parseMsg(raw, BulkCreateResultSchema, 'clients/import');
     },
     onSuccess: (msg) => {
@@ -696,7 +706,7 @@ export function useClients(options: UseClientsOptions = {}) {
   // Fetch the exported clients so the page can show them in a CodeMirror viewer
   // (Copy / Download), rather than triggering an immediate browser download.
   const exportClients = useCallback(async (): Promise<unknown[] | null> => {
-    const msg = await HttpUtil.get('/panel/api/clients/export');
+    const msg = await HttpUtil.get('/easyxray/api/v1/clients/export');
     if (!msg?.success) return null;
     return Array.isArray(msg.obj) ? msg.obj : [];
   }, []);

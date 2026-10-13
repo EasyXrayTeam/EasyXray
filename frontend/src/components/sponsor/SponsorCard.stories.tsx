@@ -10,8 +10,8 @@ const sponsor: Sponsor = {
   slots: ['dashboard', 'sidebar', 'page', 'login'],
   until: '2099-01-01T00:00:00Z',
   title: { en: 'Acme VPS — fast NVMe servers', fa: 'سرورهای سریع Acme' },
-  text: { en: 'Deploy 3X-UI in 60 seconds. 20% off for panel users.' },
-  link: 'https://acme.example/?utm_source=3x-ui',
+  text: { en: 'Deploy EasyXray in 60 seconds. 20% off for panel users.' },
+  link: 'https://acme.example/?utm_source=EasyXray',
 };
 
 const meta = {

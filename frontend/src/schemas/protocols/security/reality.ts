@@ -29,7 +29,7 @@ export type RealityLimitFallback = z.infer<typeof RealityLimitFallbackSchema>;
 // they are aliases (infra/conf/transport_internet.go: REALITYConfig has
 // `json:"target"` and `json:"dest"`). The panel writes `target`, but configs
 // produced by older panel builds, external tools, or the panel's own
-// `/panel/api/inbounds` API commonly use `dest`. Map `dest` -> `target` on
+// `/easyxray/api/v1/inbounds` API commonly use `dest`. Map `dest` -> `target` on
 // parse when `target` is absent/empty: otherwise such an inbound loads with
 // an empty (required) Target field even though it runs fine, and re-saving
 // it serializes the blank `target` and drops the working `dest` — silently

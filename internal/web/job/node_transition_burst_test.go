@@ -12,20 +12,20 @@ import (
 
 	"github.com/op/go-logging"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/eventbus"
-	xuilogger "github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/runtime"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/dbtest"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/eventbus"
+	easyxraylogger "github.com/EasyXrayTeam/EasyXray/v3/internal/logger"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/runtime"
 )
 
 // goingDownNodes seeds n online nodes whose address refuses connections, so the
 // next heartbeat flips every one of them to offline in the same tick.
 func goingDownNodes(t *testing.T, n int) {
 	t.Helper()
-	xuilogger.InitLogger(logging.ERROR)
-	dbtest.InitDB(t, filepath.Join(t.TempDir(), "x-ui.db"))
+	easyxraylogger.InitLogger(logging.ERROR)
+	dbtest.InitDB(t, filepath.Join(t.TempDir(), "EasyXray.db"))
 	runtime.SetManager(runtime.NewManager(runtime.LocalDeps{APIPort: func() int { return 0 }, SetNeedRestart: func() {}}))
 	t.Cleanup(func() { runtime.SetManager(nil) })
 	srv := httptest.NewServer(nil)

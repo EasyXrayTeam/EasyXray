@@ -36,7 +36,7 @@ const XMUX_DEFAULTS = XHttpXmuxSchema.parse({});
 // InboundFormModal. No dependency on the legacy Inbound/DBInbound
 // classes — the modal hands the raw row in, takes typed values out, and
 // on submit calls formValuesToWirePayload() to get a payload ready to
-// POST to /panel/api/inbounds/add or /update/:id.
+// POST to /easyxray/api/v1/inbounds/add or /update/:id.
 
 export interface RawInboundRow {
   port?: number;

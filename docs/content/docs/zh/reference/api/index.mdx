@@ -1,26 +1,57 @@
 ---
 title: API 参考
-description: 3x-ui 面板的 REST API —— 涵盖认证、入站、客户端、服务器状态等，依据 OpenAPI 规范自动生成。
+description: EasyXray 面板的 REST API —— 命名空间、认证、入站、客户端、服务器状态等，依据 OpenAPI 规范生成。
 icon: Webhook
 ---
 
-3x-ui 面板提供了一套用于自动化的 REST API。以下页面根据面板的 OpenAPI 规范自动生成，因此始终与所记录的 schema 保持一致。
+EasyXray 面板提供了一套用于自动化的 REST API。本节页面由面板自身的 OpenAPI
+规范生成，因此始终与面板实际提供的 schema 保持一致。
+
+## 命名空间
+
+面板提供的一切都位于**配置的 Web 基础路径**（`webBasePath`）之下，其后紧跟
+`easyxray`：
+
+| 入口          | 路径                                      |
+| ------------- | ----------------------------------------- |
+| 面板界面      | `<basePath>/easyxray/…`                   |
+| REST API      | `<basePath>/easyxray/api/v1/…`            |
+| WebSocket     | `<basePath>/easyxray/ws`                  |
+| OpenAPI 规范  | `<basePath>/easyxray/api/v1/openapi.json` |
+
+使用默认基础路径（`/`）时，例如：
+
+```text
+GET  /easyxray/api/v1/inbounds/list
+POST /easyxray/api/v1/clients/add
+GET  /easyxray/api/v1/server/status
+GET  /easyxray/api/v1/openapi.json
+```
+
+<Callout type="warn">
+  **`easyxray` 命名空间没有别名。** 上游 X-UI/3x-ui 面板的早期版本在
+  `/panel/api/…` 下提供这些端点；EasyXray **不会**在该前缀上响应，也没有安装
+  兼容性重定向。任何针对旧路径编写的脚本、机器人或看板都必须更新为上面的
+  `/easyxray/api/v1/…` 路由。
+</Callout>
 
 ## 认证
 
-请求可使用 **会话 Cookie**（来自 `POST /login`）或 **Bearer token** 进行认证：
+请求通过以下两种方式之一进行认证：**会话 Cookie**——登录面板时设置，名为
+`easyxray`；或 **Bearer 令牌**：
 
 ```text
 Authorization: Bearer <token>
 ```
 
-在面板中创建 API token；它们拥有完整的管理员权限，因此请妥善保管。参见 [API Tokens](/docs/reference/api/api-tokens)。
+在 **设置 → 安全 → API 令牌** 中创建 API 令牌；它们拥有完整管理员权限，因此请像
+保管面板密码一样保管它们。参见 [API 令牌](/docs/reference/api/api-tokens)。
 
-为下方任意端点构建一个已认证的请求：
+为本节中的任意端点构建一个已认证请求：
 
 <ApiRequestBuilder />
 
-## 按领域浏览
+## 按区域浏览
 
 <Cards>
   <Card title="认证" href="/docs/reference/api/authentication" />
@@ -32,6 +63,7 @@ Authorization: Bearer <token>
 </Cards>
 
 <Callout type="info">
-  本参考文档由 `public/openapi.json` 通过 `pnpm gen:api` 重新生成。
-  请勿手动编辑自动生成的标签页面。
+  各区域页面通过 `pnpm gen:api` 从已提交的 `public/openapi.json` 规范重新生成
+  （规范本身由面板仓库的 `frontend/scripts/build-openapi.mjs` 发布）。不要手工
+  编辑生成的标签页——请修改规范源并重新生成。
 </Callout>

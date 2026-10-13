@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for taking the time to contribute to 3x-ui. This guide gets a development panel running locally and explains the conventions the project follows so changes land cleanly.
+Thanks for taking the time to contribute to EasyXray. This guide gets a development panel running locally and explains the conventions the project follows so changes land cleanly.
 
 ## Prerequisites
 
@@ -50,12 +50,12 @@ Cross-building the Linux SQLite target from Windows (or vice versa) requires a s
 ## First-time setup
 
 ```bash
-git clone https://github.com/MHSanaei/3x-ui.git
-cd 3x-ui
+git clone https://github.com/EasyXrayTeam/EasyXray.git
+cd EasyXray
 
 cp .env.example .env
 
-mkdir x-ui
+mkdir easyxray
 
 go mod download
 
@@ -65,18 +65,18 @@ npm run build
 cd ..
 ```
 
-`.env.example` ships with defaults that keep the database, logs, and xray binary inside the local `x-ui/` folder so nothing escapes the project directory:
+`.env.example` ships with defaults that keep the database, logs, and xray binary inside the local `easyxray/` folder so nothing escapes the project directory:
 
 ```
-XUI_DEBUG=true
-XUI_DB_FOLDER=x-ui
-XUI_LOG_FOLDER=x-ui
-XUI_BIN_FOLDER=x-ui
-XUI_INIT_WEB_BASE_PATH=/
-# XUI_PORT=8080
+EASYXRAY_DEBUG=true
+EASYXRAY_DB_FOLDER=easyxray
+EASYXRAY_LOG_FOLDER=easyxray
+EASYXRAY_BIN_FOLDER=easyxray
+EASYXRAY_INIT_WEB_BASE_PATH=/
+# EASYXRAY_PORT=8080
 ```
 
-Drop the xray binary (`xray-windows-amd64.exe` on Windows, `xray-linux-amd64` on Linux, etc.) plus the matching `geoip.dat` and `geosite.dat` files into `x-ui/`. The easiest source is a [released Xray-core build](https://github.com/XTLS/Xray-core/releases). On Windows, `wintun.dll` is also required for testing TUN inbounds.
+Drop the xray binary (`xray-windows-amd64.exe` on Windows, `xray-linux-amd64` on Linux, etc.) plus the matching `geoip.dat` and `geosite.dat` files into `easyxray/`. The easiest source is a [released Xray-core build](https://github.com/XTLS/Xray-core/releases). On Windows, `wintun.dll` is also required for testing TUN inbounds.
 
 ## Running
 
@@ -88,7 +88,7 @@ Open [http://localhost:2053](http://localhost:2053) and log in with `admin` / `a
 
 ### Inside VS Code
 
-The repo checks in two VS Code launch profiles in `.vscode/launch.json`: **Run 3x-ui (Debug)** for the default SQLite setup, and **Run 3x-ui (Postgres)** which points `XUI_DB_TYPE`/`XUI_DB_DSN` at a local PostgreSQL. The Postgres profile also prepends the PostgreSQL `bin` to `PATH` so the panel can find `pg_dump`/`pg_restore` (the `postgresql-client` tools used for DB backup/restore) — adjust the DSN and that path to your machine:
+The repo checks in two VS Code launch profiles in `.vscode/launch.json`: **Run EasyXray (Debug)** for the default SQLite setup, and **Run EasyXray (Postgres)** which points `EASYXRAY_DB_TYPE`/`EASYXRAY_DB_DSN` at a local PostgreSQL. The Postgres profile also prepends the PostgreSQL `bin` to `PATH` so the panel can find `pg_dump`/`pg_restore` (the `postgresql-client` tools used for DB backup/restore) — adjust the DSN and that path to your machine:
 
 ```jsonc
 {
@@ -96,33 +96,33 @@ The repo checks in two VS Code launch profiles in `.vscode/launch.json`: **Run 3
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Run 3x-ui (Debug)",
+      "name": "Run EasyXray (Debug)",
       "type": "go",
       "request": "launch",
       "mode": "auto",
       "program": "${workspaceFolder}",
       "cwd": "${workspaceFolder}",
       "env": {
-        "XUI_DEBUG": "true",
-        "XUI_DB_FOLDER": "x-ui",
-        "XUI_LOG_FOLDER": "x-ui",
-        "XUI_BIN_FOLDER": "x-ui"
+        "EASYXRAY_DEBUG": "true",
+        "EASYXRAY_DB_FOLDER": "easyxray",
+        "EASYXRAY_LOG_FOLDER": "easyxray",
+        "EASYXRAY_BIN_FOLDER": "easyxray"
       },
       "console": "integratedTerminal"
     },
     {
-      "name": "Run 3x-ui (Postgres)",
+      "name": "Run EasyXray (Postgres)",
       "type": "go",
       "request": "launch",
       "mode": "auto",
       "program": "${workspaceFolder}",
       "cwd": "${workspaceFolder}",
       "env": {
-        "XUI_DEBUG": "true",
-        "XUI_LOG_FOLDER": "x-ui",
-        "XUI_BIN_FOLDER": "x-ui",
-        "XUI_DB_TYPE": "postgres",
-        "XUI_DB_DSN": "postgres://xui:xuipass@127.0.0.1:5432/xui?sslmode=disable",
+        "EASYXRAY_DEBUG": "true",
+        "EASYXRAY_LOG_FOLDER": "easyxray",
+        "EASYXRAY_BIN_FOLDER": "easyxray",
+        "EASYXRAY_DB_TYPE": "postgres",
+        "EASYXRAY_DB_DSN": "postgres://easyxray:easyxraypass@127.0.0.1:5432/easyxray?sslmode=disable",
         "PATH": "C:\\Program Files\\PostgreSQL\\18\\bin;${env:PATH}"
       },
       "console": "integratedTerminal"
@@ -139,7 +139,7 @@ The panel UI is a **React 19 + Ant Design 6 + TypeScript** app under `frontend/`
 
 The frontend ships **three Vite bundles**, each emitted into `internal/web/dist/` and embedded into the Go binary at compile time via `embed.FS`:
 
-- **`index.html`** — the admin panel, a **single-page app**. `src/main.tsx` mounts a `react-router` `createBrowserRouter` (see `src/routes.tsx`) under the `/panel` basename; every route (`/panel`, `/panel/inbounds`, `/panel/clients`, `/panel/groups`, `/panel/nodes`, `/panel/settings`, `/panel/xray`, `/panel/api-docs`) is lazy-loaded inside a shared `PanelLayout` (sidebar + header + `<Outlet>`).
+- **`index.html`** — the admin panel, a **single-page app**. `src/main.tsx` mounts a `react-router` `createBrowserRouter` (see `src/routes.tsx`) under the `/panel` basename; every route (`/panel`, `/panel/inbounds`, `/panel/clients`, `/panel/groups`, `/panel/nodes`, `/panel/settings`, `/panel/xray`, `/easyxray/api/v1-docs`) is lazy-loaded inside a shared `PanelLayout` (sidebar + header + `<Outlet>`).
 - **`login.html`** — the login + 2FA screen (`src/entries/login.tsx`), a standalone bundle.
 - **`subpage.html`** — the public subscription viewer (`src/entries/subpage.tsx`), a standalone bundle.
 
@@ -165,9 +165,9 @@ Locale strings live in `internal/web/translation/<locale>.json`, **not** under `
 | Verify what end users actually see | `cd frontend && npm run build`, then `go run .`. The Go binary serves the built bundle — embedded in release mode, off disk in debug mode. |
 | Develop/preview a reusable component in isolation | `cd frontend && npm run storybook` (Storybook workbench + autodocs on `:6006`). |
 
-The Vite dev proxy serves the admin SPA for any `/panel/*` URL — `bypassMigratedRoute` in `vite.config.js` rewrites those requests to `index.html` and lets React Router take over — while forwarding `/panel/api/*`, `/panel/api/setting/*`, `/panel/api/xray/*`, and the WebSocket to the Go panel. Because routing is now client-side, new panel routes need no proxy or allowlist changes.
+The Vite dev proxy serves the admin SPA for any `/panel/*` URL — `bypassMigratedRoute` in `vite.config.js` rewrites those requests to `index.html` and lets React Router take over — while forwarding `/easyxray/api/v1/*`, `/easyxray/api/v1/setting/*`, `/easyxray/api/v1/xray/*`, and the WebSocket to the Go panel. Because routing is now client-side, new panel routes need no proxy or allowlist changes.
 
-> **`XUI_DEBUG=true` gotcha** — in debug mode the panel serves HTML from the embedded FS (frozen at the last `go build` / `go run`) but JS/CSS off disk. Re-running `npm run build` without restarting Go leaves the embedded HTML pointing at the *old* hashed asset names, producing a blank page with 404s in the console. Always restart `go run .` after a frontend rebuild.
+> **`EASYXRAY_DEBUG=true` gotcha** — in debug mode the panel serves HTML from the embedded FS (frozen at the last `go build` / `go run`) but JS/CSS off disk. Re-running `npm run build` without restarting Go leaves the embedded HTML pointing at the *old* hashed asset names, producing a blank page with 404s in the console. Always restart `go run .` after a frontend rebuild.
 
 ### Adding a new page
 
@@ -188,7 +188,7 @@ Only a genuinely **standalone bundle** (like `login` or `subpage`, reachable wit
 - **Persian and Arabic users are first-class.** When writing Persian text in toasts or labels, isolate code identifiers on their own lines so RTL reading flows. (Full RTL layout is not currently wired through AntD `ConfigProvider direction` — only the Jalali date picker is RTL-aware — so treat RTL as an open area, not a solved one.)
 - **Schemas over `any`.** New config shapes go in `src/schemas/`; oxlint's `typescript/no-explicit-any` is an error and production schemas use no `.loose()`. Validate form fields with `antdRule(Schema.shape.field, t)` rather than inline `z.string()` in rules.
 - **Document new endpoints.** Every new `g.POST`/`g.GET` in `internal/web/controller/` needs a matching entry in `src/pages/api-docs/endpoints.ts` — it drives both the in-panel API docs and the generated OpenAPI/Zod (`npm run gen:api` / `gen:zod`).
-- **Do not break link generation.** Share-link logic lives in `src/lib/xray/` (`inbound-link.ts`, `outbound-link-parser.ts`, …) and is round-tripped by the golden fixture suite — run `npm run test` after any change to URL generation, defaults, or TLS/Reality handling, and regenerate snapshots (`npx vitest run -u`) only for intentional changes. Two runtime paths consume it: the **inbounds page** and the **clients page** subscription links (`/panel/api/clients/subLinks/:subId` → backend `GetSubs`); exercise both.
+- **Do not break link generation.** Share-link logic lives in `src/lib/xray/` (`inbound-link.ts`, `outbound-link-parser.ts`, …) and is round-tripped by the golden fixture suite — run `npm run test` after any change to URL generation, defaults, or TLS/Reality handling, and regenerate snapshots (`npx vitest run -u`) only for intentional changes. Two runtime paths consume it: the **inbounds page** and the **clients page** subscription links (`/easyxray/api/v1/clients/subLinks/:subId` → backend `GetSubs`); exercise both.
 - **Vite is pinned to an exact version** (no `^`) in `frontend/package.json` — read the live version there rather than trusting a number quoted here — so local, CI, and release builds resolve identically. Bump it deliberately and verify both `npm run dev` and `npm run build` afterward.
 - **Reusable components are documented in Storybook.** When you add or change a component in `frontend/src/components/`, add or update its co-located `<Component>.stories.tsx` (`tags: ['autodocs']`), documenting props via `argTypes` / `parameters.docs` string metadata rather than JSDoc. CI compile-checks every story via `npm run build-storybook` and runs each story as a headless-browser test via `@storybook/addon-vitest` (`npm run test`, needs `npx playwright install chromium`); run `npm run storybook` to preview locally.
 
@@ -237,7 +237,7 @@ For deeper notes on the frontend toolchain see [`frontend/README.md`](frontend/R
 | `internal/xray/` | Xray-core process lifecycle and gRPC API client |
 | `internal/sub/` | Subscription endpoints (raw, JSON, Clash) |
 | `internal/config/` | Environment-variable helpers, paths, defaults |
-| `x-ui/` | **Runtime data** — db, logs, xray binary, geo files (gitignored) |
+| `easyxray/` | **Runtime data** — db, logs, xray binary, geo files (gitignored) |
 
 ## Testing
 
@@ -253,7 +253,7 @@ Tests live next to the code (`foo.go` ↔ `foo_test.go`); frontend specs and gol
 
 - **Stdlib `testing` only** — no testify. Table-driven with `t.Run` subtests and `t.Helper()` on helpers.
 - **Assert the contract, not internals.** Pin the exact value / typed error / emitted string — not `err != nil` or `len > 0`. A test that still passes when the behavior is broken is worse than no test.
-- **Real dependencies over mocks.** Get a throwaway DB with `dbtest.InitDB(t, filepath.Join(t.TempDir(), "x-ui.db"))` from `internal/database/dbtest`: it copies a once-migrated template (migrating from scratch per test is ~7x slower, worst under `-race`) and closes the DB before `t.TempDir` cleanup (Windows-safe). Keep `database.InitDB` for reopening an existing file or migrating a hand-built legacy DB. Use `httptest` servers for HTTP. The `internal/sub` suite's `initSubDB(t)` is the template.
+- **Real dependencies over mocks.** Get a throwaway DB with `dbtest.InitDB(t, filepath.Join(t.TempDir(), "EasyXray.db"))` from `internal/database/dbtest`: it copies a once-migrated template (migrating from scratch per test is ~7x slower, worst under `-race`) and closes the DB before `t.TempDir` cleanup (Windows-safe). Keep `database.InitDB` for reopening an existing file or migrating a hand-built legacy DB. Use `httptest` servers for HTTP. The `internal/sub` suite's `initSubDB(t)` is the template.
 
 ### Running
 
@@ -303,24 +303,24 @@ CI runs this for you nightly (and on demand) via `.github/workflows/mutation.yml
 
 | Variable | Default | Purpose |
 |----------|---------|---------|
-| `XUI_DEBUG` | `false` | Verbose logs + Gin debug mode + serve `/assets` from disk |
-| `XUI_LOG_LEVEL` | `info` | `debug` / `info` / `notice` / `warning` / `error` |
-| `XUI_DB_FOLDER` | platform default | Where `x-ui.db` lives |
-| `XUI_LOG_FOLDER` | platform default | Where `3xui.log` lives |
-| `XUI_BIN_FOLDER` | `bin` | Where the xray binary, geo files, and xray `config.json` live |
-| `XUI_INIT_WEB_BASE_PATH` | `/` | The initial URI path for the web panel |
-| `XUI_PORT` | persisted `webPort` | Runtime-only web panel listener port override (`1` through `65535`) |
-| `XUI_DB_TYPE` | `sqlite` | Set to `postgres` to use PostgreSQL via `XUI_DB_DSN` |
-| `XUI_DB_DSN` | — | PostgreSQL DSN when `XUI_DB_TYPE=postgres` |
+| `EASYXRAY_DEBUG` | `false` | Verbose logs + Gin debug mode + serve `/assets` from disk |
+| `EASYXRAY_LOG_LEVEL` | `info` | `debug` / `info` / `notice` / `warning` / `error` |
+| `EASYXRAY_DB_FOLDER` | platform default | Where `EasyXray.db` lives |
+| `EASYXRAY_LOG_FOLDER` | platform default | Where `easyxray.log` lives |
+| `EASYXRAY_BIN_FOLDER` | `bin` | Where the xray binary, geo files, and xray `config.json` live |
+| `EASYXRAY_INIT_WEB_BASE_PATH` | `/` | The initial URI path for the web panel |
+| `EASYXRAY_PORT` | persisted `webPort` | Runtime-only web panel listener port override (`1` through `65535`) |
+| `EASYXRAY_DB_TYPE` | `sqlite` | Set to `postgres` to use PostgreSQL via `EASYXRAY_DB_DSN` |
+| `EASYXRAY_DB_DSN` | — | PostgreSQL DSN when `EASYXRAY_DB_TYPE=postgres` |
 
-A valid `XUI_PORT` takes precedence over the database-backed `webPort` for the
+A valid `EASYXRAY_PORT` takes precedence over the database-backed `webPort` for the
 current process without changing the stored setting. Unset, empty, whitespace-only,
 malformed, or out-of-range values fall back to `webPort`; invalid configured values
 also produce a warning. With Docker bridge networking, the published container port
-must match the override, for example `XUI_PORT: "8080"` with `ports: ["8080:8080"]`.
+must match the override, for example `EASYXRAY_PORT: "8080"` with `ports: ["8080:8080"]`.
 
 ## Issues
 
-- Bug reports and feature requests: [GitHub Issues](https://github.com/MHSanaei/3x-ui/issues)
+- Bug reports and feature requests: [GitHub Issues](https://github.com/EasyXrayTeam/EasyXray/issues)
 
-Before filing a bug, include the OS, Go version, panel version (`/panel/api/server/status` or the dashboard footer), and the relevant excerpt from `x-ui/3xui.log`.
+Before filing a bug, include the OS, Go version, panel version (`/easyxray/api/v1/server/status` or the dashboard footer), and the relevant excerpt from `easyxray/easyxray.log`.

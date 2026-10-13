@@ -156,7 +156,7 @@ describe('CommandPalette component', () => {
     });
 
     vi.spyOn(HttpUtil, 'get').mockImplementation(async (url: string) => {
-      if (url.includes('/panel/api/inbounds/options')) {
+      if (url.includes('/easyxray/api/v1/inbounds/options')) {
         return new Msg(true, '', []);
       }
       if (url.includes('search=ali')) {
@@ -236,7 +236,7 @@ describe('CommandPalette component', () => {
 
   it('does not re-trigger loading when adding trailing whitespace to settled query', async () => {
     const getSpy = vi.spyOn(HttpUtil, 'get').mockImplementation(async (url: string) => {
-      if (url.includes('/panel/api/inbounds/options')) return new Msg(true, '', []);
+      if (url.includes('/easyxray/api/v1/inbounds/options')) return new Msg(true, '', []);
       return new Msg(true, '', { items: [] });
     });
 
@@ -274,7 +274,7 @@ describe('CommandPalette component', () => {
         new Msg(true, '', url.includes('/setting/all') ? { subURI: 'https://sub.example/' } : {}),
     );
     vi.spyOn(HttpUtil, 'get').mockImplementation(async (url: string) => {
-      if (url.includes('/panel/api/inbounds/options')) return new Msg(true, '', []);
+      if (url.includes('/easyxray/api/v1/inbounds/options')) return new Msg(true, '', []);
       if (url.includes('search=ali')) {
         return new Msg(true, '', {
           items: [

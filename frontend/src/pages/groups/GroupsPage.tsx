@@ -70,7 +70,7 @@ const GroupRemoveClientsModal = lazy(() => import('./GroupRemoveClientsModal'));
 const JSON_HEADERS = { headers: { 'Content-Type': 'application/json' } } as const;
 
 async function fetchGroups(): Promise<GroupSummary[]> {
-  const msg = await HttpUtil.get('/panel/api/clients/groups', undefined, { silent: true });
+  const msg = await HttpUtil.get('/easyxray/api/v1/clients/groups', undefined, { silent: true });
   if (!msg?.success) throw new Error(msg?.msg || 'Failed to load groups');
   const validated = parseMsg(msg, GroupSummaryListSchema, 'clients/groups');
   return validated.obj ?? [];
@@ -78,7 +78,7 @@ async function fetchGroups(): Promise<GroupSummary[]> {
 
 async function fetchEmailsForGroup(name: string): Promise<string[]> {
   const msg = await HttpUtil.get<string[]>(
-    `/panel/api/clients/groups/${encodeURIComponent(name)}/emails`,
+    `/easyxray/api/v1/clients/groups/${encodeURIComponent(name)}/emails`,
     undefined,
     { silent: true },
   );
@@ -117,7 +117,7 @@ export default function GroupsPage() {
 
   const createMut = useMutation({
     mutationFn: (body: { name: string }) =>
-      HttpUtil.post('/panel/api/clients/groups/create', body, JSON_HEADERS),
+      HttpUtil.post('/easyxray/api/v1/clients/groups/create', body, JSON_HEADERS),
     onSuccess: (msg) => {
       if (msg?.success) invalidate();
     },
@@ -125,7 +125,7 @@ export default function GroupsPage() {
 
   const renameMut = useMutation({
     mutationFn: (body: { oldName: string; newName: string }) =>
-      HttpUtil.post('/panel/api/clients/groups/rename', body, JSON_HEADERS),
+      HttpUtil.post('/easyxray/api/v1/clients/groups/rename', body, JSON_HEADERS),
     onSuccess: (msg) => {
       if (msg?.success) invalidate();
     },
@@ -133,7 +133,7 @@ export default function GroupsPage() {
 
   const deleteMut = useMutation({
     mutationFn: (body: { name: string }) =>
-      HttpUtil.post('/panel/api/clients/groups/delete', body, JSON_HEADERS),
+      HttpUtil.post('/easyxray/api/v1/clients/groups/delete', body, JSON_HEADERS),
     onSuccess: (msg) => {
       if (msg?.success) invalidate();
     },
@@ -141,7 +141,7 @@ export default function GroupsPage() {
 
   const groupResetMut = useMutation({
     mutationFn: (body: { name: string }) =>
-      HttpUtil.post('/panel/api/clients/groups/resetTraffic', body, JSON_HEADERS),
+      HttpUtil.post('/easyxray/api/v1/clients/groups/resetTraffic', body, JSON_HEADERS),
     onSuccess: (msg) => {
       if (msg?.success) invalidate();
     },
@@ -164,7 +164,7 @@ export default function GroupsPage() {
   const allClientsQuery = useQuery<ClientRecord[]>({
     queryKey: keys.clients.all(),
     queryFn: async () => {
-      const msg = await HttpUtil.get('/panel/api/clients/list', undefined, { silent: true });
+      const msg = await HttpUtil.get('/easyxray/api/v1/clients/list', undefined, { silent: true });
       if (!msg?.success) throw new Error(msg?.msg || 'Failed to load clients');
       const validated = parseMsg(msg, ClientRecordListSchema, 'clients/list');
       return validated.obj ?? [];

@@ -122,7 +122,7 @@ export default function AttachClientsModal({
     setSaving(true);
     try {
       const msg = await HttpUtil.post(
-        '/panel/api/clients/bulkAttach',
+        '/easyxray/api/v1/clients/bulkAttach',
         { emails: selectedEmails, inboundIds: targetIds },
         { headers: { 'Content-Type': 'application/json' } },
       );

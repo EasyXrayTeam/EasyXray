@@ -5,21 +5,21 @@ import (
 	"path"
 	"strings"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/web/entity"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/middleware"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/session"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/entity"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/middleware"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/session"
 
 	"github.com/gin-gonic/gin"
 )
 
-// XUIController is the main controller for the X-UI panel, serving the SPA shell.
-type XUIController struct {
+// PanelController is the main controller for the EasyXray panel, serving the SPA shell.
+type PanelController struct {
 	BaseController
 }
 
-// NewXUIController creates a new XUIController and initializes its routes.
-func NewXUIController(g *gin.RouterGroup) *XUIController {
-	a := &XUIController{}
+// NewPanelController creates a new PanelController and initializes its routes.
+func NewPanelController(g *gin.RouterGroup) *PanelController {
+	a := &PanelController{}
 	a.initRouter(g)
 	return a
 }
@@ -28,10 +28,10 @@ func NewXUIController(g *gin.RouterGroup) *XUIController {
 //
 // The HTML routes all hand the same single-page-app shell (index.html) to the
 // browser; React Router takes over and renders the correct page from the URL.
-// The /panel/api, /panel/setting, /panel/xray sub-routers register POST/JSON
-// endpoints on different paths and stay untouched by the shell handler.
-func (a *XUIController) initRouter(g *gin.RouterGroup) {
-	g = g.Group("/panel")
+// The /easyxray/api/v1 sub-router registers POST/JSON endpoints on different
+// paths and stays untouched by the shell handler.
+func (a *PanelController) initRouter(g *gin.RouterGroup) {
+	g = g.Group("/easyxray")
 	g.Use(a.checkLogin)
 	g.Use(middleware.CSRFMiddleware())
 
@@ -52,18 +52,18 @@ func (a *XUIController) initRouter(g *gin.RouterGroup) {
 	g.GET("/csrf-token", a.csrfToken)
 }
 
-// panelSPA serves the React SPA shell. Every GET under /panel/ that isn't an
+// panelSPA serves the React SPA shell. Every GET under /easyxray/ that isn't an
 // API endpoint returns the same index.html — React Router reads the URL and
 // mounts the matching page on the client.
-func (a *XUIController) panelSPA(c *gin.Context) {
+func (a *PanelController) panelSPA(c *gin.Context) {
 	serveDistPage(c, "index.html")
 }
 
 // HandleNoRoutePanelSPA serves the React shell for client-side routes that were
 // not explicitly registered in Gin. It intentionally runs from engine.NoRoute
-// instead of a /panel/*path wildcard so explicit JSON/API routes keep their
+// instead of a /easyxray/*path wildcard so explicit JSON/API routes keep their
 // normal routing semantics.
-func (a *XUIController) HandleNoRoutePanelSPA(c *gin.Context) bool {
+func (a *PanelController) HandleNoRoutePanelSPA(c *gin.Context) bool {
 	if !isPanelSPAFallbackRequest(c) {
 		return false
 	}
@@ -95,7 +95,7 @@ func isPanelSPAFallbackRequest(c *gin.Context) bool {
 	if basePath == "" {
 		basePath = "/"
 	}
-	panelPath := strings.TrimRight(basePath, "/") + "/panel"
+	panelPath := strings.TrimRight(basePath, "/") + "/easyxray"
 
 	reqPath := c.Request.URL.Path
 	if reqPath != panelPath && !strings.HasPrefix(reqPath, panelPath+"/") {
@@ -141,7 +141,7 @@ func acceptsHTML(accept string) bool {
 // csrfToken returns the session CSRF token to authenticated SPA clients.
 // The endpoint is GET (a safe method) so it bypasses CSRFMiddleware itself,
 // but checkLogin still gates the response — anonymous callers get 401/redirect.
-func (a *XUIController) csrfToken(c *gin.Context) {
+func (a *PanelController) csrfToken(c *gin.Context) {
 	token, err := session.EnsureCSRFToken(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, entity.Msg{Success: false, Msg: err.Error()})

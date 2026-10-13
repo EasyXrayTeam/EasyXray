@@ -5,10 +5,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/dbtest"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/xray"
 )
 
 // TestResetClientExpiryTimeByEmail_MultiInbound reproduces #5039: a client
@@ -16,8 +16,8 @@ import (
 // inbound's JSON, so the stale siblings reverted the change on the next sync.
 func TestResetClientExpiryTimeByEmail_MultiInbound(t *testing.T) {
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("EASYXRAY_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "EasyXray.db"))
 
 	db := database.GetDB()
 
@@ -88,8 +88,8 @@ func TestResetClientExpiryTimeByEmail_MultiInbound(t *testing.T) {
 
 func TestSetClientEnableByEmail_MultiInbound(t *testing.T) {
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("EASYXRAY_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "EasyXray.db"))
 
 	db := database.GetDB()
 

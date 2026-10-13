@@ -60,7 +60,7 @@ describe('RuleFormModal edit preserves unsurfaced fields', () => {
     );
 
     await waitFor(() =>
-      expect(HttpUtil.get).toHaveBeenCalledWith('/panel/api/clients/list', undefined, {
+      expect(HttpUtil.get).toHaveBeenCalledWith('/easyxray/api/v1/clients/list', undefined, {
         silent: true,
       }),
     );

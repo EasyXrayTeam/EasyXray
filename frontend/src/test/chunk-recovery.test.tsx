@@ -35,7 +35,7 @@ vi.mock('@/routes', () => ({
   router: { routes: [] },
 }));
 
-const PANEL_HREF = 'http://panel.example/secret/panel/inbounds?tab=1#row';
+const PANEL_HREF = 'http://panel.example/secret/easyxray/inbounds?tab=1#row';
 
 // Same absolute URL main.tsx sees as import.meta.url. Vite rewrites new URL(..., import.meta.url).
 function entryModuleUrl(): string {
@@ -149,14 +149,14 @@ describe('stale chunk recovery', () => {
     reload = vi.fn();
     useStorage(createStorage());
     installLocation(reload);
-    window.X_UI_BASE_PATH = '/secret/';
+    window.EASYXRAY_BASE_PATH = '/secret/';
     document.body.innerHTML = '<div id="message"></div><div id="app"></div>';
     startTracking();
   });
 
   afterEach(() => {
     stopTracking();
-    delete window.X_UI_BASE_PATH;
+    delete window.EASYXRAY_BASE_PATH;
     vi.clearAllMocks();
   });
 
@@ -217,7 +217,7 @@ describe('stale chunk recovery', () => {
   });
 
   test('another base path and a later entry bundle each recover once', async () => {
-    window.X_UI_BASE_PATH = '/alpha/';
+    window.EASYXRAY_BASE_PATH = '/alpha/';
     await boot();
     window.dispatchEvent(preloadEvent());
     expect(reload).toHaveBeenCalledTimes(1);
@@ -226,7 +226,7 @@ describe('stale chunk recovery', () => {
     expect(alphaKey).toContain(entryModuleUrl());
 
     vi.resetModules();
-    window.X_UI_BASE_PATH = '/beta/';
+    window.EASYXRAY_BASE_PATH = '/beta/';
     await boot();
     window.dispatchEvent(preloadEvent());
     expect(reload).toHaveBeenCalledTimes(2);

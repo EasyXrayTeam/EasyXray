@@ -1,25 +1,56 @@
 ---
 title: API Reference
-description: The 3x-ui panel REST API — authentication, inbounds, clients, server stats, and more, generated from the OpenAPI spec.
+description: The EasyXray panel REST API — namespace, authentication, inbounds, clients, server stats, and more, generated from the OpenAPI spec.
 icon: Webhook
 ---
 
-The 3x-ui panel exposes a REST API for automation. These pages are generated from
-the panel's OpenAPI specification, so they always match the documented schema.
+The EasyXray panel exposes a REST API for automation. The pages in this section
+are generated from the panel's OpenAPI specification, so they always match the
+schema the panel actually serves.
+
+## Namespace
+
+Everything the panel serves lives under the **configured web base path**
+(`webBasePath`), followed by `easyxray`:
+
+| Surface     | Path                                     |
+| ----------- | ---------------------------------------- |
+| Panel UI    | `<basePath>/easyxray/…`                  |
+| REST API    | `<basePath>/easyxray/api/v1/…`           |
+| WebSocket   | `<basePath>/easyxray/ws`                 |
+| OpenAPI spec | `<basePath>/easyxray/api/v1/openapi.json` |
+
+With the default base path (`/`) that means, for example:
+
+```text
+GET  /easyxray/api/v1/inbounds/list
+POST /easyxray/api/v1/clients/add
+GET  /easyxray/api/v1/server/status
+GET  /easyxray/api/v1/openapi.json
+```
+
+<Callout type="warn">
+  **The `easyxray` namespace is not aliased.** Earlier releases of the upstream
+  X-UI/3x-ui panel exposed these endpoints under `/panel/api/…`; EasyXray does
+  **not** answer on that prefix, and no compatibility redirect is installed. Any
+  script, bot, or dashboard you wrote against the old paths must be updated to
+  the `/easyxray/api/v1/…` routes above.
+</Callout>
 
 ## Authentication
 
-Requests authenticate with either a **session cookie** (from `POST /login`) or a
-**Bearer token**:
+Requests authenticate with either a **session cookie** — set when you sign in to
+the panel, and named `easyxray` — or a **Bearer token**:
 
 ```text
 Authorization: Bearer <token>
 ```
 
-Create API tokens in the panel; they are full-admin credentials, so store them
-securely. See [API Tokens](/docs/reference/api/api-tokens).
+Create API tokens in **Settings → Security → API Token**; they are full-admin
+credentials, so store them like you would the panel password. See
+[API Tokens](/docs/reference/api/api-tokens).
 
-Build an authenticated request for any endpoint below:
+Build an authenticated request for any endpoint in this section:
 
 <ApiRequestBuilder />
 
@@ -35,6 +66,8 @@ Build an authenticated request for any endpoint below:
 </Cards>
 
 <Callout type="info">
-  This reference is regenerated from `public/openapi.json` with `pnpm gen:api`.
-  Don't edit the generated tag pages by hand.
+  The per-area pages are regenerated from the committed `public/openapi.json`
+  spec with `pnpm gen:api` (the spec itself is published by the panel repo's
+  `frontend/scripts/build-openapi.mjs`). Don't edit the generated tag pages by
+  hand — change the spec source and regenerate.
 </Callout>

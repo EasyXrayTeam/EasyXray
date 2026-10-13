@@ -64,7 +64,7 @@ export default function AttachExistingClientsModal({
   useEffect(() => {
     if (!open || !target) return;
     let cancelled = false;
-    HttpUtil.get('/panel/api/clients/list', undefined, { silent: true })
+    HttpUtil.get('/easyxray/api/v1/clients/list', undefined, { silent: true })
       .then((msg) => {
         if (cancelled) return;
         const list = Array.isArray(msg?.obj) ? (msg.obj as RawClient[]) : [];
@@ -151,7 +151,7 @@ export default function AttachExistingClientsModal({
     setSaving(true);
     try {
       const msg = await HttpUtil.post(
-        '/panel/api/clients/bulkAttach',
+        '/easyxray/api/v1/clients/bulkAttach',
         { emails: selectedEmails, inboundIds: [target.id] },
         { headers: { 'Content-Type': 'application/json' } },
       );

@@ -1,5 +1,5 @@
-// Pure builders for 3x-ui panel API requests. The panel exposes every endpoint
-// under /panel/api/* and authenticates with `Authorization: Bearer <token>`
+// Pure builders for EasyXray panel API requests. The panel exposes every endpoint
+// under /easyxray/api/v1/* and authenticates with `Authorization: Bearer <token>`
 // (reference/api/authentication). Emits a ready cURL command and a fetch()
 // snippet. No React/DOM imports.
 
@@ -8,7 +8,7 @@ export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export interface ApiRequestInput {
   baseUrl: string;
   token: string;
-  path: string; // e.g. /panel/api/inbounds/list
+  path: string; // e.g. /easyxray/api/v1/inbounds/list
   method: HttpMethod;
   body?: string; // JSON string, for POST/PUT
 }

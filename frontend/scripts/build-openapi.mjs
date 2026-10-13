@@ -16,7 +16,7 @@ const websocketEvents = buildWebSocketEvents(EXAMPLES);
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const outPath = join(__dirname, '..', 'public', 'openapi.json');
 
-const PANEL_VERSION = process.env.X_UI_VERSION || '3.x';
+const PANEL_VERSION = process.env.EASYXRAY_VERSION || '3.x';
 
 const SECURITY_SCHEMES = {
   bearerAuth: {
@@ -28,7 +28,7 @@ const SECURITY_SCHEMES = {
   cookieAuth: {
     type: 'apiKey',
     in: 'cookie',
-    name: '3x-ui',
+    name: 'EasyXray',
     description: 'Session cookie set by POST /login. Browser-only.',
   },
 };
@@ -329,7 +329,7 @@ export function buildSpec() {
       paths[openApiPath][ep.method.toLowerCase()] = buildOperation(ep, tag);
     }
   }
-  paths['/ws'].get['x-websocket-events'] = websocketEvents;
+  paths['/easyxray/ws'].get['x-websocket-events'] = websocketEvents;
 
   const tags = sections.map((s) => ({
     name: s.title,
@@ -339,10 +339,10 @@ export function buildSpec() {
   return {
     openapi: '3.0.3',
     info: {
-      title: '3X-UI Panel API',
+      title: 'EasyXray Panel API',
       version: PANEL_VERSION,
       description:
-        'Programmatic interface to a 3X-UI panel. Authenticate either by logging in (cookie) or with an API token from Settings → Security → API Token (Bearer). All endpoints under /panel/api/* honour both modes — an API token is a full-admin credential, so treat it like the panel password.',
+        'Programmatic interface to an EasyXray panel. Authenticate either by logging in (cookie) or with an API token from Settings → Security → API Token (Bearer). All endpoints under /easyxray/api/v1/* honour both modes — an API token is a full-admin credential, so treat it like the panel password.',
     },
     servers: [{ url: '/', description: 'Current panel (basePath aware)' }],
     components: {

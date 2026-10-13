@@ -11,14 +11,14 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/xray"
 )
 
 func TestClientWeeklyRenewMigration_Postgres(t *testing.T) {
-	dsn := strings.TrimSpace(os.Getenv("XUI_DB_DSN"))
-	if dsn == "" || os.Getenv("XUI_DB_TYPE") != "postgres" {
-		t.Skip("set XUI_DB_TYPE=postgres and XUI_DB_DSN to run the weekly migration test")
+	dsn := strings.TrimSpace(os.Getenv("EASYXRAY_DB_DSN"))
+	if dsn == "" || os.Getenv("EASYXRAY_DB_TYPE") != "postgres" {
+		t.Skip("set EASYXRAY_DB_TYPE=postgres and EASYXRAY_DB_DSN to run the weekly migration test")
 	}
 	admin, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -52,7 +52,7 @@ func TestClientWeeklyRenewMigration_Postgres(t *testing.T) {
 				u.RawQuery = query.Encode()
 				scoped = u.String()
 			}
-			t.Setenv("XUI_DB_DSN", scoped)
+			t.Setenv("EASYXRAY_DB_DSN", scoped)
 			legacy, err := gorm.Open(postgres.Open(scoped), &gorm.Config{})
 			if err != nil {
 				t.Fatal(err)

@@ -82,7 +82,7 @@ export default function CloneInboundModal({
       const results: { ok: boolean; reason: string }[] = [];
       for (const target of targets) {
         const msg = await HttpUtil.post(
-          '/panel/api/inbounds/add',
+          '/easyxray/api/v1/inbounds/add',
           buildClonePayload(
             dbInbound,
             pickClonePort(portsInUse.get(target)),

@@ -27,7 +27,7 @@ interface UseSecurityActionsArgs {
 
 /*
  * Server-side TLS / Reality key + certificate generation handlers for the
- * inbound modal's security tab. Each talks to a /panel server endpoint and
+ * inbound modal's security tab. Each talks to an /easyxray server endpoint and
  * writes the result back into the form. Lifted out of InboundFormModal so
  * the modal body stays focused on orchestration.
  */
@@ -47,7 +47,7 @@ export function useSecurityActions({
   const genRealityKeypair = async () => {
     setSaving(true);
     try {
-      const msg = await HttpUtil.get('/panel/api/server/getNewX25519Cert');
+      const msg = await HttpUtil.get('/easyxray/api/v1/server/getNewX25519Cert');
       if (msg?.success) {
         const obj = msg.obj as { privateKey: string; publicKey: string };
         setValue('streamSettings.realitySettings.privateKey', obj.privateKey);
@@ -66,7 +66,7 @@ export function useSecurityActions({
   const genMldsa65 = async () => {
     setSaving(true);
     try {
-      const msg = await HttpUtil.get('/panel/api/server/getNewmldsa65');
+      const msg = await HttpUtil.get('/easyxray/api/v1/server/getNewmldsa65');
       if (msg?.success) {
         const obj = msg.obj as { seed: string; verify: string };
         setValue('streamSettings.realitySettings.mldsa65Seed', obj.seed);
@@ -121,7 +121,7 @@ export function useSecurityActions({
     setScanning(true);
     try {
       const msg = await HttpUtil.post<RealityScanResult>(
-        '/panel/api/server/scanRealityTarget',
+        '/easyxray/api/v1/server/scanRealityTarget',
         { target, sni, xver, allowPrivate },
         { silent: true },
       );
@@ -162,7 +162,7 @@ export function useSecurityActions({
 
   const scanRealityCandidates = async (targets?: string): Promise<RealityScanResult[]> => {
     const msg = await HttpUtil.post<RealityScanResult[]>(
-      '/panel/api/server/scanRealityTargets',
+      '/easyxray/api/v1/server/scanRealityTargets',
       targets ? { targets } : {},
       { silent: true },
     );
@@ -191,7 +191,7 @@ export function useSecurityActions({
     const sni = getValues('streamSettings.tlsSettings.serverName');
     setSaving(true);
     try {
-      const msg = await HttpUtil.post('/panel/api/server/getNewEchCert', { sni });
+      const msg = await HttpUtil.post('/easyxray/api/v1/server/getNewEchCert', { sni });
       if (msg?.success) {
         const obj = msg.obj as { echServerKeys: string; echConfigList: string };
         setValue('streamSettings.tlsSettings.echServerKeys', obj.echServerKeys);
@@ -228,7 +228,10 @@ export function useSecurityActions({
     }
     setSaving(true);
     try {
-      const msg = await HttpUtil.post('/panel/api/server/getCertHash', { certFile, certContent });
+      const msg = await HttpUtil.post('/easyxray/api/v1/server/getCertHash', {
+        certFile,
+        certContent,
+      });
       if (!msg?.success) {
         messageApi.warning(msg?.msg || t('pages.inbounds.setDefaultCertEmpty'));
         return;
@@ -269,7 +272,7 @@ export function useSecurityActions({
     setSaving(true);
     try {
       const msg = await HttpUtil.post(
-        '/panel/api/server/getRemoteCertHash',
+        '/easyxray/api/v1/server/getRemoteCertHash',
         { server: target, allowPrivate },
         { silent: true },
       );
@@ -311,8 +314,10 @@ export function useSecurityActions({
        */
       const msg =
         typeof nodeId === 'number'
-          ? await HttpUtil.get(`/panel/api/nodes/webCert/${nodeId}`, undefined, { silent: true })
-          : await HttpUtil.post('/panel/api/setting/all', undefined, { silent: true });
+          ? await HttpUtil.get(`/easyxray/api/v1/nodes/webCert/${nodeId}`, undefined, {
+              silent: true,
+            })
+          : await HttpUtil.post('/easyxray/api/v1/setting/all', undefined, { silent: true });
       if (!msg?.success) {
         messageApi.warning(msg?.msg || t('pages.inbounds.setDefaultCertEmpty'));
         return;
@@ -361,7 +366,7 @@ export function useSecurityActions({
     if (next === 'reality') {
       randomizeSpiderX();
       try {
-        const msg = await HttpUtil.get('/panel/api/server/getNewX25519Cert');
+        const msg = await HttpUtil.get('/easyxray/api/v1/server/getNewX25519Cert');
         if (msg?.success) {
           const obj = msg.obj as { privateKey: string; publicKey: string };
           setValue('streamSettings.realitySettings.privateKey', obj.privateKey);

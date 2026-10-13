@@ -91,7 +91,7 @@ describe('CloneInboundModal', () => {
     clickOk();
     await waitFor(() => expect(postSpy).toHaveBeenCalledTimes(1));
 
-    expect(postSpy.mock.calls[0][0]).toBe('/panel/api/inbounds/add');
+    expect(postSpy.mock.calls[0][0]).toBe('/easyxray/api/v1/inbounds/add');
     const body = postedBodies()[0];
     expect(body.nodeId).toBe(2);
     expect(body.enable).toBe(false);

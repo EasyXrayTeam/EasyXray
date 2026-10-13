@@ -17,9 +17,9 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/crypto"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/netsafe"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/util/crypto"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/util/netsafe"
 )
 
 type generationProbeTransport struct {
@@ -62,7 +62,7 @@ func TestCredentialRotatingTransportDropsOldPoolBeforeNextRequest(t *testing.T) 
 	selected.Store(newTransport)
 	InvalidateMasterClientConnections()
 
-	req := httptest.NewRequest(http.MethodGet, "https://node.example.test/panel/api/server/status", nil)
+	req := httptest.NewRequest(http.MethodGet, "https://node.example.test/easyxray/api/v1/server/status", nil)
 	resp, err := rotating.RoundTrip(req)
 	if err != nil {
 		t.Fatalf("RoundTrip after credential rotation: %v", err)

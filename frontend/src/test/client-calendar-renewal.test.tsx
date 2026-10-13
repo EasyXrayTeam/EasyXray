@@ -54,7 +54,7 @@ it('preserves monthly clients, previews backend dates, and saves exclusive weekl
       expect(document.body.textContent).toContain('2029-12-31 23:59:59 UTC+08:00'),
     );
     expect(post).toHaveBeenCalledWith(
-      '/panel/api/clients/renewalPreview',
+      '/easyxray/api/v1/clients/renewalPreview',
       expect.objectContaining({ resetMax: 3, resetCount: 2 }),
       expect.anything(),
     );
@@ -75,7 +75,7 @@ it('preserves monthly clients, previews backend dates, and saves exclusive weekl
     chooseSelectOption(weekday.id, 'Sunday');
     await waitFor(() =>
       expect(post).toHaveBeenCalledWith(
-        '/panel/api/clients/renewalPreview',
+        '/easyxray/api/v1/clients/renewalPreview',
         expect.objectContaining({ reset: 0, resetDay: 0, resetWeekday: 7 }),
         expect.anything(),
       ),

@@ -121,7 +121,10 @@ export default function InboundList({
     try {
       const formData = new FormData();
       formData.append('enable', String(next));
-      const msg = await HttpUtil.post(`/panel/api/inbounds/setEnable/${dbInbound.id}`, formData);
+      const msg = await HttpUtil.post(
+        `/easyxray/api/v1/inbounds/setEnable/${dbInbound.id}`,
+        formData,
+      );
       if (!msg?.success) dbInbound.enable = previous;
     } catch {
       dbInbound.enable = previous;

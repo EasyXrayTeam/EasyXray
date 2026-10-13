@@ -65,7 +65,7 @@ func (pr *pair) bulkAttach(emails []string, masterInboundID int) {
 		Attached []string `json:"attached"`
 		Errors   []string `json:"errors"`
 	}
-	obj := pr.master.call(http.MethodPost, "/panel/api/clients/bulkAttach", map[string]any{"emails": emails, "inboundIds": []int{masterInboundID}})
+	obj := pr.master.call(http.MethodPost, "/easyxray/api/v1/clients/bulkAttach", map[string]any{"emails": emails, "inboundIds": []int{masterInboundID}})
 	if err := json.Unmarshal(obj, &res); err != nil {
 		pr.t.Fatalf("decode bulkAttach: %v", err)
 	}
@@ -108,13 +108,13 @@ func runNodeSyncScenarios(t *testing.T, bin, scope string) {
 		unmanagedPort = freePort(t)
 		localPort     = freePort(t)
 	)
-	node.call(http.MethodPost, "/panel/api/inbounds/add", vlessInbound("pre-existing", adoptedPort, nil))
+	node.call(http.MethodPost, "/easyxray/api/v1/inbounds/add", vlessInbound("pre-existing", adoptedPort, nil))
 
-	local := master.call(http.MethodPost, "/panel/api/inbounds/add", vlessInbound("local-pool", localPort, nil))
+	local := master.call(http.MethodPost, "/easyxray/api/v1/inbounds/add", vlessInbound("local-pool", localPort, nil))
 	var localIb inboundView
 	_ = json.Unmarshal(local, &localIb)
 	for _, email := range emailRange("p", 1, 45) {
-		master.call(http.MethodPost, "/panel/api/clients/add", map[string]any{
+		master.call(http.MethodPost, "/easyxray/api/v1/clients/add", map[string]any{
 			"client": map[string]any{"email": email, "enable": true}, "inboundIds": []int{localIb.Id},
 		})
 	}
@@ -122,7 +122,7 @@ func runNodeSyncScenarios(t *testing.T, bin, scope string) {
 	var nodeView struct {
 		Id int `json:"id"`
 	}
-	obj := master.call(http.MethodPost, "/panel/api/nodes/add", map[string]any{
+	obj := master.call(http.MethodPost, "/easyxray/api/v1/nodes/add", map[string]any{
 		"name": "n1", "scheme": "http", "address": "127.0.0.1", "port": node.port, "basePath": "/",
 		"apiToken": linkToken, "enable": true, "allowPrivateAddress": true,
 	})
@@ -146,7 +146,7 @@ func runNodeSyncScenarios(t *testing.T, bin, scope string) {
 
 	t.Run("an inbound created on the master for the node lands there with its clients", func(t *testing.T) {
 		pr.t = t
-		obj := master.call(http.MethodPost, "/panel/api/inbounds/add",
+		obj := master.call(http.MethodPost, "/easyxray/api/v1/inbounds/add",
 			vlessInbound("made-on-master", madePort, &pr.nodeID, vlessClient("m1"), vlessClient("m2")))
 		var ib inboundView
 		_ = json.Unmarshal(obj, &ib)
@@ -160,7 +160,7 @@ func runNodeSyncScenarios(t *testing.T, bin, scope string) {
 		pr.t = t
 		body := vlessInbound("renamed-on-master", madePort, &pr.nodeID)
 		body["settings"] = `{"decryption":"none"}`
-		master.call(http.MethodPost, "/panel/api/inbounds/update/"+strconv.Itoa(madeID), body)
+		master.call(http.MethodPost, "/easyxray/api/v1/inbounds/update/"+strconv.Itoa(madeID), body)
 		pr.waitNode("node shows the new remark with both clients", madePort, func(ib inboundView) bool {
 			return ib.Remark == "renamed-on-master" && hasAll(ib.emails(), "m1", "m2")
 		})
@@ -191,7 +191,7 @@ func runNodeSyncScenarios(t *testing.T, bin, scope string) {
 			t.Fatalf("master inbound has no p1: %v", mib.emails())
 		}
 		entry["enable"] = false
-		master.call(http.MethodPost, "/panel/api/clients/update/p1", entry)
+		master.call(http.MethodPost, "/easyxray/api/v1/clients/update/p1", entry)
 		pr.waitNode("node p1 disabled", madePort, func(ib inboundView) bool {
 			c := ib.client("p1")
 			return c != nil && c["enable"] == false
@@ -200,7 +200,7 @@ func runNodeSyncScenarios(t *testing.T, bin, scope string) {
 
 	t.Run("detaching a client from the node inbound removes it there", func(t *testing.T) {
 		pr.t = t
-		master.call(http.MethodPost, "/panel/api/clients/p2/detach", map[string]any{"inboundIds": []int{madeID}})
+		master.call(http.MethodPost, "/easyxray/api/v1/clients/p2/detach", map[string]any{"inboundIds": []int{madeID}})
 		pr.waitNode("node drops p2", madePort, func(ib inboundView) bool {
 			return ib.client("p2") == nil && ib.client("p3") != nil
 		})
@@ -208,7 +208,7 @@ func runNodeSyncScenarios(t *testing.T, bin, scope string) {
 
 	t.Run("deleting a client on the master removes it from the node", func(t *testing.T) {
 		pr.t = t
-		master.call(http.MethodPost, "/panel/api/clients/del/p4", nil)
+		master.call(http.MethodPost, "/easyxray/api/v1/clients/del/p4", nil)
 		pr.waitNode("node drops p4", adoptedPort, func(ib inboundView) bool {
 			return ib.client("p4") == nil && ib.client("p5") != nil
 		})
@@ -216,23 +216,23 @@ func runNodeSyncScenarios(t *testing.T, bin, scope string) {
 
 	t.Run("switching the inbound off on the master switches it off on the node", func(t *testing.T) {
 		pr.t = t
-		master.call(http.MethodPost, "/panel/api/inbounds/setEnable/"+strconv.Itoa(madeID), map[string]any{"enable": false})
+		master.call(http.MethodPost, "/easyxray/api/v1/inbounds/setEnable/"+strconv.Itoa(madeID), map[string]any{"enable": false})
 		pr.waitNode("node inbound disabled", madePort, func(ib inboundView) bool { return !ib.Enable })
 	})
 
 	t.Run("node traffic reaches the master and a master reset clears the node", func(t *testing.T) {
 		pr.t = t
-		node.call(http.MethodPost, "/panel/api/clients/updateTraffic/p5", map[string]any{"upload": 1000, "download": 2000})
+		node.call(http.MethodPost, "/easyxray/api/v1/clients/updateTraffic/p5", map[string]any{"upload": 1000, "download": 2000})
 		usage := func(p *panel) int64 {
 			var tr struct{ Up, Down int64 }
-			_ = json.Unmarshal(p.call(http.MethodGet, "/panel/api/clients/traffic/p5", nil), &tr)
+			_ = json.Unmarshal(p.call(http.MethodGet, "/easyxray/api/v1/clients/traffic/p5", nil), &tr)
 			return tr.Up + tr.Down
 		}
 		eventually(t, settleTimeout, "master sees p5's node traffic", func() (bool, string) {
 			u := usage(master)
 			return u == 3000, fmt.Sprintf("master p5 usage %d", u)
 		})
-		master.call(http.MethodPost, "/panel/api/clients/resetTraffic/p5", nil)
+		master.call(http.MethodPost, "/easyxray/api/v1/clients/resetTraffic/p5", nil)
 		eventually(t, settleTimeout, "node p5 usage reset", func() (bool, string) {
 			u := usage(node)
 			return u == 0, fmt.Sprintf("node p5 usage %d", u)
@@ -245,10 +245,10 @@ func runNodeSyncScenarios(t *testing.T, bin, scope string) {
 
 	t.Run("an inbound deleted on the node is removed from the master too", func(t *testing.T) {
 		pr.t = t
-		master.call(http.MethodPost, "/panel/api/inbounds/add", vlessInbound("deleted-on-node", lostPort, &pr.nodeID, vlessClient("l1")))
+		master.call(http.MethodPost, "/easyxray/api/v1/inbounds/add", vlessInbound("deleted-on-node", lostPort, &pr.nodeID, vlessClient("l1")))
 		pr.waitNode("node holds the inbound", lostPort, func(ib inboundView) bool { return ib.client("l1") != nil })
 		nib, _ := pr.nodeInbound(lostPort)
-		node.call(http.MethodPost, "/panel/api/inbounds/del/"+strconv.Itoa(nib.Id), nil)
+		node.call(http.MethodPost, "/easyxray/api/v1/inbounds/del/"+strconv.Itoa(nib.Id), nil)
 		eventually(t, settleTimeout, "master mirrors the node-side delete (#6219)", func() (bool, string) {
 			_, still := pr.masterInbound(lostPort)
 			return !still, "master still has the inbound"
@@ -257,11 +257,11 @@ func runNodeSyncScenarios(t *testing.T, bin, scope string) {
 
 	t.Run("deleting the inbound on the master removes it from the node", func(t *testing.T) {
 		pr.t = t
-		obj := master.call(http.MethodPost, "/panel/api/inbounds/add", vlessInbound("deleted-on-master", droppedPort, &pr.nodeID, vlessClient("d1")))
+		obj := master.call(http.MethodPost, "/easyxray/api/v1/inbounds/add", vlessInbound("deleted-on-master", droppedPort, &pr.nodeID, vlessClient("d1")))
 		var ib inboundView
 		_ = json.Unmarshal(obj, &ib)
 		pr.waitNode("node holds the inbound", droppedPort, func(ib inboundView) bool { return ib.client("d1") != nil })
-		master.call(http.MethodPost, "/panel/api/inbounds/del/"+strconv.Itoa(ib.Id), nil)
+		master.call(http.MethodPost, "/easyxray/api/v1/inbounds/del/"+strconv.Itoa(ib.Id), nil)
 		pr.waitNodeAbsent("node drops the inbound", droppedPort)
 	})
 
@@ -293,12 +293,12 @@ func runNodeSyncScenarios(t *testing.T, bin, scope string) {
 	t.Run("an inbound created and edited while the node is down lands once it is back", func(t *testing.T) {
 		pr.t = t
 		node.stop()
-		obj := master.call(http.MethodPost, "/panel/api/inbounds/add", vlessInbound("made-while-down", offlinePort, &pr.nodeID, vlessClient("o1")))
+		obj := master.call(http.MethodPost, "/easyxray/api/v1/inbounds/add", vlessInbound("made-while-down", offlinePort, &pr.nodeID, vlessClient("o1")))
 		var ib inboundView
 		_ = json.Unmarshal(obj, &ib)
 		body := vlessInbound("edited-while-down", offlinePort, &pr.nodeID)
 		body["settings"] = `{"decryption":"none"}`
-		master.call(http.MethodPost, "/panel/api/inbounds/update/"+strconv.Itoa(ib.Id), body)
+		master.call(http.MethodPost, "/easyxray/api/v1/inbounds/update/"+strconv.Itoa(ib.Id), body)
 		node.start()
 		pr.waitNode("node holds the edited inbound with o1", offlinePort, func(ib inboundView) bool {
 			return ib.Remark == "edited-while-down" && ib.client("o1") != nil
@@ -307,7 +307,7 @@ func runNodeSyncScenarios(t *testing.T, bin, scope string) {
 
 	t.Run("a change made while the node is disabled on the master lands once it is re-enabled", func(t *testing.T) {
 		pr.t = t
-		nodePath := "/panel/api/nodes/setEnable/" + strconv.Itoa(pr.nodeID)
+		nodePath := "/easyxray/api/v1/nodes/setEnable/" + strconv.Itoa(pr.nodeID)
 		master.call(http.MethodPost, nodePath, map[string]any{"enable": false})
 		pr.bulkAttach([]string{"p6"}, madeID)
 		time.Sleep(6 * time.Second)
@@ -326,11 +326,11 @@ func runNodeSyncScenarios(t *testing.T, bin, scope string) {
 				selected = append(selected, ib.Tag)
 			}
 		}
-		master.call(http.MethodPost, "/panel/api/nodes/update/"+strconv.Itoa(pr.nodeID), map[string]any{
+		master.call(http.MethodPost, "/easyxray/api/v1/nodes/update/"+strconv.Itoa(pr.nodeID), map[string]any{
 			"name": "n1", "scheme": "http", "address": "127.0.0.1", "port": node.port, "basePath": "/",
 			"enable": true, "allowPrivateAddress": true, "inboundSyncMode": "selected", "inboundTags": selected,
 		})
-		node.call(http.MethodPost, "/panel/api/inbounds/add", vlessInbound("node-only", unmanagedPort, nil, vlessClient("u1")))
+		node.call(http.MethodPost, "/easyxray/api/v1/inbounds/add", vlessInbound("node-only", unmanagedPort, nil, vlessClient("u1")))
 		pr.bulkAttach([]string{"p7"}, madeID)
 		pr.waitNode("selected inbound still converges", madePort, func(ib inboundView) bool { return ib.client("p7") != nil })
 		time.Sleep(12 * time.Second)

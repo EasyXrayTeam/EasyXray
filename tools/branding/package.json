@@ -1,0 +1,13 @@
+{
+  "name": "easyxray-branding-tools",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Rasterizes the EasyXray brand mark into the PNG/ICO assets the panel and favicons use.",
+  "scripts": {
+    "generate": "node generate-icons.mjs"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.0"
+  }
+}

@@ -1,17 +1,17 @@
 ---
 title: База данных
-description: Хранилища данных 3x-ui — SQLite (по умолчанию) и PostgreSQL — путь к базе данных, пул соединений и миграция с SQLite на PostgreSQL.
+description: Хранилища данных EasyXray — SQLite (по умолчанию) и PostgreSQL — путь к базе данных, пул соединений и миграция с SQLite на PostgreSQL.
 icon: Database
 ---
 
-3x-ui хранит всё — входящие подключения, клиентов, настройки — в базе данных.
+EasyXray хранит всё — входящие подключения, клиентов, настройки — в базе данных.
 Бэкенд выбирается во время установки; оба являются полноценными.
 
 ## SQLite (по умолчанию)
 
-Один файл по пути `/etc/x-ui/x-ui.db`. Никакой настройки не требуется, идеально
+Один файл по пути `/etc/easyxray/EasyXray.db`. Никакой настройки не требуется, идеально
 подходит для небольших и средних развёртываний. Папку можно изменить с помощью
-[`XUI_DB_FOLDER`](/docs/reference/env-vars#database) (в Windows по умолчанию она
+[`EASYXRAY_DB_FOLDER`](/docs/reference/env-vars#database) (в Windows по умолчанию она
 располагается рядом с бинарным файлом).
 
 ## PostgreSQL
@@ -19,20 +19,20 @@ icon: Database
 Рекомендуется при большом количестве клиентов или конфигурациях с несколькими
 узлами. Инсталлятор может установить PostgreSQL локально за вас либо принять DSN
 к уже существующему серверу. Во время выполнения бэкенд выбирается через
-переменные окружения, которые инсталлятор записывает в `/etc/default/x-ui`:
+переменные окружения, которые инсталлятор записывает в `/etc/default/easyxray`:
 
-```bash title="/etc/default/x-ui"
-XUI_DB_TYPE=postgres
-XUI_DB_DSN=postgres://xui:password@127.0.0.1:5432/xui?sslmode=disable
+```bash title="/etc/default/easyxray"
+EASYXRAY_DB_TYPE=postgres
+EASYXRAY_DB_DSN=postgres://easyxray:password@127.0.0.1:5432/easyxray?sslmode=disable
 ```
 
-Настройте пул соединений с помощью `XUI_DB_MAX_OPEN_CONNS` и
-`XUI_DB_MAX_IDLE_CONNS`.
+Настройте пул соединений с помощью `EASYXRAY_DB_MAX_OPEN_CONNS` и
+`EASYXRAY_DB_MAX_IDLE_CONNS`.
 
 ### Docker
 
 `docker compose up -d` продолжает использовать SQLite. Чтобы запустить со
-встроенным сервисом PostgreSQL, раскомментируйте две строки `XUI_DB_*` в
+встроенным сервисом PostgreSQL, раскомментируйте две строки `EASYXRAY_DB_*` в
 `docker-compose.yml` и запустите с профилем:
 
 ```bash
@@ -44,13 +44,13 @@ docker compose --profile postgres up -d
 Перенесите существующую установку SQLite на PostgreSQL встроенной командой:
 
 ```bash
-x-ui migrate-db --dsn "postgres://xui:password@127.0.0.1:5432/xui?sslmode=disable"
+easyxray migrate-db --dsn "postgres://easyxray:password@127.0.0.1:5432/easyxray?sslmode=disable"
 ```
 
-Затем задайте `XUI_DB_TYPE` и `XUI_DB_DSN` в `/etc/default/x-ui` и перезапустите:
+Затем задайте `EASYXRAY_DB_TYPE` и `EASYXRAY_DB_DSN` в `/etc/default/easyxray` и перезапустите:
 
 ```bash
-systemctl restart x-ui
+systemctl restart easyxray
 ```
 
 <Callout type="info">

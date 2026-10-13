@@ -49,8 +49,10 @@ export default function TuicFields() {
     try {
       const msg =
         typeof nodeId === 'number'
-          ? await HttpUtil.get(`/panel/api/nodes/webCert/${nodeId}`, undefined, { silent: true })
-          : await HttpUtil.post('/panel/api/setting/all', undefined, { silent: true });
+          ? await HttpUtil.get(`/easyxray/api/v1/nodes/webCert/${nodeId}`, undefined, {
+              silent: true,
+            })
+          : await HttpUtil.post('/easyxray/api/v1/setting/all', undefined, { silent: true });
       if (!msg?.success) {
         messageApi.warning(msg?.msg || t('pages.inbounds.setDefaultCertEmpty'));
         return;

@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" width="400" height="200" role="img" aria-labelledby="ex-title">
+  <!-- Light-background variant: same mark, wordmark in the disc's near-black.
+       The mark keeps easyxray-mark.svg's geometry with weights doubled for the
+       128px render. -->
+  <title id="ex-title">EasyXray</title>
+  <defs>
+    <radialGradient id="ex-disc" cx="46%" cy="38%" r="82%">
+      <stop offset="0%" stop-color="#12314C"/>
+      <stop offset="48%" stop-color="#08111F"/>
+      <stop offset="100%" stop-color="#03060C"/>
+    </radialGradient>
+    <linearGradient id="ex-orbit" x1="8%" y1="0%" x2="92%" y2="100%">
+      <stop offset="0%" stop-color="#EAFEFF"/>
+      <stop offset="46%" stop-color="#4FD8EE"/>
+      <stop offset="100%" stop-color="#12657E"/>
+    </linearGradient>
+    <linearGradient id="ex-glyph" x1="34%" y1="0%" x2="72%" y2="100%">
+      <stop offset="0%" stop-color="#F2FEFF"/>
+      <stop offset="42%" stop-color="#6FEBFA"/>
+      <stop offset="100%" stop-color="#158FA8"/>
+    </linearGradient>
+    <radialGradient id="ex-bloom" cx="50%" cy="50%" r="50%">
+      <stop offset="0.78" stop-color="#4FD8EE" stop-opacity="0"/>
+      <stop offset="0.885" stop-color="#4FD8EE" stop-opacity="0.26"/>
+      <stop offset="0.95" stop-color="#3FB6D4" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#2E8BA8" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="ex-clip"><circle cx="256" cy="256" r="224"/></clipPath>
+  </defs>
+
+  <g transform="translate(82 98) scale(0.285714) translate(-256 -256)">
+    <circle cx="256" cy="256" r="224" fill="url(#ex-disc)"/>
+    <g clip-path="url(#ex-clip)">
+      <g fill="none" stroke="url(#ex-orbit)" stroke-linecap="round">
+        <ellipse cx="256" cy="256" rx="174" ry="68" stroke-width="40" opacity="0.14"/>
+        <ellipse cx="256" cy="256" rx="174" ry="68" transform="rotate(45 256 256)" stroke-width="40" opacity="0.14"/>
+        <ellipse cx="256" cy="256" rx="174" ry="68" transform="rotate(90 256 256)" stroke-width="40" opacity="0.14"/>
+        <ellipse cx="256" cy="256" rx="174" ry="68" transform="rotate(135 256 256)" stroke-width="40" opacity="0.14"/>
+      </g>
+      <g fill="none" stroke="url(#ex-orbit)" stroke-linecap="round" opacity="0.88">
+        <ellipse cx="256" cy="256" rx="174" ry="68" stroke-width="16"/>
+        <ellipse cx="256" cy="256" rx="174" ry="68" transform="rotate(45 256 256)" stroke-width="16"/>
+        <ellipse cx="256" cy="256" rx="174" ry="68" transform="rotate(90 256 256)" stroke-width="16"/>
+        <ellipse cx="256" cy="256" rx="174" ry="68" transform="rotate(135 256 256)" stroke-width="16"/>
+      </g>
+      <path d="M256 160 L331 320 L181 320 Z"
+            fill="url(#ex-glyph)" fill-opacity="0.10"
+            stroke="url(#ex-glyph)" stroke-width="52" stroke-opacity="0.14"
+            stroke-linejoin="round"/>
+      <path d="M256 160 L331 320 L181 320 Z"
+            fill="none" stroke="url(#ex-glyph)" stroke-width="28"
+            stroke-linejoin="round"/>
+      <path d="M256 208 L298 295 L214 295 Z"
+            fill="none" stroke="url(#ex-glyph)" stroke-width="16"
+            stroke-linejoin="round" opacity="0.88"/>
+    </g>
+    <circle cx="256" cy="256" r="256" fill="url(#ex-bloom)"/>
+    <circle cx="256" cy="256" r="221" fill="none" stroke="url(#ex-orbit)" stroke-width="12" opacity="0.9"/>
+  </g>
+
+  <text x="164" y="122"
+        font-family="'Segoe UI Semibold', 'Segoe UI', Inter, 'Helvetica Neue', Arial, sans-serif"
+        font-size="46" font-weight="700" letter-spacing="-1.2" fill="#08111F">EasyXray</text>
+</svg>

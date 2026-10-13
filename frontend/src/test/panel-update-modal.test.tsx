@@ -53,7 +53,7 @@ describe('panel update modal', () => {
 
     expect(config.onOk()).toBeUndefined();
     expect(onClose).toHaveBeenCalledOnce();
-    expect(HttpUtil.post).toHaveBeenCalledWith('/panel/api/server/updatePanel');
+    expect(HttpUtil.post).toHaveBeenCalledWith('/easyxray/api/v1/server/updatePanel');
     expect(onBusy).toHaveBeenCalledWith({
       busy: true,
       tip: 'Installation is in progress, please do not refresh this page (dev+new)',

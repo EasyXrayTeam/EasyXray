@@ -9,12 +9,12 @@ import (
 
 	"github.com/op/go-logging"
 
-	xuilogger "github.com/mhsanaei/3x-ui/v3/internal/logger"
+	easyxraylogger "github.com/EasyXrayTeam/EasyXray/v3/internal/logger"
 )
 
 func TestMain(m *testing.M) {
-	_ = os.Setenv("XUI_LOG_FOLDER", os.TempDir())
-	xuilogger.InitLogger(logging.ERROR)
+	_ = os.Setenv("EASYXRAY_LOG_FOLDER", os.TempDir())
+	easyxraylogger.InitLogger(logging.ERROR)
 	os.Exit(m.Run())
 }
 

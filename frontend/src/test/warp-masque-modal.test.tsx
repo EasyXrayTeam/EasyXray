@@ -14,10 +14,10 @@ const registration = {
 
 function mockApi() {
   vi.spyOn(HttpUtil, 'post').mockImplementation(async (url) => {
-    if (url === '/panel/api/xray/warp/regMasque') {
+    if (url === '/easyxray/api/v1/xray/warp/regMasque') {
       return new Msg(true, '', JSON.stringify(registration));
     }
-    if (url === '/panel/api/setting/all') return new Msg(true, '', {});
+    if (url === '/easyxray/api/v1/setting/all') return new Msg(true, '', {});
     return new Msg(true, '', '');
   });
 }

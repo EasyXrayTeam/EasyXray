@@ -711,8 +711,8 @@ const DATASETS: Record<string, { categories: GeoCategory[]; entries: Record<stri
 
 function routesFor(files: GeoFile[]): GeoRoutes {
   return {
-    '/panel/api/xray/geodata/files': () => files,
-    '/panel/api/xray/geodata/categories': (query) => {
+    '/easyxray/api/v1/xray/geodata/files': () => files,
+    '/easyxray/api/v1/xray/geodata/categories': (query) => {
       const dataset = DATASETS[query.get('file') ?? ''];
       const needle = (query.get('q') ?? '').trim().toLowerCase();
       const items = (dataset?.categories ?? []).filter((category) =>
@@ -720,7 +720,7 @@ function routesFor(files: GeoFile[]): GeoRoutes {
       );
       return { total: items.length, items };
     },
-    '/panel/api/xray/geodata/entries': (query) => {
+    '/easyxray/api/v1/xray/geodata/entries': (query) => {
       const dataset = DATASETS[query.get('file') ?? ''];
       const needle = (query.get('q') ?? '').trim().toLowerCase();
       const matched = (dataset?.entries[query.get('code') ?? ''] ?? []).filter((entry) =>
@@ -789,7 +789,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Browser for the geosite/geoip `.dat` databases Xray resolves `geosite:` and `geoip:` routing tokens against: pick a database, search its categories, tick the ones a rule needs, and preview the domains or CIDRs inside the highlighted category. Applying merges the ticked categories back into the rule string, keeping hand-typed domains untouched. The stories serve `/panel/api/xray/geodata/*` from an in-memory fixture, so search, paging and selection all work without a panel backend.',
+          'Browser for the geosite/geoip `.dat` databases Xray resolves `geosite:` and `geoip:` routing tokens against: pick a database, search its categories, tick the ones a rule needs, and preview the domains or CIDRs inside the highlighted category. Applying merges the ticked categories back into the rule string, keeping hand-typed domains untouched. The stories serve `/easyxray/api/v1/xray/geodata/*` from an in-memory fixture, so search, paging and selection all work without a panel backend.',
       },
     },
   },

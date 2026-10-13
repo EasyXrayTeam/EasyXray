@@ -8,21 +8,21 @@ const outDir = path.resolve(import.meta.dirname, '../internal/web/dist');
 const BACKEND_TARGET = 'http://localhost:2053';
 
 function resolveDBPath() {
-  const envFolder = process.env.XUI_DB_FOLDER;
+  const envFolder = process.env.EASYXRAY_DB_FOLDER;
   if (envFolder) {
     const abs = path.isAbsolute(envFolder)
       ? envFolder
       : path.resolve(import.meta.dirname, '..', envFolder);
-    return path.join(abs, 'x-ui.db');
+    return path.join(abs, 'EasyXray.db');
   }
-  const repoSubDB = path.resolve(import.meta.dirname, '..', 'x-ui', 'x-ui.db');
+  const repoSubDB = path.resolve(import.meta.dirname, '..', 'easyxray', 'EasyXray.db');
   if (fs.existsSync(repoSubDB)) return repoSubDB;
-  const repoDB = path.resolve(import.meta.dirname, '..', 'x-ui.db');
+  const repoDB = path.resolve(import.meta.dirname, '..', 'EasyXray.db');
   if (fs.existsSync(repoDB)) return repoDB;
-  return '/etc/x-ui/x-ui.db';
+  return '/etc/easyxray/EasyXray.db';
 }
 
-const PANEL_API_PREFIXES = ['panel/api/', 'panel/csrf-token'];
+const PANEL_API_PREFIXES = ['easyxray/api/v1/', 'easyxray/csrf-token'];
 
 let cachedBasePath = '/';
 
@@ -65,13 +65,13 @@ function readPanelVersion() {
 // already injects webBasePath and version at runtime in production.
 function injectBasePathPlugin() {
   return {
-    name: 'xui-inject-base-path',
+    name: 'easyxray-inject-base-path',
     apply: 'serve',
     transformIndexHtml(html) {
       const basePath = refreshBasePath();
       const escaped = basePath.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
       const version = readPanelVersion().replace(/\\/g, '\\\\').replace(/"/g, '\\"');
-      const tag = `<script>window.X_UI_BASE_PATH="${escaped}";window.X_UI_CUR_VER="${version}";</script>`;
+      const tag = `<script>window.EASYXRAY_BASE_PATH="${escaped}";window.EASYXRAY_CUR_VER="${version}";</script>`;
       return html.replace('</head>', `${tag}</head>`);
     },
   };
@@ -81,7 +81,7 @@ function injectBasePathPlugin() {
 // own loader, breaking ES-module semantics; data-cfasync="false" opts out.
 function rocketLoaderOptOutPlugin() {
   return {
-    name: 'xui-rocket-loader-opt-out',
+    name: 'easyxray-rocket-loader-opt-out',
     apply: 'build',
     transformIndexHtml(html) {
       return html.replaceAll('<script ', '<script data-cfasync="false" ');
@@ -105,7 +105,7 @@ function bypassMigratedRoute(req) {
         return undefined;
       }
     }
-    if (stripped === 'panel' || stripped === 'panel/' || stripped.startsWith('panel/')) {
+    if (stripped === 'easyxray' || stripped === 'easyxray/' || stripped.startsWith('easyxray/')) {
       return '/index.html';
     }
   }
@@ -213,7 +213,7 @@ export default defineConfig({
     renderBuiltUrl(filename, { hostType }) {
       if (hostType === 'js') {
         return {
-          runtime: `((window.X_UI_BASE_PATH||'/')+${JSON.stringify(filename)})`,
+          runtime: `((window.EASYXRAY_BASE_PATH||'/')+${JSON.stringify(filename)})`,
         };
       }
       return undefined;
@@ -226,9 +226,9 @@ export default defineConfig({
     // production sourcemaps (~18MB across 112 files, 72% of dist) ship inside
     // every release build. Nothing consumes them there; `npm run dev` serves
     // its own maps regardless of this setting. To debug a minified bundle
-    // (including the XUI_DEBUG serve-from-disk path), build once with
-    // XUI_SOURCEMAP=true — no tracked-file edit to accidentally commit.
-    sourcemap: process.env.XUI_SOURCEMAP === 'true',
+    // (including the EASYXRAY_DEBUG serve-from-disk path), build once with
+    // EASYXRAY_SOURCEMAP=true — no tracked-file edit to accidentally commit.
+    sourcemap: process.env.EASYXRAY_SOURCEMAP === 'true',
     target: 'es2020',
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
@@ -286,7 +286,7 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
     proxy: {
-      '^/(?:[^/]+/)?(login|logout|getTwoFactorEnable|csrf-token|sponsors|panel|server)(?:/|$)': makeBackendProxy(BACKEND_TARGET),
+      '^/(?:[^/]+/)?(login|logout|getTwoFactorEnable|csrf-token|sponsors|easyxray|server)(?:/|$)': makeBackendProxy(BACKEND_TARGET),
       '^/$': makeBackendProxy(BACKEND_TARGET),
       '^/[^/]+/$': makeBackendProxy(BACKEND_TARGET),
       '^/(?:[^/]+/)?ws$': {

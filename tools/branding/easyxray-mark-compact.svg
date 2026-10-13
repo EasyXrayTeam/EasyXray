@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="ex-title">
+  <title id="ex-title">EasyXray</title>
+  <!-- Small-size variant, used below 48px. The glow passes, the particles and
+       the glyph's inner triangle all vanish at that size, so this drops them and
+       widens every remaining stroke instead. -->
+  <defs>
+    <radialGradient id="ex-disc" cx="46%" cy="38%" r="82%">
+      <stop offset="0%" stop-color="#12314C"/>
+      <stop offset="48%" stop-color="#08111F"/>
+      <stop offset="100%" stop-color="#03060C"/>
+    </radialGradient>
+    <linearGradient id="ex-orbit" x1="8%" y1="0%" x2="92%" y2="100%">
+      <stop offset="0%" stop-color="#EAFEFF"/>
+      <stop offset="46%" stop-color="#4FD8EE"/>
+      <stop offset="100%" stop-color="#12657E"/>
+    </linearGradient>
+    <linearGradient id="ex-glyph" x1="34%" y1="0%" x2="72%" y2="100%">
+      <stop offset="0%" stop-color="#F2FEFF"/>
+      <stop offset="42%" stop-color="#6FEBFA"/>
+      <stop offset="100%" stop-color="#158FA8"/>
+    </linearGradient>
+    <clipPath id="ex-disc-clip"><circle cx="256" cy="256" r="224"/></clipPath>
+  </defs>
+
+  <circle cx="256" cy="256" r="224" fill="url(#ex-disc)"/>
+
+  <g clip-path="url(#ex-disc-clip)">
+    <g fill="none" stroke="url(#ex-orbit)" stroke-linecap="round" opacity="0.9">
+      <ellipse cx="256" cy="256" rx="174" ry="68" stroke-width="24"/>
+      <ellipse cx="256" cy="256" rx="174" ry="68" transform="rotate(45 256 256)" stroke-width="24"/>
+      <ellipse cx="256" cy="256" rx="174" ry="68" transform="rotate(90 256 256)" stroke-width="24"/>
+      <ellipse cx="256" cy="256" rx="174" ry="68" transform="rotate(135 256 256)" stroke-width="24"/>
+    </g>
+    <path d="M256 158 L333 322 L179 322 Z"
+          fill="url(#ex-glyph)" fill-opacity="0.22"
+          stroke="url(#ex-glyph)" stroke-width="34"
+          stroke-linejoin="round"/>
+    <path d="M256 208 L298 295 L214 295 Z"
+          fill="none" stroke="#08111F" stroke-width="16"
+          stroke-linejoin="round" opacity="0.75"/>
+  </g>
+
+  <circle cx="256" cy="256" r="221" fill="none" stroke="url(#ex-orbit)" stroke-width="16" opacity="0.85"/>
+</svg>

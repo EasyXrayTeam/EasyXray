@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { Inter, Vazirmatn } from 'next/font/google';
 import './global.css';
-import { appName, appTagline, siteUrl } from '@/lib/shared';
+import { appName, appTagline, basePath, siteUrl } from '@/lib/shared';
 import { i18n, localeDirection } from '@/lib/i18n';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
@@ -27,8 +27,10 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
   },
   icons: {
-    icon: '/favicon.png',
-    apple: '/icon.png',
+    // Metadata icon URLs are not rewritten by Next's basePath, so prefix them
+    // by hand for the GitHub Pages sub-path deployment.
+    icon: `${basePath}/favicon.png`,
+    apple: `${basePath}/icon.png`,
   },
 };
 

@@ -11,19 +11,19 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/crypto"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/locale"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service/discord"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/dbtest"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/util/crypto"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/locale"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/service"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/service/discord"
 )
 
 func TestValidateRegex(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	router := gin.New()
-	NewSettingController(router.Group("/panel/api"))
+	NewSettingController(router.Group("/easyxray/api/v1"))
 
 	tests := []struct {
 		name    string
@@ -36,7 +36,7 @@ func TestValidateRegex(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			req := httptest.NewRequest(http.MethodPost, "/panel/api/setting/validateRegex", strings.NewReader(tt.body))
+			req := httptest.NewRequest(http.MethodPost, "/easyxray/api/v1/setting/validateRegex", strings.NewReader(tt.body))
 			req.Header.Set("Content-Type", "application/json")
 			resp := httptest.NewRecorder()
 
@@ -57,8 +57,8 @@ func TestValidateRegex(t *testing.T) {
 }
 
 func TestAPITokenMutationRoutesEnforceExpectedScope(t *testing.T) {
-	t.Setenv("XUI_DB_FOLDER", t.TempDir())
-	dbtest.InitDB(t, filepath.Join(t.TempDir(), "x-ui.db"))
+	t.Setenv("EASYXRAY_DB_FOLDER", t.TempDir())
+	dbtest.InitDB(t, filepath.Join(t.TempDir(), "EasyXray.db"))
 	row := &model.ApiToken{Name: "route-scope", Token: crypto.HashTokenSHA256("token"), Enabled: true, Scope: model.ApiScopeNodeSync}
 	if err := database.GetDB().Create(row).Error; err != nil {
 		t.Fatalf("seed token: %v", err)
@@ -66,10 +66,10 @@ func TestAPITokenMutationRoutesEnforceExpectedScope(t *testing.T) {
 
 	gin.SetMode(gin.TestMode)
 	router := gin.New()
-	NewSettingController(router.Group("/panel/api"))
+	NewSettingController(router.Group("/easyxray/api/v1"))
 	for _, path := range []string{
-		"/panel/api/setting/apiTokens/delete/" + strconv.Itoa(row.Id),
-		"/panel/api/setting/apiTokens/setEnabled/" + strconv.Itoa(row.Id),
+		"/easyxray/api/v1/setting/apiTokens/delete/" + strconv.Itoa(row.Id),
+		"/easyxray/api/v1/setting/apiTokens/setEnabled/" + strconv.Itoa(row.Id),
 	} {
 		body := `{"expectedScope":"admin","enabled":false}`
 		req := httptest.NewRequest(http.MethodPost, path, strings.NewReader(body))
@@ -92,8 +92,8 @@ func TestAPITokenMutationRoutesEnforceExpectedScope(t *testing.T) {
 // GHSA-xqqw-jqqv-99h6: a save that keeps 2FA enabled must not be able to
 // rebind the authenticator without presenting a current code.
 func TestUpdateSettingRequiresCodeToReplaceTwoFactorToken(t *testing.T) {
-	t.Setenv("XUI_DB_FOLDER", t.TempDir())
-	dbtest.InitDB(t, filepath.Join(t.TempDir(), "x-ui.db"))
+	t.Setenv("EASYXRAY_DB_FOLDER", t.TempDir())
+	dbtest.InitDB(t, filepath.Join(t.TempDir(), "EasyXray.db"))
 
 	settingService := service.SettingService{}
 	if err := settingService.SetTwoFactorToken("ORIGINALSECRET234567"); err != nil {
@@ -125,8 +125,8 @@ func TestUpdateSettingRequiresCodeToReplaceTwoFactorToken(t *testing.T) {
 
 		gin.SetMode(gin.TestMode)
 		router := gin.New()
-		NewSettingController(router.Group("/panel/api"))
-		req := httptest.NewRequest(http.MethodPost, "/panel/api/setting/update", strings.NewReader(string(payload)))
+		NewSettingController(router.Group("/easyxray/api/v1"))
+		req := httptest.NewRequest(http.MethodPost, "/easyxray/api/v1/setting/update", strings.NewReader(string(payload)))
 		req.Header.Set("Content-Type", "application/json")
 		resp := httptest.NewRecorder()
 		router.ServeHTTP(resp, req)
@@ -178,9 +178,9 @@ func TestTestDiscordEndpoint(t *testing.T) {
 		c.Set("I18n", func(_ locale.I18nType, key string, _ ...string) string { return key })
 		c.Next()
 	})
-	NewSettingController(router.Group("/panel/api"))
+	NewSettingController(router.Group("/easyxray/api/v1"))
 
-	req := httptest.NewRequest(http.MethodPost, "/panel/api/setting/testDiscord", nil)
+	req := httptest.NewRequest(http.MethodPost, "/easyxray/api/v1/setting/testDiscord", nil)
 	resp := httptest.NewRecorder()
 	router.ServeHTTP(resp, req)
 
@@ -189,8 +189,8 @@ func TestTestDiscordEndpoint(t *testing.T) {
 	}
 
 	// Setup DB
-	t.Setenv("XUI_DB_FOLDER", t.TempDir())
-	dbtest.InitDB(t, filepath.Join(t.TempDir(), "x-ui.db"))
+	t.Setenv("EASYXRAY_DB_FOLDER", t.TempDir())
+	dbtest.InitDB(t, filepath.Join(t.TempDir(), "EasyXray.db"))
 	t.Cleanup(func() { SetDiscordService(nil) })
 
 	settingService := service.SettingService{}
@@ -199,7 +199,7 @@ func TestTestDiscordEndpoint(t *testing.T) {
 
 	// 2. Discord bot disabled
 	_ = settingService.SetDiscordBotEnable(false)
-	req = httptest.NewRequest(http.MethodPost, "/panel/api/setting/testDiscord", nil)
+	req = httptest.NewRequest(http.MethodPost, "/easyxray/api/v1/setting/testDiscord", nil)
 	resp = httptest.NewRecorder()
 	router.ServeHTTP(resp, req)
 
@@ -209,7 +209,7 @@ func TestTestDiscordEndpoint(t *testing.T) {
 
 	// 3. Discord bot enabled but missing config
 	_ = settingService.SetDiscordBotEnable(true)
-	req = httptest.NewRequest(http.MethodPost, "/panel/api/setting/testDiscord", nil)
+	req = httptest.NewRequest(http.MethodPost, "/easyxray/api/v1/setting/testDiscord", nil)
 	resp = httptest.NewRecorder()
 	router.ServeHTTP(resp, req)
 
@@ -229,7 +229,7 @@ func TestTestDiscordEndpoint(t *testing.T) {
 	svc.SetBaseURL(server.URL)
 	svc.SetHTTPClient(server.Client())
 
-	req = httptest.NewRequest(http.MethodPost, "/panel/api/setting/testDiscord", nil)
+	req = httptest.NewRequest(http.MethodPost, "/easyxray/api/v1/setting/testDiscord", nil)
 	resp = httptest.NewRecorder()
 	router.ServeHTTP(resp, req)
 

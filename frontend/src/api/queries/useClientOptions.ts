@@ -12,7 +12,7 @@ const ClientRecordListSchema = z
   .transform((value) => value ?? []);
 
 async function fetchClients(): Promise<ClientRecord[]> {
-  const msg = await HttpUtil.get('/panel/api/clients/list', undefined, { silent: true });
+  const msg = await HttpUtil.get('/easyxray/api/v1/clients/list', undefined, { silent: true });
   if (!msg?.success) throw new Error(msg?.msg || 'Failed to load clients');
   const validated = parseMsg(msg, ClientRecordListSchema, 'clients/list');
   return validated.obj ?? [];

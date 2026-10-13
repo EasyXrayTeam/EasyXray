@@ -32,7 +32,9 @@ export default function AddClientsToGroupModal({
     if (!open) return;
     let cancelled = false;
     (async () => {
-      const msg = await HttpUtil.get('/panel/api/clients/groups', undefined, { silent: true });
+      const msg = await HttpUtil.get('/easyxray/api/v1/clients/groups', undefined, {
+        silent: true,
+      });
       if (cancelled) return;
       const list = Array.isArray(msg?.obj) ? (msg.obj as Array<{ name?: string }>) : [];
       setGroups(list.map((g) => g?.name || '').filter(Boolean));
@@ -52,7 +54,7 @@ export default function AddClientsToGroupModal({
       }}
       onSubmit={async (group) => {
         const msg = await HttpUtil.post(
-          '/panel/api/clients/groups/bulkAdd',
+          '/easyxray/api/v1/clients/groups/bulkAdd',
           { emails, group },
           { headers: { 'Content-Type': 'application/json' } },
         );

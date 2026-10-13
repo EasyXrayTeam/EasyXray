@@ -422,7 +422,7 @@ export default function InboundFormModal({
     if (!authId) return;
     setSaving(true);
     try {
-      const msg = await HttpUtil.get('/panel/api/server/getNewVlessEnc');
+      const msg = await HttpUtil.get('/easyxray/api/v1/server/getNewVlessEnc');
       if (!msg?.success) return;
       const obj = msg.obj as {
         auths?: { decryption: string; encryption: string; label?: string; id?: string }[];
@@ -599,8 +599,8 @@ export default function InboundFormModal({
       const payload = formValuesToWirePayload(parsed.data, { omitClients: mode === 'edit' });
       const url =
         mode === 'edit' && dbInbound
-          ? `/panel/api/inbounds/update/${dbInbound.id}`
-          : '/panel/api/inbounds/add';
+          ? `/easyxray/api/v1/inbounds/update/${dbInbound.id}`
+          : '/easyxray/api/v1/inbounds/add';
       const msg = await HttpUtil.post(url, payload);
       if (msg?.success) {
         if (isFallbackHost) {

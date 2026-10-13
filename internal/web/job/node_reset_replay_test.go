@@ -12,19 +12,19 @@ import (
 
 	"github.com/op/go-logging"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	xuilogger "github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/runtime"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/dbtest"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	easyxraylogger "github.com/EasyXrayTeam/EasyXray/v3/internal/logger"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/runtime"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/service"
 )
 
 // A reset the node missed is replayed by the next sync, ahead of the snapshot
 // fetch so the merge already sees the zeroed counters.
 func TestNodeTrafficSyncReplaysOwedResetBeforeSnapshot(t *testing.T) {
-	xuilogger.InitLogger(logging.ERROR)
-	dbtest.InitDB(t, filepath.Join(t.TempDir(), "x-ui.db"))
+	easyxraylogger.InitLogger(logging.ERROR)
+	dbtest.InitDB(t, filepath.Join(t.TempDir(), "EasyXray.db"))
 	service.StartTrafficWriter()
 	t.Cleanup(service.StopTrafficWriter)
 	runtime.SetManager(runtime.NewManager(runtime.LocalDeps{APIPort: func() int { return 0 }, SetNeedRestart: func() {}}))

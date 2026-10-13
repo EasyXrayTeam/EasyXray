@@ -11,9 +11,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/config"
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/session"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/config"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/logger"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/session"
 )
 
 var distFS fs.FS
@@ -90,7 +90,13 @@ func pwaHeadInjection(basePath, pageName string) []byte {
 	}
 
 	basePath = normalizeWebBasePath(basePath)
-	return []byte(`<link rel="manifest" href="` + htmlpkg.EscapeString(basePath+"manifest.webmanifest") + `"><script data-cfasync="false" defer src="` + htmlpkg.EscapeString(basePath+"pwa-register.js") + `"></script>`)
+	// Icons are served by ServePWAIcon from the same embedded dist FS, so they
+	// follow the web base path like the manifest does.
+	return []byte(`<link rel="icon" href="` + htmlpkg.EscapeString(basePath+"icons/easyxray-32.png") + `" sizes="32x32" type="image/png">` +
+		`<link rel="icon" href="` + htmlpkg.EscapeString(basePath+"favicon.ico") + `" sizes="any">` +
+		`<link rel="apple-touch-icon" href="` + htmlpkg.EscapeString(basePath+"apple-touch-icon.png") + `">` +
+		`<link rel="manifest" href="` + htmlpkg.EscapeString(basePath+"manifest.webmanifest") + `">` +
+		`<script data-cfasync="false" defer src="` + htmlpkg.EscapeString(basePath+"pwa-register.js") + `"></script>`)
 }
 
 func serveDistPage(c *gin.Context, name string) {
@@ -132,11 +138,11 @@ func serveDistPage(c *gin.Context, name string) {
 	if nonce := c.GetString("csp_nonce"); nonce != "" {
 		nonceAttr = ` nonce="` + htmlpkg.EscapeString(nonce) + `"`
 	}
-	script := `<script data-cfasync="false"` + nonceAttr + `>window.X_UI_BASE_PATH="` + escapedBase + `"`
+	script := `<script data-cfasync="false"` + nonceAttr + `>window.EASYXRAY_BASE_PATH="` + escapedBase + `"`
 	if name != "login.html" {
 		escapedVer := jsEscape.Replace(config.GetPanelVersion())
-		script += `;window.X_UI_CUR_VER="` + escapedVer + `"`
-		script += `;window.X_UI_DB_TYPE="` + config.GetDBKind() + `"`
+		script += `;window.EASYXRAY_CUR_VER="` + escapedVer + `"`
+		script += `;window.EASYXRAY_DB_TYPE="` + config.GetDBKind() + `"`
 	}
 	script += `;</script>`
 	inject := []byte(script)

@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/config"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/config"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,8 +23,8 @@ import (
 func newPanelUpdateTestEngine() *gin.Engine {
 	a := &ServerController{}
 	engine := gin.New()
-	engine.GET("/panel/api/server/getUpdateStatus", a.getUpdateStatus)
-	engine.POST("/panel/api/server/updatePanel", a.updatePanel)
+	engine.GET("/easyxray/api/v1/server/getUpdateStatus", a.getUpdateStatus)
+	engine.POST("/easyxray/api/v1/server/updatePanel", a.updatePanel)
 	return engine
 }
 
@@ -50,7 +50,7 @@ func TestGetUpdateStatus_NoStatusFileYet(t *testing.T) {
 	newHostTestDB(t)
 	engine := newPanelUpdateTestEngine()
 
-	env := doPanelUpdateReq(t, engine, http.MethodGet, "/panel/api/server/getUpdateStatus")
+	env := doPanelUpdateReq(t, engine, http.MethodGet, "/easyxray/api/v1/server/getUpdateStatus")
 	if !env.Success {
 		t.Fatalf("getUpdateStatus should always report success=true (it's a best-effort read): msg=%s", env.Msg)
 	}
@@ -84,7 +84,7 @@ func TestGetUpdateStatus_RunIdIsAlwaysAString(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	env := doPanelUpdateReq(t, engine, http.MethodGet, "/panel/api/server/getUpdateStatus")
+	env := doPanelUpdateReq(t, engine, http.MethodGet, "/easyxray/api/v1/server/getUpdateStatus")
 	var status struct {
 		RunID string `json:"runId"`
 		State string `json:"state"`
@@ -113,7 +113,7 @@ func TestUpdatePanel_UnsupportedPlatformReturnsNoRunId(t *testing.T) {
 	newHostTestDB(t)
 	engine := newPanelUpdateTestEngine()
 
-	env := doPanelUpdateReq(t, engine, http.MethodPost, "/panel/api/server/updatePanel")
+	env := doPanelUpdateReq(t, engine, http.MethodPost, "/easyxray/api/v1/server/updatePanel")
 	if env.Success {
 		t.Fatal("updatePanel on an unsupported platform: success = true, want false")
 	}
@@ -132,7 +132,7 @@ func TestUpdatePanel_InvalidDevValueRejectedBeforeLaunch(t *testing.T) {
 	engine := newPanelUpdateTestEngine()
 
 	form := url.Values{"dev": {"notabool"}}
-	req := httptest.NewRequest(http.MethodPost, "/panel/api/server/updatePanel", strings.NewReader(form.Encode()))
+	req := httptest.NewRequest(http.MethodPost, "/easyxray/api/v1/server/updatePanel", strings.NewReader(form.Encode()))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	w := httptest.NewRecorder()
 	engine.ServeHTTP(w, req)

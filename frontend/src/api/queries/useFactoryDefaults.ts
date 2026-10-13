@@ -6,7 +6,7 @@ import { FactoryDefaultsSchema, type FactoryDefaults } from '@/schemas/setting';
 import { keys } from '@/api/queryKeys';
 
 async function fetchFactoryDefaults(): Promise<FactoryDefaults> {
-  const msg = await HttpUtil.post('/panel/api/setting/factoryDefaults', undefined, {
+  const msg = await HttpUtil.post('/easyxray/api/v1/setting/factoryDefaults', undefined, {
     silent: true,
   });
   if (!msg?.success) throw new Error(msg?.msg || 'Failed to fetch factory defaults');

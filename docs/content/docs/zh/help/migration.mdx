@@ -1,24 +1,39 @@
 ---
 title: 迁移
-description: 从 x-ui 迁移到 3x-ui、在服务器之间迁移，或在不同 3x-ui 版本之间迁移。
+description: 在服务器之间或版本之间迁移 EasyXray 安装 —— 以及为什么不支持导入 X-UI / 3x-ui 安装。
 icon: ArrowRightLeft
 ---
 
+## 从 X-UI / 3x-ui 迁移
+
+**EasyXray 不会迁移现有的 X-UI 或 3x-ui 安装。** 既没有检测步骤，也没有导入命令，更没有自动转换。这两个产品在迁移所必需查看的几乎每一处都刻意不同：
+
+| | X-UI / 3x-ui | EasyXray |
+| --- | --- | --- |
+| 服务与命令 | `x-ui` | `easyxray` |
+| 配置 / 数据库 | 各自的路径 | `/etc/easyxray/EasyXray.db` |
+| 环境变量前缀 | `XUI_*` | `EASYXRAY_*` |
+| HTTP 命名空间 | `/panel/…` | `/easyxray/…` |
+
+在已经运行 X-UI/3x-ui 的服务器上安装 EasyXray，属于一次**全新的并行安装**——它不会替换或升级旧版本。若要迁移过来，请全新安装 EasyXray，重新创建入站与客户端，并从旧面板逐一导出每个客户端的分享链接，以便在客户端侧导入。复用旧的 SQLite 文件不受支持：两者的数据库结构不同。
+
+自动化方面也是如此：REST API 已从 `/panel/api/…` 迁移到 `/easyxray/api/v1/…`，旧前缀**没有任何兼容别名**。凡是针对 `/panel/api/…` 编写的脚本、机器人和面板，都必须更新。
+
 ## 在服务器之间迁移
 
-迁移到新服务器本质上就是迁移数据库：
+把同一个 EasyXray 安装迁移到新服务器，本质上就是迁移数据库：
 
 <Steps>
 
 <Step>
 ### 备份旧服务器
 
-复制数据库（默认位于 `/etc/x-ui/x-ui.db`）以及你的证书。参见
+复制数据库（默认位于 `/etc/easyxray/EasyXray.db`）以及你的证书。参见
 [备份与恢复](/docs/operations/backup-restore)。
 </Step>
 
 <Step>
-### 在新服务器上安装 3x-ui
+### 在新服务器上安装 EasyXray
 
 使用相同的安装方式以及兼容的版本。参见
 [安装](/docs/guide/installation)。
@@ -27,20 +42,16 @@ icon: ArrowRightLeft
 <Step>
 ### 恢复数据库
 
-停止面板，将数据库放置到位，恢复证书，然后启动面板。同时更新所有与 IP/域名相关的设置。
+停止面板，将数据库放置到位，恢复证书，然后启动面板。并重新检查所有与 IP/域名相关的设置。
 </Step>
 
 </Steps>
 
-## 在不同 3x-ui 版本之间迁移
+## 在不同 EasyXray 版本之间迁移
 
 在同一后端内，升级通常只需重新运行安装程序或拉取新镜像即可——面板会自行迁移其数据库。如果是跨**大版本**升级，请先阅读
-[版本发布说明](https://github.com/MHSanaei/3x-ui/releases)
+[版本发布说明](https://github.com/EasyXrayTeam/EasyXray/releases)
 并做好备份。
-
-## 从 x-ui 迁移
-
-将旧版 x-ui 面板的数据库直接导入 3x-ui **不受支持**——两者的数据库结构不同。请全新安装 3x-ui 并重新创建入站/客户端，同时从旧面板逐一导出分享链接。
 
 <Callout type="warn">
   在任何迁移之前都要先做好备份，并在确认新服务器正常工作之前保持旧服务器继续运行。

@@ -25,15 +25,16 @@ export default function BackupModal({
   onBusy,
 }: BackupModalProps) {
   const { t } = useTranslation();
-  const isPostgres = window.X_UI_DB_TYPE === 'postgres';
+  const isPostgres = window.EASYXRAY_DB_TYPE === 'postgres';
   const [keepHostSettings, setKeepHostSettings] = useState(true);
 
   function exportDb() {
-    window.location.href = (window.X_UI_BASE_PATH || '') + 'panel/api/server/getDb';
+    window.location.href = (window.EASYXRAY_BASE_PATH || '') + 'easyxray/api/v1/server/getDb';
   }
 
   function exportMigration() {
-    window.location.href = (window.X_UI_BASE_PATH || '') + 'panel/api/server/getMigration';
+    window.location.href =
+      (window.EASYXRAY_BASE_PATH || '') + 'easyxray/api/v1/server/getMigration';
   }
 
   function importDb() {
@@ -51,7 +52,7 @@ export default function BackupModal({
       onClose();
       onBusy({ busy: true, tip: `${t('pages.index.importDatabase')}…` });
 
-      const upload = await HttpUtil.post('/panel/api/server/importDB', formData, {
+      const upload = await HttpUtil.post('/easyxray/api/v1/server/importDB', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       if (!upload?.success) {

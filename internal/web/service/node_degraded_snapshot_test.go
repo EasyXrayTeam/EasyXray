@@ -9,9 +9,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/runtime"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/runtime"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/xray"
 
 	"gorm.io/gorm"
 )
@@ -123,10 +123,10 @@ func TestSetRemoteTraffic_EmptySnapshotRepushesHubClients(t *testing.T) {
 		_ = json.NewEncoder(w).Encode(map[string]any{"success": true, "msg": "", "obj": obj})
 	}
 	mux := http.NewServeMux()
-	mux.HandleFunc("/panel/api/inbounds/list", func(w http.ResponseWriter, _ *http.Request) {
+	mux.HandleFunc("/easyxray/api/v1/inbounds/list", func(w http.ResponseWriter, _ *http.Request) {
 		writeOK(w, []map[string]any{{"id": 7, "tag": "deg-in", "port": 41001, "protocol": "vless"}})
 	})
-	mux.HandleFunc("/panel/api/inbounds/update/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/easyxray/api/v1/inbounds/update/", func(w http.ResponseWriter, r *http.Request) {
 		if err := r.ParseForm(); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return

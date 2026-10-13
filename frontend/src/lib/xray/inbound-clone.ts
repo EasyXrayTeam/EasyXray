@@ -3,7 +3,7 @@ import { createDefaultInboundSettings } from '@/lib/xray/inbound-defaults';
 import { coerceInboundJsonField, type DBInbound } from '@/models/dbinbound';
 
 /*
- * Payload for POST /panel/api/inbounds/add reproducing `dbInbound` as a
+ * Payload for POST /easyxray/api/v1/inbounds/add reproducing `dbInbound` as a
  * staged copy: fresh port, empty client list (emails are unique panel-wide
  * and UUIDs must not repeat across nodes), disabled, no tag (the backend
  * regenerates one with the correct per-node prefix), cleared listen (listen

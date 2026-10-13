@@ -26,7 +26,7 @@ describe('http-init fetch wrapper', () => {
   beforeEach(async () => {
     vi.resetModules();
     document.head.innerHTML = '';
-    delete (window as { X_UI_BASE_PATH?: string }).X_UI_BASE_PATH;
+    delete (window as { EASYXRAY_BASE_PATH?: string }).EASYXRAY_BASE_PATH;
     fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);
     replaceMock = vi.fn();
@@ -51,7 +51,7 @@ describe('http-init fetch wrapper', () => {
     http.setupHttp();
     fetchMock.mockResolvedValue(okEnvelope());
 
-    await http.httpRequest('POST', '/panel/x', { a: 1, b: ['x', 'y'] });
+    await http.httpRequest('POST', '/easyxray/x', { a: 1, b: ['x', 'y'] });
 
     expect(initOf().body).toBe('a=1&b=x&b=y');
     expect(headersOf().get('content-type')).toBe(
@@ -66,7 +66,7 @@ describe('http-init fetch wrapper', () => {
 
     await http.httpRequest(
       'POST',
-      '/panel/x',
+      '/easyxray/x',
       { a: 1 },
       { headers: { 'Content-Type': 'application/json' } },
     );
@@ -82,7 +82,7 @@ describe('http-init fetch wrapper', () => {
 
     const fd = new FormData();
     fd.append('db', 'contents');
-    await http.httpRequest('POST', '/panel/import', fd, {
+    await http.httpRequest('POST', '/easyxray/import', fd, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
 
@@ -106,16 +106,16 @@ describe('http-init fetch wrapper', () => {
   });
 
   it('prepends the base path to request and csrf-token URLs', async () => {
-    window.X_UI_BASE_PATH = '/xui';
+    window.EASYXRAY_BASE_PATH = '/admin-random';
     http.setupHttp();
     fetchMock.mockImplementation((url: string) =>
       Promise.resolve(url.endsWith('/csrf-token') ? csrfResponse('fresh') : okEnvelope()),
     );
 
-    await http.httpRequest('POST', '/panel/api/x', { a: 1 });
+    await http.httpRequest('POST', '/easyxray/api/v1/x', { a: 1 });
 
-    expect(urlOf(0)).toBe('/xui/csrf-token');
-    expect(urlOf(1)).toBe('/xui/panel/api/x');
+    expect(urlOf(0)).toBe('/admin-random/csrf-token');
+    expect(urlOf(1)).toBe('/admin-random/easyxray/api/v1/x');
   });
 
   it('refreshes the token and retries once on 403', async () => {
@@ -127,7 +127,7 @@ describe('http-init fetch wrapper', () => {
       return Promise.resolve(dataCalls === 1 ? new Response('', { status: 403 }) : okEnvelope());
     });
 
-    const resp = await http.httpRequest('POST', '/panel/api/x', { a: 1 });
+    const resp = await http.httpRequest('POST', '/easyxray/api/v1/x', { a: 1 });
 
     expect(resp.ok).toBe(true);
     expect(dataCalls).toBe(2);
@@ -143,14 +143,14 @@ describe('http-init fetch wrapper', () => {
       return Promise.resolve(new Response('', { status: 403 }));
     });
 
-    await expect(http.httpRequest('POST', '/panel/api/x', { a: 1 })).rejects.toBeInstanceOf(
+    await expect(http.httpRequest('POST', '/easyxray/api/v1/x', { a: 1 })).rejects.toBeInstanceOf(
       http.HttpError,
     );
     expect(dataCalls).toBe(2);
   });
 
   it('redirects once on 401 and never settles', async () => {
-    window.X_UI_BASE_PATH = '/xui';
+    window.EASYXRAY_BASE_PATH = '/easyxray';
     document.head.innerHTML = '<meta name="csrf-token" content="tok">';
     http.setupHttp();
     fetchMock.mockResolvedValue(new Response('', { status: 401 }));
@@ -162,7 +162,7 @@ describe('http-init fetch wrapper', () => {
     ]);
     expect(first).toBe(pending);
     expect(replaceMock).toHaveBeenCalledTimes(1);
-    expect(replaceMock).toHaveBeenCalledWith('/xui');
+    expect(replaceMock).toHaveBeenCalledWith('/easyxray');
 
     const second = await Promise.race([
       http.httpRequest('POST', '/p', { a: 1 }),

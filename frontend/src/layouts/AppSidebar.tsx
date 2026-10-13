@@ -47,12 +47,12 @@ import { useCommandPalette } from '@/components/command-palette/useCommandPalett
 import SponsorSlot from '@/components/sponsor/SponsorSlot';
 import './AppSidebar.css';
 
-const DONATE_URL = 'https://donate.sanaei.dev/';
+const DONATE_URL = 'https://ko-fi.com/minimaxflora';
 // The palette listens for Ctrl as well as Cmd, so the chip must not show a
 // Mac glyph to the Linux and Windows operators who are most of this panel's.
 const SHORTCUT_MODIFIER = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent) ? '⌘' : 'Ctrl';
-const DOCS_URL = 'https://docs.sanaei.dev/';
-const REPO_URL = 'https://github.com/MHSanaei/3x-ui';
+const DOCS_URL = 'https://easyxrayteam.github.io/EasyXray/';
+const REPO_URL = 'https://github.com/EasyXrayTeam/EasyXray';
 const LOGOUT_KEY = '__logout__';
 const RAIL_WIDTH = 72;
 const SIDER_WIDTH = 220;
@@ -221,7 +221,7 @@ export default function AppSidebar() {
   }, [updateHovered]);
 
   const currentTheme: 'light' | 'dark' = isDark ? 'dark' : 'light';
-  const panelVersion = window.X_UI_CUR_VER || '';
+  const panelVersion = window.EASYXRAY_CUR_VER || '';
 
   const tabs = useMemo<{ key: string; icon: IconName; title: string }[]>(
     () => [
@@ -336,7 +336,7 @@ export default function AppSidebar() {
     async (key: string) => {
       if (key === LOGOUT_KEY) {
         await HttpUtil.post('/logout');
-        window.location.href = window.X_UI_BASE_PATH || '/';
+        window.location.href = window.EASYXRAY_BASE_PATH || '/';
         return;
       }
       navigate(key);
@@ -383,7 +383,7 @@ export default function AppSidebar() {
       >
         <div className="sider-brand">
           <div className="brand-block">
-            <span className="brand-text">{railCollapsed ? '3X' : '3X-UI'}</span>
+            <span className="brand-text">{railCollapsed ? '3X' : 'EasyXray'}</span>
           </div>
           {!railCollapsed && (
             <div className="brand-actions">
@@ -478,7 +478,7 @@ export default function AppSidebar() {
       >
         <div className="drawer-header">
           <div className="brand-block">
-            <span className="drawer-brand">3X-UI</span>
+            <span className="drawer-brand">EasyXray</span>
           </div>
           <div className="drawer-header-actions">
             <DocsButton ariaLabel={t('menu.docs') || 'Documentation'} />

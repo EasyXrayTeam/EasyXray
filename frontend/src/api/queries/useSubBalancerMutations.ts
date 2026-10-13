@@ -20,7 +20,7 @@ export function useSubBalancerMutations() {
 
   const createMut = useMutation({
     mutationFn: (payload: SubBalancerFormValues) =>
-      HttpUtil.post('/panel/api/sub-balancers', toWirePayload(payload)),
+      HttpUtil.post('/easyxray/api/v1/sub-balancers', toWirePayload(payload)),
     onSuccess: (msg) => {
       if (msg?.success) invalidate();
     },
@@ -28,14 +28,14 @@ export function useSubBalancerMutations() {
 
   const updateMut = useMutation({
     mutationFn: ({ id, payload }: { id: number; payload: SubBalancerFormValues }) =>
-      HttpUtil.post(`/panel/api/sub-balancers/${id}`, toWirePayload(payload)),
+      HttpUtil.post(`/easyxray/api/v1/sub-balancers/${id}`, toWirePayload(payload)),
     onSuccess: (msg) => {
       if (msg?.success) invalidate();
     },
   });
 
   const removeMut = useMutation({
-    mutationFn: (id: number) => HttpUtil.post(`/panel/api/sub-balancers/${id}/del`),
+    mutationFn: (id: number) => HttpUtil.post(`/easyxray/api/v1/sub-balancers/${id}/del`),
     onSuccess: (msg) => {
       if (msg?.success) invalidate();
     },

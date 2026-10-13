@@ -53,7 +53,7 @@ export default function PanelUpdateModal({
     while (Date.now() < deadline) {
       try {
         const msg = await HttpUtil.get<PanelUpdateStatus>(
-          '/panel/api/server/getUpdateStatus',
+          '/easyxray/api/v1/server/getUpdateStatus',
           undefined,
           { silent: true, timeout: 2000 },
         );
@@ -85,7 +85,7 @@ export default function PanelUpdateModal({
     const tip = info.latestVersion ? `${baseTip} (${info.latestVersion})` : baseTip;
     onClose();
     onBusy({ busy: true, tip });
-    const result = await HttpUtil.post<{ runId: string }>('/panel/api/server/updatePanel');
+    const result = await HttpUtil.post<{ runId: string }>('/easyxray/api/v1/server/updatePanel');
     if (!result?.success) {
       onBusy({ busy: false });
       return;
@@ -166,7 +166,7 @@ export default function PanelUpdateModal({
               <Tag color="green">{info.currentCommit || '?'}</Tag>
             ) : (
               <Tag color="green">
-                {formatPanelVersion(window.X_UI_CUR_VER || info.currentVersion) || '?'}
+                {formatPanelVersion(window.EASYXRAY_CUR_VER || info.currentVersion) || '?'}
               </Tag>
             )}
           </div>

@@ -14,7 +14,7 @@ import (
 
 	"github.com/op/go-logging"
 
-	xuilogger "github.com/mhsanaei/3x-ui/v3/internal/logger"
+	easyxraylogger "github.com/EasyXrayTeam/EasyXray/v3/internal/logger"
 )
 
 func TestWriteFileAtomicModeAndRenameFailure(t *testing.T) {
@@ -120,8 +120,8 @@ func TestStopKillsProcessThatIgnoresSIGTERM(t *testing.T) {
 
 func initProcessTestLogger(t *testing.T) {
 	t.Helper()
-	t.Setenv("XUI_LOG_FOLDER", t.TempDir())
-	xuilogger.InitLogger(logging.ERROR)
+	t.Setenv("EASYXRAY_LOG_FOLDER", t.TempDir())
+	easyxraylogger.InitLogger(logging.ERROR)
 }
 
 func startProcessHelper(t *testing.T, mode string) *process {

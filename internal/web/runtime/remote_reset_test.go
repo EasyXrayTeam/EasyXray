@@ -8,7 +8,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
 )
 
 // The master replays a node's reset backlog through the node's bulk endpoint.
@@ -29,8 +29,8 @@ func TestRemoteResetClientTrafficsPostsEmailsToBulkEndpoint(t *testing.T) {
 	if err := r.ResetClientTraffics(context.Background(), []string{"a@x", "b@x"}); err != nil {
 		t.Fatalf("ResetClientTraffics: %v", err)
 	}
-	if path != "/panel/api/clients/bulkResetTraffic" || !slices.Equal(body.Emails, []string{"a@x", "b@x"}) {
-		t.Fatalf("node got %s %v, want /panel/api/clients/bulkResetTraffic [a@x b@x]", path, body.Emails)
+	if path != "/easyxray/api/v1/clients/bulkResetTraffic" || !slices.Equal(body.Emails, []string{"a@x", "b@x"}) {
+		t.Fatalf("node got %s %v, want /easyxray/api/v1/clients/bulkResetTraffic [a@x b@x]", path, body.Emails)
 	}
 }
 
@@ -51,8 +51,8 @@ func TestRemoteResetInboundTrafficUsesNodeInboundID(t *testing.T) {
 	if err := r.ResetInboundTraffic(context.Background(), ib); err != nil {
 		t.Fatalf("ResetInboundTraffic: %v", err)
 	}
-	if method != http.MethodPost || path != "/panel/api/inbounds/7/resetTraffic" {
-		t.Fatalf("node got %s %s, want POST /panel/api/inbounds/7/resetTraffic", method, path)
+	if method != http.MethodPost || path != "/easyxray/api/v1/inbounds/7/resetTraffic" {
+		t.Fatalf("node got %s %s, want POST /easyxray/api/v1/inbounds/7/resetTraffic", method, path)
 	}
 }
 
@@ -62,7 +62,7 @@ func TestRemoteResetInboundTrafficUnknownTagErrors(t *testing.T) {
 	var resetPosted bool
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		if req.URL.Path == "/panel/api/inbounds/list" {
+		if req.URL.Path == "/easyxray/api/v1/inbounds/list" {
 			_, _ = w.Write([]byte(`{"success":true,"msg":"ok","obj":[]}`))
 			return
 		}

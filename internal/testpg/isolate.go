@@ -15,8 +15,8 @@ import (
 )
 
 const (
-	dbTypeEnv = "XUI_DB_TYPE"
-	dbDSNEnv  = "XUI_DB_DSN"
+	dbTypeEnv = "EASYXRAY_DB_TYPE"
+	dbDSNEnv  = "EASYXRAY_DB_DSN"
 )
 
 // IsolatePackage gives one test package its own PostgreSQL schema: package test
@@ -34,7 +34,7 @@ func IsolatePackage(packageName string) (func(), error) {
 	if _, err := rand.Read(suffix); err != nil {
 		return nil, fmt.Errorf("generate PostgreSQL test schema suffix: %w", err)
 	}
-	schema := fmt.Sprintf("xui_%s_%d_%s", sanitize(packageName), os.Getpid(), hex.EncodeToString(suffix))
+	schema := fmt.Sprintf("easyxray_%s_%d_%s", sanitize(packageName), os.Getpid(), hex.EncodeToString(suffix))
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

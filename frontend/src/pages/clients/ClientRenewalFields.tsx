@@ -71,7 +71,7 @@ export default function ClientRenewalFields({
     enabled: active && mode !== 'none' && request === debounced,
     retry: false,
     queryFn: async () => {
-      const msg = await HttpUtil.post('/panel/api/clients/renewalPreview', debounced, {
+      const msg = await HttpUtil.post('/easyxray/api/v1/clients/renewalPreview', debounced, {
         headers: { 'Content-Type': 'application/json' },
         silent: true,
       });

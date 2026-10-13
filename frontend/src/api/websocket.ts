@@ -126,7 +126,7 @@ export class WebSocketClient {
     let basePath = this.basePath || '/';
     if (!basePath.startsWith('/')) basePath = '/' + basePath;
     if (!basePath.endsWith('/')) basePath += '/';
-    return `${protocol}//${window.location.host}${basePath}ws`;
+    return `${protocol}//${window.location.host}${basePath}easyxray/ws`;
   }
 
   #onMessage(event: MessageEvent): void {
@@ -206,7 +206,7 @@ let sharedClient: WebSocketClient | null = null;
 
 export function getSharedWebSocketClient(): WebSocketClient {
   if (sharedClient) return sharedClient;
-  const basePath = (typeof window !== 'undefined' && window.X_UI_BASE_PATH) || '';
+  const basePath = (typeof window !== 'undefined' && window.EASYXRAY_BASE_PATH) || '';
   sharedClient = new WebSocketClient(basePath);
   return sharedClient;
 }

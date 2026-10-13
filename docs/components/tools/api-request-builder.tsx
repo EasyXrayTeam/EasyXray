@@ -16,7 +16,7 @@ const METHODS: readonly HttpMethod[] = ['GET', 'POST', 'PUT', 'DELETE'];
 export function ApiRequestBuilder() {
   const [baseUrl, setBaseUrl] = useState('https://panel.example.com:2053');
   const [token, setToken] = useState('');
-  const [path, setPath] = useState('/panel/api/inbounds/list');
+  const [path, setPath] = useState('/easyxray/api/v1/inbounds/list');
   const [method, setMethod] = useState<HttpMethod>('GET');
   const [body, setBody] = useState('');
   const bodyId = useId();
@@ -27,7 +27,7 @@ export function ApiRequestBuilder() {
   function reset() {
     setBaseUrl('https://panel.example.com:2053');
     setToken('');
-    setPath('/panel/api/inbounds/list');
+    setPath('/easyxray/api/v1/inbounds/list');
     setMethod('GET');
     setBody('');
   }
@@ -35,7 +35,7 @@ export function ApiRequestBuilder() {
   return (
     <ToolFrame
       title="API request builder"
-      description="Build an authenticated cURL command or fetch() snippet for any 3x-ui panel API endpoint under /panel/api/*."
+      description="Build an authenticated cURL command or fetch() snippet for any EasyXray panel API endpoint under /easyxray/api/v1/*."
       onReset={reset}
     >
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

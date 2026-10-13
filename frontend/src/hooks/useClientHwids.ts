@@ -20,7 +20,7 @@ export function useClientHwids(email: string | undefined) {
     setHwidsLoading(true);
     try {
       const msg = (await HttpUtil.post(
-        `/panel/api/clients/hwids/${encodeURIComponent(email)}`,
+        `/easyxray/api/v1/clients/hwids/${encodeURIComponent(email)}`,
       )) as ApiMsg<unknown[]>;
       if (!msg?.success) {
         setClientHwids([]);
@@ -37,7 +37,7 @@ export function useClientHwids(email: string | undefined) {
     setHwidsClearing(true);
     try {
       const msg = (await HttpUtil.delete(
-        `/panel/api/clients/hwids/${encodeURIComponent(email)}`,
+        `/easyxray/api/v1/clients/hwids/${encodeURIComponent(email)}`,
       )) as ApiMsg;
       if (msg?.success) setClientHwids([]);
     } finally {
@@ -50,7 +50,7 @@ export function useClientHwids(email: string | undefined) {
     setDeletingHwidId(id);
     try {
       const msg = (await HttpUtil.delete(
-        `/panel/api/clients/hwids/${encodeURIComponent(email)}/${id}`,
+        `/easyxray/api/v1/clients/hwids/${encodeURIComponent(email)}/${id}`,
       )) as ApiMsg;
       if (msg?.success) setClientHwids((prev) => prev.filter((entry) => entry.id !== id));
     } finally {

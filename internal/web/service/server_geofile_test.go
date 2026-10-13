@@ -12,7 +12,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/dbtest"
 )
 
 // Loyalsoldier and runetfreedom write "<hash>  geoip.dat"; chocolate4u writes
@@ -140,11 +140,11 @@ func geofileTestEnv(t *testing.T, entries map[string]geofileEntry) string {
 	t.Helper()
 
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("EASYXRAY_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "EasyXray.db"))
 
 	binFolder := t.TempDir()
-	t.Setenv("XUI_BIN_FOLDER", binFolder)
+	t.Setenv("EASYXRAY_BIN_FOLDER", binFolder)
 
 	originalAllowlist := geofileAllowlist
 	geofileAllowlist = entries

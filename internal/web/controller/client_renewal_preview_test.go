@@ -11,11 +11,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/dbtest"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/service"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/xray"
 )
 
 func TestClientRenewalPreviewHTTP(t *testing.T) {
@@ -46,7 +46,7 @@ func TestClientRenewalPreviewHTTP(t *testing.T) {
 		{name: "negative count", zone: "UTC", count: -1, invalid: true, wantError: "renewal preview reset and resetCount must not be negative\n"},
 	} {
 		t.Run(tt.name, func(t *testing.T) {
-			dbtest.InitDB(t, filepath.Join(t.TempDir(), "x-ui.db"))
+			dbtest.InitDB(t, filepath.Join(t.TempDir(), "EasyXray.db"))
 			db := database.GetDB()
 			if err := db.Create(&model.Setting{Key: "timeLocation", Value: tt.zone}).Error; err != nil {
 				t.Fatal(err)
@@ -70,9 +70,9 @@ func TestClientRenewalPreviewHTTP(t *testing.T) {
 				t.Fatal(err)
 			}
 			router := gin.New()
-			NewClientController(router.Group("/panel/api/clients"))
+			NewClientController(router.Group("/easyxray/api/v1/clients"))
 			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodPost, "/panel/api/clients/renewalPreview", bytes.NewReader(payload))
+			r := httptest.NewRequest(http.MethodPost, "/easyxray/api/v1/clients/renewalPreview", bytes.NewReader(payload))
 			r.Header.Set("Content-Type", "application/json")
 			router.ServeHTTP(w, r)
 			var msg struct {

@@ -23,7 +23,7 @@ export function useInboundFallbacks(dbInbound: DBInbound | null, dbInbounds: DBI
       setFallbacks([]);
       return;
     }
-    const msg = await HttpUtil.get(`/panel/api/inbounds/${masterId}/fallbacks`);
+    const msg = await HttpUtil.get(`/easyxray/api/v1/inbounds/${masterId}/fallbacks`);
     if (!msg?.success || !Array.isArray(msg.obj)) {
       setFallbacks([]);
       return;
@@ -65,7 +65,7 @@ export function useInboundFallbacks(dbInbound: DBInbound | null, dbInbounds: DBI
           sortOrder: i,
         })),
     };
-    const msg = await HttpUtil.post(`/panel/api/inbounds/${masterId}/fallbacks`, payload, {
+    const msg = await HttpUtil.post(`/easyxray/api/v1/inbounds/${masterId}/fallbacks`, payload, {
       headers: { 'Content-Type': 'application/json' },
     });
     return !!msg?.success;

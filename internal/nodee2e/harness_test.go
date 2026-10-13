@@ -1,5 +1,5 @@
 // Package nodee2e drives a real master panel and a real node panel, each its own
-// process, through the node-sync paths. Gated by XUI_NODE_E2E_BINARY.
+// process, through the node-sync paths. Gated by EASYXRAY_NODE_E2E_BINARY.
 package nodee2e
 
 import (
@@ -19,16 +19,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
 )
 
 const settleTimeout = 30 * time.Second
 
 func panelBinary(t *testing.T) string {
 	t.Helper()
-	bin := os.Getenv("XUI_NODE_E2E_BINARY")
+	bin := os.Getenv("EASYXRAY_NODE_E2E_BINARY")
 	if bin == "" {
-		t.Skip("XUI_NODE_E2E_BINARY not set; run `make node-e2e`")
+		t.Skip("EASYXRAY_NODE_E2E_BINARY not set; run `make node-e2e`")
 	}
 	abs, err := filepath.Abs(bin)
 	if err != nil {
@@ -60,10 +60,10 @@ func freePort(t *testing.T) int {
 
 func (p *panel) env() []string {
 	return append(os.Environ(),
-		"XUI_DB_FOLDER="+filepath.Join(p.dir, "db"),
-		"XUI_LOG_FOLDER="+filepath.Join(p.dir, "log"),
-		"XUI_BIN_FOLDER="+filepath.Join(p.dir, "bin"),
-		"XUI_ENABLE_FAIL2BAN=false",
+		"EASYXRAY_DB_FOLDER="+filepath.Join(p.dir, "db"),
+		"EASYXRAY_LOG_FOLDER="+filepath.Join(p.dir, "log"),
+		"EASYXRAY_BIN_FOLDER="+filepath.Join(p.dir, "bin"),
+		"EASYXRAY_ENABLE_FAIL2BAN=false",
 		"MSYS_NO_PATHCONV=1",
 	)
 }
@@ -115,7 +115,7 @@ func preparePanel(t *testing.T, bin, name string) *panel {
 	p.cli("setting", "-username", "e2e", "-password", "e2e-pass", "-port", strconv.Itoa(p.port), "-webBasePath", "/")
 	sharedDBMu.Lock()
 	defer sharedDBMu.Unlock()
-	if err := database.InitDB(filepath.Join(p.dir, "db", "x-ui.db")); err != nil {
+	if err := database.InitDB(filepath.Join(p.dir, "db", "EasyXray.db")); err != nil {
 		t.Fatalf("%s: open db: %v", name, err)
 	}
 	db := database.GetDB()
@@ -145,7 +145,7 @@ func (p *panel) start() {
 		p.t.Fatalf("%s: start: %v", p.name, err)
 	}
 	eventually(p.t, settleTimeout, p.name+" answers /server/status", func() (bool, string) {
-		env, err := p.try(http.MethodGet, "/panel/api/server/status", nil)
+		env, err := p.try(http.MethodGet, "/easyxray/api/v1/server/status", nil)
 		if err != nil {
 			return false, err.Error()
 		}
@@ -184,7 +184,7 @@ func (p *panel) deleteInboundRow(id int) {
 	}
 	sharedDBMu.Lock()
 	defer sharedDBMu.Unlock()
-	if err := database.InitDB(filepath.Join(p.dir, "db", "x-ui.db")); err != nil {
+	if err := database.InitDB(filepath.Join(p.dir, "db", "EasyXray.db")); err != nil {
 		p.t.Fatalf("%s: open db: %v", p.name, err)
 	}
 	defer func() { _ = database.CloseDB() }()
@@ -318,7 +318,7 @@ func (ib inboundView) client(email string) clientEntry {
 func (p *panel) inbounds() []inboundView {
 	p.t.Helper()
 	var list []inboundView
-	if err := json.Unmarshal(p.call(http.MethodGet, "/panel/api/inbounds/list", nil), &list); err != nil {
+	if err := json.Unmarshal(p.call(http.MethodGet, "/easyxray/api/v1/inbounds/list", nil), &list); err != nil {
 		p.t.Fatalf("%s: decode inbound list: %v", p.name, err)
 	}
 	return list

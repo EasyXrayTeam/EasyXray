@@ -88,7 +88,7 @@ export function useOverviewHistory(status: Status, hasData: boolean): OverviewHi
       await Promise.all(
         SERIES_KEYS.map(async (key) => {
           const msg = await HttpUtil.get<HistoryPoint[]>(
-            `/panel/api/server/history/${key}/${SEED_BUCKET_SECONDS}`,
+            `/easyxray/api/v1/server/history/${key}/${SEED_BUCKET_SECONDS}`,
             undefined,
             { silent: true },
           );
