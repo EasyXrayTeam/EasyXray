@@ -7,8 +7,10 @@ import (
 	"testing"
 
 	"github.com/EasyXrayTeam/EasyXray/v3/internal/amneziawgnet"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/config"
 	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
 	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/util/version"
 )
 
 func seedVersionedNode(t *testing.T, panelVersion string) *model.Node {
@@ -44,9 +46,9 @@ func TestAddInbound_SidecarProtocolDeploysToANodeAtItsFirstRelease(t *testing.T)
 		protocol     model.Protocol
 		firstRelease string
 	}{
-		{model.MTProto, "v3.5.0"},
-		{model.AmneziaWG, "v3.7.0"},
-		{model.TUIC, "v3.8.0"},
+		{model.MTProto, "v1.0.0"},
+		{model.AmneziaWG, "v1.0.0"},
+		{model.TUIC, "v1.0.0"},
 	}
 	for _, tc := range cases {
 		t.Run(string(tc.protocol), func(t *testing.T) {
@@ -76,7 +78,7 @@ func TestAddInbound_SidecarProtocolNodeVersionGate(t *testing.T) {
 		panelVersion string
 		wantErr      string
 	}{
-		{"one release too old", "v3.6.9", "v3.7.0"},
+		{"node older than the first release", "v0.9.0", "need v1.0.0 or newer"},
 		{"version not reported yet", "", "has not reported its panel version"},
 		{"dev build", "dev+1d1128cf", ""},
 	}
@@ -99,11 +101,26 @@ func TestAddInbound_SidecarProtocolNodeVersionGate(t *testing.T) {
 	}
 }
 
+// The floors below are release tags, so any renumbering that runs past one makes
+// a supported protocol unassignable to every node. This panel must host all of them.
+func TestNodeProtocolFirstReleaseIsNotNewerThanThisPanel(t *testing.T) {
+	panel := config.GetBaseVersion()
+	for protocol, firstRelease := range nodeProtocolFirstRelease {
+		cmp, ok := version.Compare(panel, firstRelease)
+		if !ok {
+			t.Fatalf("panel version %q is not a plain MAJOR.MINOR.PATCH", panel)
+		}
+		if cmp < 0 {
+			t.Errorf("%s inbounds need panel %s, newer than this panel (%s)", protocol, firstRelease, panel)
+		}
+	}
+}
+
 // The egress port is a loopback port on the host running mtg; one picked or
 // copied on the master can be taken on the node, so the node must allocate it.
 func TestAddInbound_NodeMtprotoLeavesTheEgressPortToTheNode(t *testing.T) {
 	setupConflictDB(t)
-	node := seedVersionedNode(t, "v3.8.0")
+	node := seedVersionedNode(t, config.GetBaseVersion())
 
 	ib := sidecarNodeInbound(t, model.MTProto, "mt-routed", node.Id)
 	ib.Settings = `{"routeThroughXray":true,"routeXrayPort":4444,` + strings.TrimPrefix(ib.Settings, "{")
@@ -141,7 +158,7 @@ func TestAddInbound_NodeAmneziaWGForwardedPortsCheckTheNodesHost(t *testing.T) {
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			setupConflictDB(t)
-			node := seedVersionedNode(t, "v3.8.0")
+			node := seedVersionedNode(t, config.GetBaseVersion())
 			var owner *int
 			if tc.onNode {
 				owner = &node.Id
@@ -182,7 +199,7 @@ func awgClientsPayload(t *testing.T, tag, address, forwardedPorts string) string
 func seedNodeAmneziaWGBesideLocalHolder(t *testing.T) *model.Inbound {
 	t.Helper()
 	setupConflictDB(t)
-	node := seedVersionedNode(t, "v3.8.0")
+	node := seedVersionedNode(t, config.GetBaseVersion())
 	seedInboundConflict(t, "holder", "0.0.0.0", 8443, model.VLESS, `{"network":"tcp"}`, `{"clients":[]}`)
 	seedInboundConflictNode(t, "awg-node", "0.0.0.0", 51820, model.AmneziaWG, ``, awgRelayWindowSettings(t, "awg-node"), &node.Id)
 	var row model.Inbound

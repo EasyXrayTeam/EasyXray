@@ -1428,8 +1428,8 @@ setup_fail2ban() {
         return 0
     fi
 
-    # Scripts older than v3.4.0 have no setup-fail2ban and exit 0 from the
-    # usage banner, which would read as success here.
+    # Upstream 3x-ui scripts older than its v3.4.0 have no setup-fail2ban and
+    # exit 0 from the usage banner, which would read as success here.
     if ! grep -q '"setup-fail2ban")' /usr/bin/easyxray; then
         echo -e "${yellow}This easyxray.sh predates 'easyxray setup-fail2ban'; skipping Fail2ban auto-setup.${plain}"
         return 0
@@ -1730,20 +1730,16 @@ install_easyxray() {
         verify_release_checksum "https://github.com/EasyXrayTeam/EasyXray/releases/download/${tag_version}/easyxray-linux-$(arch).tar.gz" "${easyxray_folder}-linux-$(arch).tar.gz"
     else
         tag_version=$1
+        # No version floor: the inherited one encoded upstream 3.x numbering and
+        # so rejected this project's own tags. The tag is validated further down
+        # by require_repo_files and the published checksum.
+
         # The rolling dev channel ships under a fixed, non-semver tag that is
         # force-moved to the latest main commit on every push. Accept `dev` as a
-        # convenient alias and skip the numeric floor check for it.
+        # convenient alias.
         if [[ "$tag_version" == "dev" || "$tag_version" == "dev-latest" ]]; then
             tag_version="dev-latest"
             echo -e "${yellow}Installing the rolling dev build (tag: dev-latest). This is a per-commit pre-release, not a stable version.${plain}"
-        else
-            tag_version_numeric=${tag_version#v}
-            min_version="2.3.5"
-
-            if [[ "$(printf '%s\n' "$min_version" "$tag_version_numeric" | sort -V | head -n1)" != "$min_version" ]]; then
-                echo -e "${red}Please use a newer version (at least v2.3.5). Exiting installation.${plain}"
-                exit 1
-            fi
         fi
 
         url="https://github.com/EasyXrayTeam/EasyXray/releases/download/${tag_version}/easyxray-linux-$(arch).tar.gz"

@@ -254,8 +254,8 @@ setup_fail2ban() {
         return 0
     fi
 
-    # Scripts older than v3.4.0 have no setup-fail2ban and exit 0 from the
-    # usage banner, which would read as success here.
+    # Upstream 3x-ui scripts older than its v3.4.0 have no setup-fail2ban and
+    # exit 0 from the usage banner, which would read as success here.
     if ! grep -q '"setup-fail2ban")' /usr/bin/easyxray; then
         echo -e "${yellow}This easyxray.sh predates 'easyxray setup-fail2ban'; skipping Fail2ban auto-setup.${plain}"
         return 0

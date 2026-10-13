@@ -59,13 +59,13 @@ var nodeEligibleProtocols = map[model.Protocol]bool{
 	model.MASQUE:      true,
 }
 
-// nodeProtocolFirstRelease is the panel release that introduced each protocol
-// newer than node support itself; an older node would hand it to Xray as-is.
+// nodeProtocolFirstRelease is the EasyXray release each protocol needs; an older
+// node hands the row to Xray as-is. All four ship in the 1.0.0 line.
 var nodeProtocolFirstRelease = map[model.Protocol]string{
-	model.MTProto:   "v3.5.0",
-	model.AmneziaWG: "v3.7.0",
-	model.TUIC:      "v3.8.0",
-	model.MASQUE:    "v3.9.1",
+	model.MTProto:   "v1.0.0",
+	model.AmneziaWG: "v1.0.0",
+	model.TUIC:      "v1.0.0",
+	model.MASQUE:    "v1.0.0",
 }
 
 // checkNodeCanHostProtocol refuses assigning protocol to nodeID unless the
