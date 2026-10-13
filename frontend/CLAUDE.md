@@ -8,7 +8,7 @@ React 19 + Ant Design 6 + Vite 8 + TypeScript. The Vite config is
 `vite.config.js` (plain JS). Three bundles, each emitted into
 `internal/web/dist/` and embedded into the Go binary:
 - `index.html` — admin panel SPA (entry `src/main.tsx`; react-router under
-  `/panel`, lazy routes).
+  `/easyxray`, lazy routes).
 - `login.html` — login + 2FA (`src/entries/login.tsx`).
 - `subpage.html` — public subscription viewer (`src/entries/subpage.tsx`).
 The `@` import alias maps to `src/`.
@@ -54,7 +54,7 @@ The `@` import alias maps to `src/`.
 
 ## Adding a panel route
 1. `src/pages/<page>/<Page>.tsx` (kebab folder, PascalCase component).
-2. Register in `src/routes.tsx` under `/panel` (lazy import).
+2. Register in `src/routes.tsx` under `/easyxray` (lazy import).
 3. Add a sidebar link in `src/layouts/AppSidebar.tsx` if it needs nav.
 Only standalone bundles (login/subpage) need a new `.html` + `src/entries/*` +
 `rollupOptions.input` (in `vite.config.js`) + a Go controller route.
@@ -68,5 +68,5 @@ Only standalone bundles (login/subpage) need a new `.html` + `src/entries/*` +
   compile-checks every story). Reusable `src/components/` get a co-located
   `<Component>.stories.tsx` with `tags: ['autodocs']`; document props via
   `argTypes` / `parameters.docs` string metadata, never JSDoc.
-- After `npm run build`, RESTART `go run .` (see the XUI_DEBUG gotcha in root
+- After `npm run build`, RESTART `go run .` (see the EASYXRAY_DEBUG gotcha in root
   CLAUDE.md) before checking the panel.

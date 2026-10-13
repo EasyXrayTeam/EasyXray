@@ -8,7 +8,7 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
 )
 
 // TestReconcileInbound_SkipsUnchanged proves the delta-skip: a second reconcile
@@ -17,8 +17,8 @@ import (
 func TestReconcileInbound_SkipsUnchanged(t *testing.T) {
 	var pushes atomic.Int32
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodPost && (strings.Contains(r.URL.Path, "/panel/api/inbounds/update/") ||
-			strings.Contains(r.URL.Path, "/panel/api/inbounds/add")) {
+		if r.Method == http.MethodPost && (strings.Contains(r.URL.Path, "/easyxray/api/v1/inbounds/update/") ||
+			strings.Contains(r.URL.Path, "/easyxray/api/v1/inbounds/add")) {
 			pushes.Add(1)
 		}
 		w.Header().Set("Content-Type", "application/json")
@@ -77,11 +77,11 @@ func newCountingNodeServer(t *testing.T, clientsResp string) (*httptest.Server, 
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		switch {
-		case strings.Contains(r.URL.Path, "/panel/api/inbounds/add"):
+		case strings.Contains(r.URL.Path, "/easyxray/api/v1/inbounds/add"):
 			counts.adds.Add(1)
-		case strings.Contains(r.URL.Path, "/panel/api/inbounds/update/"):
+		case strings.Contains(r.URL.Path, "/easyxray/api/v1/inbounds/update/"):
 			counts.inboundUpdates.Add(1)
-		case strings.Contains(r.URL.Path, "/panel/api/clients/"):
+		case strings.Contains(r.URL.Path, "/easyxray/api/v1/clients/"):
 			counts.clientMutations.Add(1)
 			_, _ = w.Write([]byte(clientsResp))
 			return
@@ -255,7 +255,7 @@ func TestDeleteUserNotFoundHandling(t *testing.T) {
 	})
 	t.Run("http 404 from an old node stays an error", func(t *testing.T) {
 		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if strings.Contains(r.URL.Path, "/panel/api/clients/") {
+			if strings.Contains(r.URL.Path, "/easyxray/api/v1/clients/") {
 				http.Error(w, "404 page not found", http.StatusNotFound)
 				return
 			}
@@ -326,12 +326,12 @@ func TestReconcileInbound_RecreatesInboundTheNodeLost(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		switch {
-		case strings.Contains(r.URL.Path, "/panel/api/inbounds/list"):
+		case strings.Contains(r.URL.Path, "/easyxray/api/v1/inbounds/list"):
 			_, _ = w.Write([]byte(`{"success":true,"obj":[]}`))
-		case strings.Contains(r.URL.Path, "/panel/api/inbounds/update/"):
+		case strings.Contains(r.URL.Path, "/easyxray/api/v1/inbounds/update/"):
 			staleUpdates.Add(1)
 			_, _ = w.Write([]byte(`{"success":false,"msg":"record not found"}`))
-		case strings.Contains(r.URL.Path, "/panel/api/inbounds/add"):
+		case strings.Contains(r.URL.Path, "/easyxray/api/v1/inbounds/add"):
 			adds.Add(1)
 			_, _ = w.Write([]byte(`{"success":true,"obj":{"id":9,"tag":"in-1"}}`))
 		default:

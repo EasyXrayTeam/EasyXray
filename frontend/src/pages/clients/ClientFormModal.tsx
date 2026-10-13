@@ -584,7 +584,7 @@ export default function ClientFormModal({
     setIpsLoading(true);
     try {
       const msg = (await HttpUtil.post(
-        `/panel/api/clients/ips/${encodeURIComponent(client.email)}`,
+        `/easyxray/api/v1/clients/ips/${encodeURIComponent(client.email)}`,
       )) as ApiMsg<unknown[]>;
       if (!msg?.success) {
         setClientIps([]);
@@ -606,7 +606,7 @@ export default function ClientFormModal({
     setIpsClearing(true);
     try {
       const msg = (await HttpUtil.post(
-        `/panel/api/clients/clearIps/${encodeURIComponent(client.email)}`,
+        `/easyxray/api/v1/clients/clearIps/${encodeURIComponent(client.email)}`,
       )) as ApiMsg;
       if (msg?.success) setClientIps([]);
     } finally {

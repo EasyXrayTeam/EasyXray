@@ -15,25 +15,25 @@ import (
 
 	"gorm.io/gorm"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/locale"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/dbtest"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/locale"
 )
 
 func newNodeCredentialTestEngine(t *testing.T) *gin.Engine {
 	t.Helper()
 	gin.SetMode(gin.TestMode)
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("EASYXRAY_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "EasyXray.db"))
 
 	engine := gin.New()
 	engine.Use(func(c *gin.Context) {
 		c.Set("I18n", func(_ locale.I18nType, key string, _ ...string) string { return key })
 		c.Next()
 	})
-	NewNodeController(engine.Group("/panel/api/nodes"))
+	NewNodeController(engine.Group("/easyxray/api/v1/nodes"))
 	return engine
 }
 
@@ -51,7 +51,7 @@ func TestNodeControllerResponsesDoNotLeakApiToken(t *testing.T) {
 		t.Fatalf("seed node: %v", err)
 	}
 
-	for _, path := range []string{"/panel/api/nodes/list", "/panel/api/nodes/get/1"} {
+	for _, path := range []string{"/easyxray/api/v1/nodes/list", "/easyxray/api/v1/nodes/get/1"} {
 		w := httptest.NewRecorder()
 		engine.ServeHTTP(w, httptest.NewRequest(http.MethodGet, path, nil))
 		if w.Code != http.StatusOK {
@@ -104,7 +104,7 @@ func TestNodeControllerProbeReportsHeartbeatPersistenceFailure(t *testing.T) {
 	})
 
 	w := httptest.NewRecorder()
-	engine.ServeHTTP(w, httptest.NewRequest(http.MethodPost, "/panel/api/nodes/probe/"+strconv.Itoa(node.Id), nil))
+	engine.ServeHTTP(w, httptest.NewRequest(http.MethodPost, "/easyxray/api/v1/nodes/probe/"+strconv.Itoa(node.Id), nil))
 	if !strings.Contains(w.Body.String(), `"success":false`) {
 		t.Fatalf("probe reported success despite heartbeat persistence failure: %s", w.Body.String())
 	}
@@ -117,7 +117,7 @@ func TestNodeControllerAddAcceptsTokenButReturnsView(t *testing.T) {
 	engine := newNodeCredentialTestEngine(t)
 
 	remote := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/panel/api/server/status" {
+		if r.URL.Path != "/easyxray/api/v1/server/status" {
 			t.Fatalf("unexpected path: %s", r.URL.Path)
 		}
 		if got := r.Header.Get("Authorization"); got != "Bearer input-secret-token" {
@@ -148,7 +148,7 @@ func TestNodeControllerAddAcceptsTokenButReturnsView(t *testing.T) {
 	}
 	raw, _ := json.Marshal(payload)
 	w := httptest.NewRecorder()
-	req := httptest.NewRequest(http.MethodPost, "/panel/api/nodes/add", strings.NewReader(string(raw)))
+	req := httptest.NewRequest(http.MethodPost, "/easyxray/api/v1/nodes/add", strings.NewReader(string(raw)))
 	req.Header.Set("Content-Type", "application/json")
 	engine.ServeHTTP(w, req)
 	if w.Code != http.StatusOK {
@@ -175,7 +175,7 @@ func TestNodeControllerUpdateBlankApiTokenKeepsStoredToken(t *testing.T) {
 	engine := newNodeCredentialTestEngine(t)
 
 	remote := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/panel/api/server/status" {
+		if r.URL.Path != "/easyxray/api/v1/server/status" {
 			t.Fatalf("unexpected path: %s", r.URL.Path)
 		}
 		if got := r.Header.Get("Authorization"); got != "Bearer stored-secret-token" {
@@ -219,7 +219,7 @@ func TestNodeControllerUpdateBlankApiTokenKeepsStoredToken(t *testing.T) {
 	}
 	raw, _ := json.Marshal(payload)
 	w := httptest.NewRecorder()
-	req := httptest.NewRequest(http.MethodPost, "/panel/api/nodes/update/"+strconv.Itoa(node.Id), strings.NewReader(string(raw)))
+	req := httptest.NewRequest(http.MethodPost, "/easyxray/api/v1/nodes/update/"+strconv.Itoa(node.Id), strings.NewReader(string(raw)))
 	req.Header.Set("Content-Type", "application/json")
 	engine.ServeHTTP(w, req)
 	if w.Code != http.StatusOK {

@@ -17,18 +17,18 @@ import (
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/config"
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/common"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/netproxy"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/random"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/reflect_util"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/totp"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/entity"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray/dnsconf"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/config"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/logger"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/util/common"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/util/netproxy"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/util/random"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/util/reflect_util"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/util/totp"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/entity"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/xray"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/xray/dnsconf"
 )
 
 //go:embed config.json
@@ -72,7 +72,7 @@ var defaultValueMap = map[string]string{
 	"nodeMtlsClientKeyPem":        "",
 	"nodeMtlsClientCertSha256":    "",
 	"nodeMtlsClientCAPem":         "",
-	"webBasePath":                 normalizeBasePath(getEnv("XUI_INIT_WEB_BASE_PATH", "/")),
+	"webBasePath":                 normalizeBasePath(getEnv("EASYXRAY_INIT_WEB_BASE_PATH", "/")),
 	"sessionMaxAge":               "360",
 	"trustedProxyCIDRs":           DefaultTrustedProxyCIDRs,
 	"realityScanCandidates":       DefaultRealityScanCandidatesCSV,

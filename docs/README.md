@@ -1,45 +1,45 @@
 <p align="center">
-  <a href="https://docs.sanaei.dev">
+  <a href="https://easyxrayteam.github.io/EasyXray">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="public/logo-dark.png" />
-      <img src="public/logo-light.png" alt="3x-ui" width="180" />
+      <img src="public/logo-light.png" alt="EasyXray" width="180" />
     </picture>
   </a>
 </p>
 
-<h1 align="center">3x-ui Documentation</h1>
+<h1 align="center">EasyXray Documentation</h1>
 
 <p align="center">
   The official documentation and product site for
-  <a href="https://github.com/MHSanaei/3x-ui"><b>3x-ui</b></a> —
+  <a href="https://github.com/EasyXrayTeam/EasyXray"><b>EasyXray</b></a> —
   an advanced web panel for managing Xray-core servers.
 </p>
 
 <p align="center">
-  <a href="https://docs.sanaei.dev"><img src="https://img.shields.io/badge/docs-docs.sanaei.dev-22d3ee?style=flat-square" alt="Live site" /></a>
-  <a href="https://github.com/MHSanaei/3x-ui/actions/workflows/docs-ci.yml"><img src="https://github.com/MHSanaei/3x-ui/actions/workflows/docs-ci.yml/badge.svg" alt="CI" /></a>
+  <a href="https://easyxrayteam.github.io/EasyXray"><img src="https://img.shields.io/badge/docs-easyxrayteam.github.io/EasyXray-22d3ee?style=flat-square" alt="Live site" /></a>
+  <a href="https://github.com/EasyXrayTeam/EasyXray/actions/workflows/docs-ci.yml"><img src="https://github.com/EasyXrayTeam/EasyXray/actions/workflows/docs-ci.yml/badge.svg" alt="CI" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue?style=flat-square" alt="License: GPL-3.0" /></a>
   <img src="https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js" alt="Next.js 16" />
   <img src="https://img.shields.io/badge/Fumadocs-16-0ea5e9?style=flat-square" alt="Fumadocs 16" />
 </p>
 
 <p align="center">
-  <a href="https://docs.sanaei.dev"><b>Read the docs →</b></a>
+  <a href="https://easyxrayteam.github.io/EasyXray"><b>Read the docs →</b></a>
 </p>
 
 ---
 
 ## Overview
 
-This directory (`docs/` in the [3x-ui](https://github.com/MHSanaei/3x-ui) monorepo) contains
-the source for [docs.sanaei.dev](https://docs.sanaei.dev) — a static-first documentation and
+This directory (`docs/` in the [EasyXray](https://github.com/EasyXrayTeam/EasyXray) monorepo) contains
+the source for [easyxrayteam.github.io/EasyXray](https://easyxrayteam.github.io/EasyXray) — a static-first documentation and
 marketing site built with [Fumadocs](https://fumadocs.dev) on Next.js. It has **no backend,
 no database, and no auth**: every page is prerendered and every tool runs entirely in the
 browser.
 
 ## What's inside
 
-The documentation walks you through 3x-ui from first install to day-to-day operation:
+The documentation walks you through EasyXray from first install to day-to-day operation:
 
 - **Getting Started** — installation, first login, and updating or uninstalling the panel.
 - **Configuration** — the panel, inbounds, REALITY, transports, clients, subscriptions, and share links.
@@ -103,10 +103,10 @@ app/             # Next.js App Router — layouts, home, docs, OG images, search
 components/      # React components — interactive tools, home sections, MDX bindings
 content/docs/    # MDX documentation, one folder per locale (en · fa · ru · zh)
 lib/             # source config, i18n, GitHub stats, and the unit-tested lib/xray logic
-public/          # static assets — logos, favicon, openapi.json, CNAME
+public/          # static assets — logos, favicon, openapi.json
 scripts/         # build-time scripts (API reference generation)
 source.config.ts # Fumadocs MDX schema & collection config
-next.config.mjs  # Next.js config (static-export gating)
+next.config.mjs  # Next.js config (static-export gating + GitHub Pages base path)
 proxy.ts         # i18n middleware
 ```
 
@@ -121,7 +121,28 @@ never 404. English URLs are unprefixed; other locales live under `/fa`, `/ru`, `
 The site builds for two targets:
 
 - **Vercel / Node** — `pnpm build` (static search index + prerendered OG images).
+  Served from the domain root, so no base path is applied.
 - **GitHub Pages (static export)** — `DEPLOY_TARGET=static pnpm build` → `out/`.
+
+### GitHub Pages
+
+The site is published as a **project site** at
+<https://easyxrayteam.github.io/EasyXray/>, i.e. from the `/EasyXray` sub-path:
+
+- **Enable GitHub Pages in the repository settings** (*Settings → Pages → Build and
+  deployment → Source: GitHub Actions*) before the first deploy. The workflow
+  (`.github/workflows/docs-deploy.yml`) uploads `docs/out` as the Pages artifact, but
+  the site will not go live until Pages is switched on there.
+- `DEPLOY_TARGET=static` also sets `basePath`/`assetPrefix` to `/EasyXray` in
+  `next.config.mjs`, so every route and every `_next/` asset is emitted under that
+  prefix. Without it the published site 404s on its own CSS, JS, and images.
+- Raw asset URLs that Next does not rewrite (the logos in `components/logo.tsx`, the
+  metadata icons in `app/layout.tsx`) go through `basePath` from `lib/shared.ts`.
+  Use it for any new absolute URL you add.
+- There is **no `public/CNAME`**: a GitHub Pages project site is served from its
+  `/EasyXray` sub-path and needs no custom-domain file.
+- `NEXT_PUBLIC_SITE_URL` is optional; it defaults to the production origin in
+  `lib/shared.ts`.
 
 ## Contributing
 

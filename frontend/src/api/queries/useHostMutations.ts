@@ -12,7 +12,7 @@ export function useHostMutations() {
 
   const bulkCreateMut = useMutation({
     mutationFn: (payload: BulkAddHostValues) =>
-      HttpUtil.post('/panel/api/hosts/bulk/add', payload, JSON_HEADERS),
+      HttpUtil.post('/easyxray/api/v1/hosts/bulk/add', payload, JSON_HEADERS),
     onSuccess: (msg) => {
       if (msg?.success) invalidate();
     },
@@ -20,14 +20,14 @@ export function useHostMutations() {
 
   const updateMut = useMutation({
     mutationFn: ({ groupId, payload }: { groupId: string; payload: BulkAddHostValues }) =>
-      HttpUtil.post(`/panel/api/hosts/update/${groupId}`, payload, JSON_HEADERS),
+      HttpUtil.post(`/easyxray/api/v1/hosts/update/${groupId}`, payload, JSON_HEADERS),
     onSuccess: (msg) => {
       if (msg?.success) invalidate();
     },
   });
 
   const removeMut = useMutation({
-    mutationFn: (groupId: string) => HttpUtil.post(`/panel/api/hosts/del/${groupId}`),
+    mutationFn: (groupId: string) => HttpUtil.post(`/easyxray/api/v1/hosts/del/${groupId}`),
     onSuccess: (msg) => {
       if (msg?.success) invalidate();
     },
@@ -35,7 +35,7 @@ export function useHostMutations() {
 
   const setEnableMut = useMutation({
     mutationFn: ({ groupId, enable }: { groupId: string; enable: boolean }) =>
-      HttpUtil.post(`/panel/api/hosts/setEnable/${groupId}`, { enable }),
+      HttpUtil.post(`/easyxray/api/v1/hosts/setEnable/${groupId}`, { enable }),
     onSuccess: (msg) => {
       if (msg?.success) invalidate();
     },
@@ -43,7 +43,7 @@ export function useHostMutations() {
 
   const reorderMut = useMutation({
     mutationFn: (groupIds: string[]) =>
-      HttpUtil.post('/panel/api/hosts/reorder', { ids: groupIds }, JSON_HEADERS),
+      HttpUtil.post('/easyxray/api/v1/hosts/reorder', { ids: groupIds }, JSON_HEADERS),
     onSuccess: (msg) => {
       if (msg?.success) invalidate();
     },
@@ -51,7 +51,11 @@ export function useHostMutations() {
 
   const bulkEnableMut = useMutation({
     mutationFn: ({ groupIds, enable }: { groupIds: string[]; enable: boolean }) =>
-      HttpUtil.post('/panel/api/hosts/bulk/setEnable', { ids: groupIds, enable }, JSON_HEADERS),
+      HttpUtil.post(
+        '/easyxray/api/v1/hosts/bulk/setEnable',
+        { ids: groupIds, enable },
+        JSON_HEADERS,
+      ),
     onSuccess: (msg) => {
       if (msg?.success) invalidate();
     },
@@ -59,7 +63,7 @@ export function useHostMutations() {
 
   const bulkDelMut = useMutation({
     mutationFn: (groupIds: string[]) =>
-      HttpUtil.post('/panel/api/hosts/bulk/del', { ids: groupIds }, JSON_HEADERS),
+      HttpUtil.post('/easyxray/api/v1/hosts/bulk/del', { ids: groupIds }, JSON_HEADERS),
     onSuccess: (msg) => {
       if (msg?.success) invalidate();
     },

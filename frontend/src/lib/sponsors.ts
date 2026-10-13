@@ -2,7 +2,7 @@ import type { Sponsor } from '@/generated/types';
 
 export type SponsorSlot = 'dashboard' | 'sidebar' | 'page' | 'login';
 
-const DISMISS_KEY = 'xui.sponsor.dismissed';
+const DISMISS_KEY = 'easyxray.sponsor.dismissed';
 export const SPONSOR_DISMISS_MS = 24 * 60 * 60 * 1000;
 
 export function pickLocale(map: Record<string, string> | undefined, lang: string): string {

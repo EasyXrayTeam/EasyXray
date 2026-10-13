@@ -13,10 +13,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/runtime"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/runtime"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/xray"
 )
 
 // resetGate holds every node reset open until released, counting how many nodes
@@ -46,7 +46,7 @@ func resetNode(t *testing.T, gate *resetGate, name, inboundTag string) int {
 	t.Helper()
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		_, _ = io.Copy(io.Discard, r.Body)
-		if strings.HasSuffix(r.URL.Path, "/panel/api/inbounds/list") {
+		if strings.HasSuffix(r.URL.Path, "/easyxray/api/v1/inbounds/list") {
 			w.Header().Set("Content-Type", "application/json")
 			_, _ = fmt.Fprintf(w, `{"success":true,"obj":[{"id":1,"tag":%q}]}`, inboundTag)
 			return

@@ -43,9 +43,12 @@ export default function AmneziaWGLogModal({ open, onClose }: AmneziaWGLogModalPr
 
   const runRefresh = useCallback(async () => {
     try {
-      const msg = await HttpUtil.post<AmneziaWGLogs>(`/panel/api/server/amneziawglogs/${rows}`, {
-        filter,
-      });
+      const msg = await HttpUtil.post<AmneziaWGLogs>(
+        `/easyxray/api/v1/server/amneziawglogs/${rows}`,
+        {
+          filter,
+        },
+      );
       if (msg?.success) setLogs(msg.obj || {});
       await PromiseUtil.sleep(300);
     } finally {

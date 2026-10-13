@@ -163,7 +163,7 @@ export default function CommandPalette() {
     const controller = new AbortController();
 
     HttpUtil.get(
-      `/panel/api/clients/list/paged?search=${encodeURIComponent(debouncedQuery)}&pageSize=8`,
+      `/easyxray/api/v1/clients/list/paged?search=${encodeURIComponent(debouncedQuery)}&pageSize=8`,
       undefined,
       { silent: true, signal: controller.signal },
     )
@@ -207,7 +207,7 @@ export default function CommandPalette() {
 
   const restartXray = useCallback(async () => {
     close();
-    const msg = await HttpUtil.post('/panel/api/server/restartXrayService', undefined, {
+    const msg = await HttpUtil.post('/easyxray/api/v1/server/restartXrayService', undefined, {
       silentSuccess: true,
     });
     if (msg?.success) {
@@ -812,7 +812,7 @@ export default function CommandPalette() {
                 {t('close')}
               </span>
             </div>
-            <span>3x-ui Command Palette</span>
+            <span>EasyXray Command Palette</span>
           </div>
         </div>
       </div>

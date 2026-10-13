@@ -409,7 +409,7 @@ export default function InboundsPage() {
   );
 
   const exportAllLinks = useCallback(async () => {
-    const msg = await HttpUtil.get('/panel/api/inbounds/allLinks');
+    const msg = await HttpUtil.get('/easyxray/api/v1/inbounds/allLinks');
     const links = msg?.success && Array.isArray(msg.obj) ? (msg.obj as string[]) : [];
     openText({
       title: t('pages.inbounds.exportAllLinksTitle'),
@@ -447,7 +447,7 @@ export default function InboundsPage() {
       value: '',
       json: true,
       confirm: async (value) => {
-        const msg = await HttpUtil.post('/panel/api/inbounds/import', { data: value });
+        const msg = await HttpUtil.post('/easyxray/api/v1/inbounds/import', { data: value });
         if (msg?.success) {
           await refresh();
           return true;
@@ -478,7 +478,7 @@ export default function InboundsPage() {
         okType: 'danger',
         cancelText: t('cancel'),
         onOk: async () => {
-          const msg = await HttpUtil.post(`/panel/api/inbounds/del/${dbInbound.id}`);
+          const msg = await HttpUtil.post(`/easyxray/api/v1/inbounds/del/${dbInbound.id}`);
           if (msg?.success) await refresh();
         },
       });
@@ -501,7 +501,7 @@ export default function InboundsPage() {
           cancelText: t('cancel'),
           onOk: async () => {
             const msg = await HttpUtil.post(
-              '/panel/api/inbounds/bulkDel',
+              '/easyxray/api/v1/inbounds/bulkDel',
               { ids },
               { headers: { 'Content-Type': 'application/json' } },
             );
@@ -538,7 +538,7 @@ export default function InboundsPage() {
         okText: t('reset'),
         cancelText: t('cancel'),
         onOk: async () => {
-          const msg = await HttpUtil.post(`/panel/api/inbounds/${dbInbound.id}/resetTraffic`);
+          const msg = await HttpUtil.post(`/easyxray/api/v1/inbounds/${dbInbound.id}/resetTraffic`);
           if (msg?.success) await refresh();
         },
       });
@@ -556,7 +556,9 @@ export default function InboundsPage() {
         okType: 'danger',
         cancelText: t('cancel'),
         onOk: async () => {
-          const msg = await HttpUtil.post(`/panel/api/inbounds/${dbInbound.id}/delAllClients`);
+          const msg = await HttpUtil.post(
+            `/easyxray/api/v1/inbounds/${dbInbound.id}/delAllClients`,
+          );
           if (msg?.success) await refresh();
         },
       });
@@ -583,7 +585,7 @@ export default function InboundsPage() {
         cancelText: t('cancel'),
         onOk: async () => {
           const msg = await HttpUtil.post(
-            '/panel/api/inbounds/add',
+            '/easyxray/api/v1/inbounds/add',
             buildClonePayload(dbInbound, RandomUtil.randomInteger(10000, 60000), null),
           );
           if (msg?.success) await refresh();
@@ -611,7 +613,7 @@ export default function InboundsPage() {
             okText: t('reset'),
             cancelText: t('cancel'),
             onOk: async () => {
-              const msg = await HttpUtil.post('/panel/api/inbounds/resetAllTraffics');
+              const msg = await HttpUtil.post('/easyxray/api/v1/inbounds/resetAllTraffics');
               if (msg?.success) await refresh();
             },
           });

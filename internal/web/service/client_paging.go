@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/xray"
 
 	"gorm.io/gorm"
 )
@@ -38,7 +38,7 @@ type ClientSlim struct {
 	UpdatedAt    int64               `json:"updatedAt" example:"1735100000000"`
 }
 
-// ClientPageParams are the query params accepted by /panel/api/clients/list/paged.
+// ClientPageParams are the query params accepted by /easyxray/api/v1/clients/list/paged.
 // All fields are optional — the empty value means "no filter" / defaults.
 //
 // Filter / Protocol / Inbound accept either a single value or a comma-separated

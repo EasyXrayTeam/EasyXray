@@ -1,5 +1,5 @@
 // Shape of one entry in a client's HWID (registered-device) log, as returned
-// by POST /panel/api/clients/hwids/:email.
+// by POST /easyxray/api/v1/clients/hwids/:email.
 export type ClientHwidInfo = {
   id: number;
   firstSeen: number;

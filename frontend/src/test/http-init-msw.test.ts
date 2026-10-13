@@ -11,13 +11,13 @@ const ORIGIN = 'http://localhost';
 describe('httpRequest against the MSW-mocked network', () => {
   beforeEach(() => {
     vi.stubGlobal('document', { querySelector: () => null });
-    window.X_UI_BASE_PATH = ORIGIN;
+    window.EASYXRAY_BASE_PATH = ORIGIN;
     setupHttp();
   });
 
   afterEach(() => {
     vi.unstubAllGlobals();
-    delete window.X_UI_BASE_PATH;
+    delete window.EASYXRAY_BASE_PATH;
   });
 
   it('fetches a CSRF token, then refetches and retries once after a 403', async () => {
@@ -25,7 +25,7 @@ describe('httpRequest against the MSW-mocked network', () => {
     const sentTokens: (string | null)[] = [];
     server.use(
       http.get(`${ORIGIN}/csrf-token`, () => HttpResponse.json({ success: true, obj: CSRF_TOKEN })),
-      http.post(`${ORIGIN}/panel/api/test`, ({ request }) => {
+      http.post(`${ORIGIN}/easyxray/api/v1/test`, ({ request }) => {
         posts += 1;
         sentTokens.push(request.headers.get('X-CSRF-Token'));
         if (posts === 1) return new HttpResponse(null, { status: 403 });
@@ -33,7 +33,7 @@ describe('httpRequest against the MSW-mocked network', () => {
       }),
     );
 
-    const res = await httpRequest('POST', '/panel/api/test', { hello: 'world' });
+    const res = await httpRequest('POST', '/easyxray/api/v1/test', { hello: 'world' });
 
     expect(posts).toBe(2);
     expect(sentTokens).toEqual([CSRF_TOKEN, CSRF_TOKEN]);
@@ -54,7 +54,7 @@ describe('httpRequest against the MSW-mocked network', () => {
     const sentTokens: (string | null)[] = [];
     server.use(
       http.get(`${ORIGIN}/csrf-token`, () => HttpResponse.json({ success: true, obj: FRESH })),
-      http.post(`${ORIGIN}/panel/api/test`, ({ request }) => {
+      http.post(`${ORIGIN}/easyxray/api/v1/test`, ({ request }) => {
         posts += 1;
         const token = request.headers.get('X-CSRF-Token');
         sentTokens.push(token);
@@ -63,7 +63,7 @@ describe('httpRequest against the MSW-mocked network', () => {
       }),
     );
 
-    const res = await httpRequest('POST', '/panel/api/test', { hello: 'world' });
+    const res = await httpRequest('POST', '/easyxray/api/v1/test', { hello: 'world' });
 
     expect(sentTokens).toEqual([STALE, FRESH]);
     expect(posts).toBe(2);
@@ -77,12 +77,12 @@ describe('httpRequest against the MSW-mocked network', () => {
         csrfHits += 1;
         return HttpResponse.json({ success: true, obj: CSRF_TOKEN });
       }),
-      http.get(`${ORIGIN}/panel/api/status`, () =>
+      http.get(`${ORIGIN}/easyxray/api/v1/status`, () =>
         HttpResponse.json({ success: true, obj: { up: true } }),
       ),
     );
 
-    const res = await httpRequest('GET', '/panel/api/status');
+    const res = await httpRequest('GET', '/easyxray/api/v1/status');
 
     expect(csrfHits).toBe(0);
     expect(res.status).toBe(200);

@@ -71,14 +71,16 @@ const TRACKED_PROTOCOLS: readonly string[] = [
 ];
 
 async function fetchSlimInbounds(): Promise<unknown[]> {
-  const msg = await HttpUtil.get('/panel/api/inbounds/list/slim', undefined, { silent: true });
+  const msg = await HttpUtil.get('/easyxray/api/v1/inbounds/list/slim', undefined, {
+    silent: true,
+  });
   if (!msg?.success) throw new Error(msg?.msg || 'Failed to fetch inbounds');
   const validated = parseMsg(msg, SlimInboundListSchema, 'inbounds/list/slim');
   return Array.isArray(validated.obj) ? validated.obj : [];
 }
 
 async function fetchOnlineClients(): Promise<string[]> {
-  const msg = await HttpUtil.post('/panel/api/clients/onlines', undefined, { silent: true });
+  const msg = await HttpUtil.post('/easyxray/api/v1/clients/onlines', undefined, { silent: true });
   if (!msg?.success) throw new Error(msg?.msg || 'Failed to fetch onlines');
   const validated = parseMsg(msg, OnlinesSchema, 'clients/onlines');
   return Array.isArray(validated.obj) ? validated.obj : [];
@@ -89,7 +91,9 @@ async function fetchOnlineClients(): Promise<string[]> {
 // node is not shown online on every node's inbounds — and a client on a
 // sub-node is attributed to that sub-node, not the node it syncs through (#4983).
 async function fetchOnlineClientsByGuid(): Promise<Record<string, string[]>> {
-  const msg = await HttpUtil.post('/panel/api/clients/onlinesByGuid', undefined, { silent: true });
+  const msg = await HttpUtil.post('/easyxray/api/v1/clients/onlinesByGuid', undefined, {
+    silent: true,
+  });
   if (!msg?.success) throw new Error(msg?.msg || 'Failed to fetch onlinesByGuid');
   const validated = parseMsg(msg, OnlineByNodeSchema, 'clients/onlinesByGuid');
   return validated.obj && typeof validated.obj === 'object'
@@ -102,7 +106,9 @@ async function fetchOnlineClientsByGuid(): Promise<Record<string, string[]>> {
 // is only marked online on the ones that actually moved bytes — Xray's
 // user-level stat can't attribute traffic to a single inbound on its own.
 async function fetchActiveInboundsByNode(): Promise<Record<string, string[]>> {
-  const msg = await HttpUtil.post('/panel/api/clients/activeInbounds', undefined, { silent: true });
+  const msg = await HttpUtil.post('/easyxray/api/v1/clients/activeInbounds', undefined, {
+    silent: true,
+  });
   if (!msg?.success) throw new Error(msg?.msg || 'Failed to fetch activeInbounds');
   const validated = parseMsg(msg, ActiveInboundsByNodeSchema, 'clients/activeInbounds');
   return validated.obj && typeof validated.obj === 'object'
@@ -132,14 +138,16 @@ function sameGuidSets(a: Map<string, Set<string>>, b: Map<string, Set<string>>):
 }
 
 async function fetchLastOnlineMap(): Promise<Record<string, number>> {
-  const msg = await HttpUtil.post('/panel/api/clients/lastOnline', undefined, { silent: true });
+  const msg = await HttpUtil.post('/easyxray/api/v1/clients/lastOnline', undefined, {
+    silent: true,
+  });
   if (!msg?.success) throw new Error(msg?.msg || 'Failed to fetch lastOnline');
   const validated = parseMsg(msg, LastOnlineMapSchema, 'clients/lastOnline');
   return validated.obj && typeof validated.obj === 'object' ? validated.obj : {};
 }
 
 async function fetchDefaultSettings(): Promise<DefaultsPayload> {
-  const msg = await HttpUtil.post('/panel/api/setting/defaultSettings', undefined, {
+  const msg = await HttpUtil.post('/easyxray/api/v1/setting/defaultSettings', undefined, {
     silent: true,
   });
   if (!msg?.success) throw new Error(msg?.msg || 'Failed to fetch defaults');
@@ -421,7 +429,7 @@ export function useInbounds() {
   // before opening edit / info / qr / export / clone flows — refresh() loads
   // the slim list which doesn't carry per-client secrets.
   const hydrateInbound = useCallback(async (id: number) => {
-    const msg = await HttpUtil.get(`/panel/api/inbounds/get/${id}`);
+    const msg = await HttpUtil.get(`/easyxray/api/v1/inbounds/get/${id}`);
     if (!msg?.success || !msg.obj) return null;
     const validated = parseMsg(msg, InboundDetailSchema, `inbounds/get/${id}`);
     if (!validated.obj) return null;

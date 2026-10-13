@@ -60,7 +60,7 @@ export default function IndexPage() {
     updateAvailable: false,
   });
 
-  const basePath = window.X_UI_BASE_PATH || '';
+  const basePath = window.EASYXRAY_BASE_PATH || '';
 
   const [showIp, setShowIp] = useState(false);
   const [logsOpen, setLogsOpen] = useState(false);
@@ -80,20 +80,20 @@ export default function IndexPage() {
 
   useEffect(() => {
     HttpUtil.post<{ accessLogEnable?: boolean; devChannelEnable?: boolean }>(
-      '/panel/api/setting/defaultSettings',
+      '/easyxray/api/v1/setting/defaultSettings',
     ).then((msg) => {
       if (msg?.success && msg.obj) {
         setAccessLogEnable(!!msg.obj.accessLogEnable);
         setDevChannelEnable(!!msg.obj.devChannelEnable);
       }
     });
-    HttpUtil.get<PanelUpdateInfo>('/panel/api/server/getPanelUpdateInfo').then((msg) => {
+    HttpUtil.get<PanelUpdateInfo>('/easyxray/api/v1/server/getPanelUpdateInfo').then((msg) => {
       if (msg?.success && msg.obj) setPanelUpdateInfo(msg.obj);
     });
   }, []);
 
   const displayVersion = useMemo(
-    () => window.X_UI_CUR_VER || panelUpdateInfo.currentVersion || '?',
+    () => window.EASYXRAY_CUR_VER || panelUpdateInfo.currentVersion || '?',
     [panelUpdateInfo.currentVersion],
   );
 
@@ -103,27 +103,27 @@ export default function IndexPage() {
   }, []);
 
   const stopXray = useCallback(async () => {
-    await HttpUtil.post('/panel/api/server/stopXrayService');
+    await HttpUtil.post('/easyxray/api/v1/server/stopXrayService');
     await refresh();
   }, [refresh]);
 
   const restartXray = useCallback(async () => {
-    await HttpUtil.post('/panel/api/server/restartXrayService');
+    await HttpUtil.post('/easyxray/api/v1/server/restartXrayService');
     await refresh();
   }, [refresh]);
 
   async function handleChannelChange(dev: boolean) {
-    const res = await HttpUtil.post('/panel/api/server/setUpdateChannel', { dev });
+    const res = await HttpUtil.post('/easyxray/api/v1/server/setUpdateChannel', { dev });
     if (!res?.success) return;
     setDevChannelEnable(dev);
-    const msg = await HttpUtil.get<PanelUpdateInfo>('/panel/api/server/getPanelUpdateInfo');
+    const msg = await HttpUtil.get<PanelUpdateInfo>('/easyxray/api/v1/server/getPanelUpdateInfo');
     if (msg?.success && msg.obj) setPanelUpdateInfo(msg.obj);
   }
 
   async function openConfig() {
     setLoading(true);
     try {
-      const msg = await HttpUtil.get('/panel/api/server/getConfigJson');
+      const msg = await HttpUtil.get('/easyxray/api/v1/server/getConfigJson');
       if (!msg?.success) return;
       setConfigText(JSON.stringify(msg.obj, null, 2));
       setConfigTextOpen(true);

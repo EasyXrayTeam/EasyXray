@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	xuilogger "github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/json_util"
+	easyxraylogger "github.com/EasyXrayTeam/EasyXray/v3/internal/logger"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/util/json_util"
 
 	"github.com/op/go-logging"
 )
@@ -14,7 +14,7 @@ import (
 func TestMain(m *testing.M) {
 	// ComputeHotDiff logs the section that blocks a hot apply; the package
 	// logger must exist before any test exercises a blocked path.
-	xuilogger.InitLogger(logging.ERROR)
+	easyxraylogger.InitLogger(logging.ERROR)
 	os.Exit(m.Run())
 }
 
@@ -417,7 +417,7 @@ func TestComputeHotDiff_RealityClientOnlyChangeStaysHot(t *testing.T) {
 // nowhere until the next full restart -- confirmed directly on a real box
 // (iptables TPROXY counters incrementing, but `ss` showing nothing listening
 // on the bridge port; the listener only appeared after `systemctl restart
-// x-ui`). This must force a restart instead of a hot add.
+// easyxray`). This must force a restart instead of a hot add.
 func TestComputeHotDiff_NewTproxyInboundNeedsRestart(t *testing.T) {
 	oldCfg := makeHotConfig()
 	newCfg := makeHotConfig()

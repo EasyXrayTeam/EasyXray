@@ -11,11 +11,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/crypto"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/runtime"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/dbtest"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/util/crypto"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/runtime"
 )
 
 // A sub-node stores whatever the master pushes. A master row whose certificate
@@ -23,8 +23,8 @@ import (
 func TestNodeSyncPushSkipsOperatorTLSGuard(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("EASYXRAY_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "EasyXray.db"))
 	prev := runtime.GetManager()
 	runtime.SetManager(runtime.NewManager(runtime.LocalDeps{APIPort: func() int { return 0 }, SetNeedRestart: func() {}}))
 	t.Cleanup(func() { runtime.SetManager(prev) })
@@ -38,7 +38,7 @@ func TestNodeSyncPushSkipsOperatorTLSGuard(t *testing.T) {
 
 	engine := gin.New()
 	a := &APIController{}
-	api := engine.Group("/panel/api")
+	api := engine.Group("/easyxray/api/v1")
 	api.Use(a.checkAPIAuth, a.enforceTokenScope)
 	NewInboundController(api.Group("/inbounds"))
 
@@ -53,7 +53,7 @@ func TestNodeSyncPushSkipsOperatorTLSGuard(t *testing.T) {
 			"settings":       {`{"clients":[]}`},
 			"streamSettings": {legacyStream},
 		}
-		req := httptest.NewRequest(http.MethodPost, "/panel/api/inbounds/add", strings.NewReader(form.Encode()))
+		req := httptest.NewRequest(http.MethodPost, "/easyxray/api/v1/inbounds/add", strings.NewReader(form.Encode()))
 		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 		req.Header.Set("Authorization", "Bearer "+token)
 		w := httptest.NewRecorder()

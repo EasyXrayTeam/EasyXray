@@ -102,5 +102,6 @@ import { HttpUtil, Msg } from '@/utils';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 vi.spyOn(HttpUtil, 'post').mockResolvedValue({ success: true, obj: {} } as any);
 vi.spyOn(HttpUtil, 'get').mockImplementation(
-  async (url: string) => new Msg(true, '', url.includes('/panel/api/inbounds/options') ? [] : {}),
+  async (url: string) =>
+    new Msg(true, '', url.includes('/easyxray/api/v1/inbounds/options') ? [] : {}),
 );

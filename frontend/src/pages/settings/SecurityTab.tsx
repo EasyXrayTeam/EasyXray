@@ -98,13 +98,13 @@ export default function SecurityTab({ allSetting, updateSetting, saveSetting }: 
     async (twoFactorCode = '') => {
       setUpdating(true);
       try {
-        const msg = (await HttpUtil.post('/panel/api/setting/updateUser', {
+        const msg = (await HttpUtil.post('/easyxray/api/v1/setting/updateUser', {
           ...user,
           twoFactorCode,
         })) as ApiMsg;
         if (msg?.success) {
           await HttpUtil.post('/logout');
-          const basePath = window.X_UI_BASE_PATH || '/';
+          const basePath = window.EASYXRAY_BASE_PATH || '/';
           window.location.replace(basePath);
         }
       } finally {
@@ -132,7 +132,9 @@ export default function SecurityTab({ allSetting, updateSetting, saveSetting }: 
 
   const fetchApiTokens = useCallback(async () => {
     try {
-      const msg = (await HttpUtil.get('/panel/api/setting/apiTokens')) as ApiMsg<ApiTokenRow[]>;
+      const msg = (await HttpUtil.get('/easyxray/api/v1/setting/apiTokens')) as ApiMsg<
+        ApiTokenRow[]
+      >;
       if (msg?.success) setApiTokens(Array.isArray(msg.obj) ? msg.obj : []);
     } finally {
       setApiTokensLoading(false);
@@ -168,7 +170,9 @@ export default function SecurityTab({ allSetting, updateSetting, saveSetting }: 
     }
     setCreating(true);
     try {
-      const msg = (await HttpUtil.post('/panel/api/setting/apiTokens/create', { name })) as ApiMsg<{
+      const msg = (await HttpUtil.post('/easyxray/api/v1/setting/apiTokens/create', {
+        name,
+      })) as ApiMsg<{
         token?: string;
       }>;
       if (msg?.success) {
@@ -193,7 +197,7 @@ export default function SecurityTab({ allSetting, updateSetting, saveSetting }: 
       cancelText: t('cancel'),
       okType: 'danger',
       onOk: async () => {
-        const msg = (await HttpUtil.post(`/panel/api/setting/apiTokens/delete/${row.id}`, {
+        const msg = (await HttpUtil.post(`/easyxray/api/v1/setting/apiTokens/delete/${row.id}`, {
           expectedScope: row.scope,
         })) as ApiMsg;
         if (msg?.success) await loadApiTokens();
@@ -203,7 +207,7 @@ export default function SecurityTab({ allSetting, updateSetting, saveSetting }: 
 
   async function toggleTokenEnabled(row: ApiTokenRow) {
     const target = !row.enabled;
-    const msg = (await HttpUtil.post(`/panel/api/setting/apiTokens/setEnabled/${row.id}`, {
+    const msg = (await HttpUtil.post(`/easyxray/api/v1/setting/apiTokens/setEnabled/${row.id}`, {
       enabled: target,
       expectedScope: row.scope,
     })) as ApiMsg;

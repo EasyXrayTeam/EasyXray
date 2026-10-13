@@ -1,13 +1,13 @@
 ---
 title: FAQ
-description: Frequently asked questions about 3x-ui — licensing, supported systems, databases, and clients.
+description: Frequently asked questions about EasyXray — licensing, supported systems, databases, clients, and where to get help.
 icon: CircleQuestionMark
 ---
 
-## Is 3x-ui free and open source?
+## Is EasyXray free and open source?
 
-Yes. 3x-ui is open source under the GPL-3.0 license. The source is on
-[GitHub](https://github.com/MHSanaei/3x-ui).
+Yes. EasyXray is open source under the GPL-3.0 license. The source lives on
+[GitHub](https://github.com/EasyXrayTeam/EasyXray).
 
 ## What systems does it run on?
 
@@ -18,7 +18,7 @@ It also runs as a Docker container. See [Installation](/docs/guide/installation)
 ## SQLite or PostgreSQL?
 
 SQLite is the default and is fine for most deployments. PostgreSQL is available
-for larger setups via `XUI_DB_TYPE=postgres` and `XUI_DB_DSN` — see the
+for larger setups via `EASYXRAY_DB_TYPE=postgres` and `EASYXRAY_DB_DSN` — see the
 [environment variables](/docs/reference/env-vars).
 
 ## Which client apps work with it?
@@ -27,21 +27,34 @@ Any Xray-compatible client — for example v2rayNG, Hiddify, and Clash/Mihomo.
 Import a client's share link or QR code, or use a
 [subscription](/docs/config/subscription).
 
-## How is 3x-ui different from x-ui?
+## How is EasyXray different from X-UI?
 
-3x-ui is an enhanced fork of the original X-UI project. It adds broader protocol
+EasyXray is an enhanced fork of the original X-UI project. It adds broader protocol
 support, improved stability, per-client traffic accounting, multi-node
 management, a 13-language UI, and many quality-of-life features.
+
+Because it is a fork and not a continuation, it has its own identity on disk:
+the `easyxray` service and command, the `/etc/easyxray` configuration directory,
+the `EASYXRAY_*` environment prefix, and the `/easyxray/…` HTTP namespace. None
+of the old paths are aliased — see [Migration](/docs/help/migration).
+
+## Can I migrate from an existing 3x-ui install?
+
+No. EasyXray does not detect, import, or upgrade an existing X-UI / 3x-ui
+installation. The service name, install paths, environment prefix, and database
+file all differ, and there is no in-place conversion. Install EasyXray fresh and
+recreate your inbounds and clients — see [Migration](/docs/help/migration).
 
 ## How do I update?
 
 Re-run the install script (it updates in place), or pull the new Docker image.
-See [Installation](/docs/guide/installation) and the
-[releases page](https://github.com/MHSanaei/3x-ui/releases).
+See [Update & Uninstall](/docs/guide/update-uninstall) and the
+[releases page](https://github.com/EasyXrayTeam/EasyXray/releases).
 
 ## Where can I get help?
 
-Join the official Telegram channel [@XrayUI](https://t.me/XrayUI) for
-announcements and community support, or open an issue on
-[GitHub](https://github.com/MHSanaei/3x-ui/issues). For common problems, start
+Open an issue on
+[GitHub](https://github.com/EasyXrayTeam/EasyXray/issues) — that is the canonical
+place for bug reports and feature requests. EasyXray users also share the upstream
+X-UI community channel [@XrayUI](https://t.me/XrayUI). For common problems, start
 with [Troubleshooting](/docs/help/troubleshooting).

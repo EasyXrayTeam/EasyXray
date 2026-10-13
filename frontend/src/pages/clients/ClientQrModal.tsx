@@ -271,7 +271,7 @@ function ClientQrModalContent({
     (async () => {
       try {
         const msg = await HttpUtil.post<HappLinkResult>(
-          `/panel/api/clients/happLink/${clientId}`,
+          `/easyxray/api/v1/clients/happLink/${clientId}`,
           undefined,
           { silent: true },
         );
@@ -404,7 +404,7 @@ function ClientQrModalContent({
     (async () => {
       try {
         const msg = (await HttpUtil.get(
-          `/panel/api/clients/subLinks/${encodeURIComponent(client.subId!)}`,
+          `/easyxray/api/v1/clients/subLinks/${encodeURIComponent(client.subId!)}`,
         )) as ApiMsg<string[]>;
         if (!cancelled) {
           setLinks(msg?.success && Array.isArray(msg.obj) ? msg.obj : []);

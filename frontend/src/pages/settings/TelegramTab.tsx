@@ -26,7 +26,7 @@ export default function TelegramTab({ allSetting, updateSetting }: TelegramTabPr
     setTestLoading(true);
     setTestResult(null);
     try {
-      const res = (await HttpUtil.post('/panel/api/setting/testTgBot')) as {
+      const res = (await HttpUtil.post('/easyxray/api/v1/setting/testTgBot')) as {
         success?: boolean;
         msg?: string;
       };

@@ -44,7 +44,7 @@ describe('useAllSettings', () => {
 
   it('keeps cached default settings when a save fails', async () => {
     vi.spyOn(HttpUtil, 'post').mockImplementation(async (url) => {
-      if (url === '/panel/api/setting/update') return new Msg(false, 'Save failed');
+      if (url === '/easyxray/api/v1/setting/update') return new Msg(false, 'Save failed');
       return new Msg(true, '', {});
     });
     const queryClient = makeTestQueryClient();
@@ -112,7 +112,7 @@ describe('useAllSettings', () => {
   it('hydrates redacted secrets after a successful save', async () => {
     let fetchCount = 0;
     vi.spyOn(HttpUtil, 'post').mockImplementation(async (url) => {
-      if (url === '/panel/api/setting/all') {
+      if (url === '/easyxray/api/v1/setting/all') {
         fetchCount += 1;
         return new Msg(
           true,
@@ -143,7 +143,7 @@ describe('useAllSettings', () => {
   it('establishes a saved baseline for a full-payload security save', async () => {
     let fetchCount = 0;
     vi.spyOn(HttpUtil, 'post').mockImplementation(async (url) => {
-      if (url === '/panel/api/setting/all') {
+      if (url === '/easyxray/api/v1/setting/all') {
         fetchCount += 1;
         return new Msg(
           true,

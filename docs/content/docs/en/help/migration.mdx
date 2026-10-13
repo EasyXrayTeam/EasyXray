@@ -1,24 +1,47 @@
 ---
 title: Migration
-description: Migrate to 3x-ui from x-ui, between servers, or between 3x-ui versions.
+description: Move an EasyXray installation between servers or between versions — and why importing an X-UI / 3x-ui installation is not supported.
 icon: ArrowRightLeft
 ---
 
+## From X-UI / 3x-ui
+
+**EasyXray does not migrate an existing X-UI or 3x-ui installation.** There is no
+detection step, no import command, and no automatic conversion. The two products
+deliberately differ in almost every place a migration would have to look:
+
+| | X-UI / 3x-ui | EasyXray |
+| --- | --- | --- |
+| Service & command | `x-ui` | `easyxray` |
+| Config / database | its own paths | `/etc/easyxray/EasyXray.db` |
+| Environment prefix | `XUI_*` | `EASYXRAY_*` |
+| HTTP namespace | `/panel/…` | `/easyxray/…` |
+
+Installing EasyXray on a server that already runs X-UI/3x-ui is a **new, parallel
+install** — it does not replace or upgrade the old one. To move over, install
+EasyXray fresh, recreate your inbounds and clients, and export each client's share
+link from the old panel to import it on the client side. Reusing the old SQLite
+file is not supported: the schemas differ.
+
+The same applies to automation: the REST API moved from `/panel/api/…` to
+`/easyxray/api/v1/…`, and the old prefix has **no compatibility alias**. Scripts,
+bots, and dashboards written against `/panel/api/…` must be updated.
+
 ## Between servers
 
-Moving to a new server is a database move:
+Moving the *same* EasyXray installation to a new server is a database move:
 
 <Steps>
 
 <Step>
 ### Back up the old server
 
-Copy the database (default `/etc/x-ui/x-ui.db`) and your certificates. See
+Copy the database (default `/etc/easyxray/EasyXray.db`) and your certificates. See
 [Backup & restore](/docs/operations/backup-restore).
 </Step>
 
 <Step>
-### Install 3x-ui on the new server
+### Install EasyXray on the new server
 
 Use the same install method and a compatible version. See
 [Installation](/docs/guide/installation).
@@ -28,25 +51,19 @@ Use the same install method and a compatible version. See
 ### Restore the database
 
 Stop the panel, put the database in place, restore certificates, and start the
-panel. Update any IP/domain-specific settings.
+panel. Revisit any IP- or domain-specific settings.
 </Step>
 
 </Steps>
 
-## Between 3x-ui versions
+## Between EasyXray versions
 
 Within the same backend, upgrading is usually just re-running the installer or
 pulling a new image — the panel migrates its own database. Across **major**
-versions, read the [release notes](https://github.com/MHSanaei/3x-ui/releases)
+versions, read the [release notes](https://github.com/EasyXrayTeam/EasyXray/releases)
 first and take a backup.
-
-## From x-ui
-
-Importing an older x-ui panel's database directly into 3x-ui is **not
-supported** — the schemas differ. Install 3x-ui fresh and recreate
-inbounds/clients, exporting share links from the old panel as you go.
 
 <Callout type="warn">
   Always take a backup before any migration, and keep the old server running
-  until you've verified the new one.
+  until you have verified the new one.
 </Callout>

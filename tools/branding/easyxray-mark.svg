@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="ex-title">
+  <title id="ex-title">EasyXray</title>
+  <!-- Geometry traced from the master artwork: disc r=224, rim ring r=221,
+       four orbits rx=174 ry=68 at 0/45/90/135deg, nested triangle glyph. -->
+  <defs>
+    <radialGradient id="ex-disc" cx="46%" cy="38%" r="82%">
+      <stop offset="0%" stop-color="#12314C"/>
+      <stop offset="48%" stop-color="#08111F"/>
+      <stop offset="100%" stop-color="#03060C"/>
+    </radialGradient>
+    <linearGradient id="ex-orbit" x1="8%" y1="0%" x2="92%" y2="100%">
+      <stop offset="0%" stop-color="#EAFEFF"/>
+      <stop offset="46%" stop-color="#4FD8EE"/>
+      <stop offset="100%" stop-color="#12657E"/>
+    </linearGradient>
+    <linearGradient id="ex-glyph" x1="34%" y1="0%" x2="72%" y2="100%">
+      <stop offset="0%" stop-color="#F2FEFF"/>
+      <stop offset="42%" stop-color="#6FEBFA"/>
+      <stop offset="100%" stop-color="#158FA8"/>
+    </linearGradient>
+    <radialGradient id="ex-bloom" cx="50%" cy="50%" r="50%">
+      <stop offset="0.78" stop-color="#4FD8EE" stop-opacity="0"/>
+      <stop offset="0.885" stop-color="#4FD8EE" stop-opacity="0.30"/>
+      <stop offset="0.95" stop-color="#3FB6D4" stop-opacity="0.10"/>
+      <stop offset="1" stop-color="#2E8BA8" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="ex-disc-clip"><circle cx="256" cy="256" r="224"/></clipPath>
+  </defs>
+
+  <circle cx="256" cy="256" r="224" fill="url(#ex-disc)"/>
+
+  <g clip-path="url(#ex-disc-clip)">
+    <!-- Soft pass under each crisp pass, so the bloom needs no filter (filters
+         render inconsistently across librsvg/resvg/browsers). -->
+    <g fill="none" stroke="url(#ex-orbit)" stroke-linecap="round">
+      <ellipse cx="256" cy="256" rx="174" ry="68" stroke-width="46" opacity="0.10"/>
+      <ellipse cx="256" cy="256" rx="174" ry="68" transform="rotate(45 256 256)" stroke-width="46" opacity="0.10"/>
+      <ellipse cx="256" cy="256" rx="174" ry="68" transform="rotate(90 256 256)" stroke-width="46" opacity="0.10"/>
+      <ellipse cx="256" cy="256" rx="174" ry="68" transform="rotate(135 256 256)" stroke-width="46" opacity="0.10"/>
+    </g>
+    <g fill="none" stroke="url(#ex-orbit)" stroke-linecap="round" opacity="0.82">
+      <ellipse cx="256" cy="256" rx="174" ry="68" stroke-width="8"/>
+      <ellipse cx="256" cy="256" rx="174" ry="68" transform="rotate(45 256 256)" stroke-width="8"/>
+      <ellipse cx="256" cy="256" rx="174" ry="68" transform="rotate(90 256 256)" stroke-width="8"/>
+      <ellipse cx="256" cy="256" rx="174" ry="68" transform="rotate(135 256 256)" stroke-width="8"/>
+    </g>
+
+    <g fill="#EAFEFF">
+      <circle cx="414" cy="285" r="11" opacity="0.28"/>
+      <circle cx="105" cy="290" r="11" opacity="0.28"/>
+      <circle cx="227" cy="414" r="11" opacity="0.28"/>
+      <circle cx="222" cy="105" r="11" opacity="0.28"/>
+      <circle cx="415" cy="285" r="4.5"/>
+      <circle cx="105" cy="290" r="4.5"/>
+      <circle cx="227" cy="414" r="4.5"/>
+      <circle cx="222" cy="105" r="4.5"/>
+    </g>
+    <g fill="#BFF3FF">
+      <circle cx="347" cy="388" r="10" opacity="0.26"/>
+      <circle cx="125" cy="173" r="10" opacity="0.26"/>
+      <circle cx="124" cy="347" r="10" opacity="0.26"/>
+      <circle cx="339" cy="125" r="10" opacity="0.26"/>
+      <circle cx="347" cy="388" r="4"/>
+      <circle cx="125" cy="173" r="4"/>
+      <circle cx="124" cy="347" r="4"/>
+      <circle cx="339" cy="125" r="4"/>
+    </g>
+
+    <path d="M256 160 L331 320 L181 320 Z"
+          fill="url(#ex-glyph)" fill-opacity="0.10"
+          stroke="url(#ex-glyph)" stroke-width="46" stroke-opacity="0.14"
+          stroke-linejoin="round"/>
+    <path d="M256 160 L331 320 L181 320 Z"
+          fill="none" stroke="url(#ex-glyph)" stroke-width="14"
+          stroke-linejoin="round" opacity="0.94"/>
+    <path d="M256 208 L298 295 L214 295 Z"
+          fill="none" stroke="url(#ex-glyph)" stroke-width="22"
+          stroke-linejoin="round" opacity="0.13"/>
+    <path d="M256 208 L298 295 L214 295 Z"
+          fill="none" stroke="url(#ex-glyph)" stroke-width="8"
+          stroke-linejoin="round" opacity="0.86"/>
+  </g>
+
+  <!-- Rim sits on the disc edge; the gradient bloom around it is what the
+       artwork's halo becomes outside the circle. -->
+  <circle cx="256" cy="256" r="256" fill="url(#ex-bloom)"/>
+  <circle cx="256" cy="256" r="221" fill="none" stroke="url(#ex-orbit)" stroke-width="6" opacity="0.9"/>
+</svg>

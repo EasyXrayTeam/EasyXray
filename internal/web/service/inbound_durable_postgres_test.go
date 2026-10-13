@@ -8,17 +8,17 @@ import (
 	"github.com/op/go-logging"
 	"gorm.io/gorm"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	xuilogger "github.com/mhsanaei/3x-ui/v3/internal/logger"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	easyxraylogger "github.com/EasyXrayTeam/EasyXray/v3/internal/logger"
 )
 
 func durablePostgresDB(t *testing.T) *gorm.DB {
 	t.Helper()
-	if os.Getenv("XUI_DB_TYPE") != "postgres" || strings.TrimSpace(os.Getenv("XUI_DB_DSN")) == "" {
-		t.Skip("set XUI_DB_TYPE=postgres and XUI_DB_DSN to run commit-failure injection")
+	if os.Getenv("EASYXRAY_DB_TYPE") != "postgres" || strings.TrimSpace(os.Getenv("EASYXRAY_DB_DSN")) == "" {
+		t.Skip("set EASYXRAY_DB_TYPE=postgres and EASYXRAY_DB_DSN to run commit-failure injection")
 	}
-	portConflictLoggerOnce.Do(func() { xuilogger.InitLogger(logging.ERROR) })
+	portConflictLoggerOnce.Do(func() { easyxraylogger.InitLogger(logging.ERROR) })
 	if err := database.InitDB(""); err != nil {
 		t.Fatalf("InitDB: %v", err)
 	}

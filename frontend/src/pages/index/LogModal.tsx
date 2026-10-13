@@ -28,7 +28,7 @@ export default function LogModal({ open, onClose }: LogModalProps) {
 
   const runRefresh = useCallback(async () => {
     try {
-      const msg = await HttpUtil.post<string[]>(`/panel/api/server/logs/${rows}`, {
+      const msg = await HttpUtil.post<string[]>(`/easyxray/api/v1/server/logs/${rows}`, {
         level,
         syslog,
       });
@@ -73,7 +73,7 @@ export default function LogModal({ open, onClose }: LogModalProps) {
   const parsedLogs = useMemo(() => logs.map(parseLogLine), [logs]);
 
   function download() {
-    FileManager.downloadTextFile(logs.join('\n'), 'x-ui.log');
+    FileManager.downloadTextFile(logs.join('\n'), 'easyxray.log');
   }
 
   const titleNode = (

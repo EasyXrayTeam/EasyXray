@@ -2,7 +2,7 @@
 title: WebSocket
 description: >-
   Обновления статуса в реальном времени через WebSocket. Подключитесь один раз к
-  <code>ws://<panel>/ws</code>, чтобы получать поток JSON-сообщений без
+  <code>ws://<panel>/easyxray/ws</code>, чтобы получать поток JSON-сообщений без
   опроса. Требуется аутентифицированный сессионный cookie (авторизация по токену
   Bearer не поддерживается). У каждого сообщения есть поле <code>type</code>,
   которое определяет структуру полезной нагрузки.
@@ -40,7 +40,7 @@ export default function Layout(props) {
   return (
     <>
       {props.children}
-      <Comp document="./public/openapi.json" webhooks={[]} operations={[{"path":"/ws","method":"get"}]} showTitle />
+      <Comp document="./public/openapi.json" webhooks={[]} operations={[{"path":"/easyxray/ws","method":"get"}]} showTitle />
     </>
   );
 }

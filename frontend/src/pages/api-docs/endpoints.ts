@@ -94,9 +94,9 @@ const outboundSubscriptionBodyParams: EndpointParam[] = [
     name: 'userAgent',
     in: 'body (form)',
     type: 'string',
-    desc: 'Custom User-Agent sent when fetching this subscription. Defaults to "3x-ui-outbound-sub/1.0".',
+    desc: 'Custom User-Agent sent when fetching this subscription. Defaults to "easyxray-outbound-sub/1.0".',
     optional: true,
-    defaultValue: '3x-ui-outbound-sub/1.0',
+    defaultValue: 'easyxray-outbound-sub/1.0',
   },
   {
     name: 'updateInterval',
@@ -201,7 +201,7 @@ export const sections: readonly Section[] = [
     id: 'authentication',
     title: 'Authentication',
     description:
-      'Two authentication modes are supported. UI sessions use a cookie set by the login endpoint. Programmatic clients (bots, scripts, remote panels) authenticate with a Bearer token taken from Settings → Security → API Token. Both work for every endpoint under /panel/api/*.',
+      'Two authentication modes are supported. UI sessions use a cookie set by the login endpoint. Programmatic clients (bots, scripts, remote panels) authenticate with a Bearer token taken from Settings → Security → API Token. Both work for every endpoint under /easyxray/api/v1/*.',
     endpoints: [
       {
         method: 'POST',
@@ -257,11 +257,11 @@ export const sections: readonly Section[] = [
     id: 'inbounds',
     title: 'Inbounds',
     description:
-      'Manage inbound configurations and their clients. All endpoints live under /panel/api/inbounds and require a logged-in session or Bearer token. Link-generating endpoints honour forwarded headers only when the request comes from a configured trusted proxy.',
+      'Manage inbound configurations and their clients. All endpoints live under /easyxray/api/v1/inbounds and require a logged-in session or Bearer token. Link-generating endpoints honour forwarded headers only when the request comes from a configured trusted proxy.',
     endpoints: [
       {
         method: 'GET',
-        path: '/panel/api/inbounds/list',
+        path: '/easyxray/api/v1/inbounds/list',
         summary:
           'List every inbound owned by the authenticated user, including each inbound’s clientStats traffic counters. settings, streamSettings, and sniffing are returned as nested JSON objects (no escaped strings); legacy callers that send them back as JSON-encoded strings are still accepted on write.',
         responseSchema: 'Inbound',
@@ -269,7 +269,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/inbounds/list/slim',
+        path: '/easyxray/api/v1/inbounds/list/slim',
         summary:
           'Same shape as /list but with settings.clients[] stripped down to {email, enable, comment} and ClientStats not enriched with UUID/SubId. Use this for list pages; fetch /get/:id when you need the full per-client payload (uuid, password, flow, ...).',
         response:
@@ -277,7 +277,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/inbounds/options',
+        path: '/easyxray/api/v1/inbounds/options',
         summary:
           'Lightweight picker projection of the authenticated user’s inbounds. Returns id, remark, tag, protocol, port, a server-computed tlsFlowCapable flag (true for VLESS on TCP with tls or reality, or on XHTTP with VLESS encryption / vlessenc enabled), and ssMethod (the Shadowsocks cipher, empty for non-Shadowsocks inbounds — used by the client UI to generate a valid Shadowsocks 2022 PSK). Use this for dropdowns and attach pickers — it skips settings, streamSettings, and clientStats so the payload stays small even on panels with thousands of clients.',
         responseSchema: 'InboundOption',
@@ -285,7 +285,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/inbounds/allLinks',
+        path: '/easyxray/api/v1/inbounds/allLinks',
         responseObjectSchema: { type: 'array', nullable: true, items: { type: 'string' } },
         summary:
           'Return every protocol URL (vless://, vmess://, trojan://, ss://, hysteria://, mtproto) across all inbounds and all of their clients. Links are rendered through the subscription engine, so the configured remark template (name-only display part) is applied per client — the same output the client info/QR pages use. Protocols without a URL form (socks, http, mixed, wireguard, dokodemo, tunnel) contribute nothing. Used by the panel’s "Export all inbound links" action.',
@@ -294,13 +294,13 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/inbounds/get/:id',
+        path: '/easyxray/api/v1/inbounds/get/:id',
         summary: 'Fetch a single inbound by numeric ID.',
         params: [{ name: 'id', in: 'path', type: 'number', desc: 'Inbound ID.' }],
       },
       {
         method: 'POST',
-        path: '/panel/api/inbounds/add',
+        path: '/easyxray/api/v1/inbounds/add',
         summary:
           'Create a new inbound. Send the full inbound payload (protocol, port, settings, streamSettings, sniffing, remark, expiryTime, total, enable). settings, streamSettings, and sniffing may be sent as nested JSON objects (preferred) or as JSON-encoded strings (legacy).',
         body: inboundBody,
@@ -308,13 +308,13 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/inbounds/del/:id',
+        path: '/easyxray/api/v1/inbounds/del/:id',
         summary: 'Delete an inbound by ID. Also removes its associated client stats rows.',
         params: [{ name: 'id', in: 'path', type: 'number', desc: 'Inbound ID.' }],
       },
       {
         method: 'POST',
-        path: '/panel/api/inbounds/bulkDel',
+        path: '/easyxray/api/v1/inbounds/bulkDel',
         summary:
           'Delete many inbounds in one call. Processes the list sequentially; failures are reported per id and the rest still proceed. Restarts xray at most once.',
         body: '{\n  "ids": [1, 2, 3]\n}',
@@ -323,15 +323,15 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/inbounds/update/:id',
+        path: '/easyxray/api/v1/inbounds/update/:id',
         summary:
-          'Replace an inbound’s configuration. Body shape mirrors /add, but the inbound keeps its stored client list and enable flag: settings.clients and enable in the body are ignored. Manage clients through the /panel/api/clients endpoints and toggle the inbound with /setEnable.',
+          'Replace an inbound’s configuration. Body shape mirrors /add, but the inbound keeps its stored client list and enable flag: settings.clients and enable in the body are ignored. Manage clients through the /easyxray/api/v1/clients endpoints and toggle the inbound with /setEnable.',
         params: [{ name: 'id', in: 'path', type: 'number', desc: 'Inbound ID.' }],
         body: inboundBody,
       },
       {
         method: 'POST',
-        path: '/panel/api/inbounds/setEnable/:id',
+        path: '/easyxray/api/v1/inbounds/setEnable/:id',
         summary:
           'Toggle only the enable flag without serialising the whole settings JSON. Recommended for UI switches on large inbounds.',
         params: [{ name: 'id', in: 'path', type: 'number', desc: 'Inbound ID.' }],
@@ -339,7 +339,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/inbounds/:id/subSortIndex',
+        path: '/easyxray/api/v1/inbounds/:id/subSortIndex',
         summary:
           'Set only the subscription sort order. Reads the stored inbound, so a reorder cannot carry a stale client list over a concurrent edit.',
         params: [{ name: 'id', in: 'path', type: 'number', desc: 'Inbound ID.' }],
@@ -347,14 +347,14 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/inbounds/:id/resetTraffic',
+        path: '/easyxray/api/v1/inbounds/:id/resetTraffic',
         summary:
           'Zero out upload + download counters for a single inbound. Does not touch per-client counters.',
         params: [{ name: 'id', in: 'path', type: 'number', desc: 'Inbound ID.' }],
       },
       {
         method: 'POST',
-        path: '/panel/api/inbounds/:id/delAllClients',
+        path: '/easyxray/api/v1/inbounds/:id/delAllClients',
         summary:
           'Remove every client attached to a single inbound while keeping the inbound itself. Collects emails from settings.clients[] and feeds them into the optimized bulk-delete path (runtime user removal + traffic-row cleanup + SyncInbound). Destructive and cannot be undone.',
         params: [{ name: 'id', in: 'path', type: 'number', desc: 'Inbound ID.' }],
@@ -362,13 +362,13 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/inbounds/resetAllTraffics',
+        path: '/easyxray/api/v1/inbounds/resetAllTraffics',
         summary:
           'Reset upload + download counters on every inbound. Destructive — accounting history is lost.',
       },
       {
         method: 'POST',
-        path: '/panel/api/inbounds/import',
+        path: '/easyxray/api/v1/inbounds/import',
         summary:
           'Bulk-import an inbound from a JSON blob (e.g. one exported via the UI). The body uses form encoding with a single "data" field.',
         params: [
@@ -382,7 +382,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/inbounds/pushClientTraffics',
+        path: '/easyxray/api/v1/inbounds/pushClientTraffics',
         summary:
           "Receive a master panel's aggregated per-client usage, keyed by the master's GUID. Stored in a side table used only for the UI display overlay and local quota enforcement — never folded into the local counters that masters poll, so delta accounting stays intact. Called panel-to-panel by the node traffic sync job.",
         params: [
@@ -404,7 +404,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/inbounds/:id/fallbacks',
+        path: '/easyxray/api/v1/inbounds/:id/fallbacks',
         summary:
           "List the fallback rules attached to a master VLESS/Trojan TCP-TLS inbound. Each rule links one child inbound (the dest) to optional SNI/ALPN/path/dest/xver match criteria. When dest is empty the child inbound's listen+port is used.",
         params: [{ name: 'id', in: 'path', type: 'number', desc: 'Master inbound ID.' }],
@@ -413,7 +413,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/inbounds/:id/fallbacks',
+        path: '/easyxray/api/v1/inbounds/:id/fallbacks',
         summary:
           'Replace the entire fallback list for a master inbound. Body is JSON. Triggers an Xray restart.',
         params: [
@@ -435,17 +435,17 @@ export const sections: readonly Section[] = [
     id: 'server',
     title: 'Server',
     description:
-      'System status, log retrieval, certificate generators, Xray binary management, and backup/restore. All under /panel/api/server.',
+      'System status, log retrieval, certificate generators, Xray binary management, and backup/restore. All under /easyxray/api/v1/server.',
     endpoints: [
       {
         method: 'GET',
-        path: '/panel/api/openapi.json',
+        path: '/easyxray/api/v1/openapi.json',
         summary:
-          'Serve this API description as an OpenAPI 3 document — the same file that powers the API Docs page. Requires a session or Bearer token like the rest of /panel/api. Useful for generating clients or importing into API tooling.',
+          'Serve this API description as an OpenAPI 3 document — the same file that powers the API Docs page. Requires a session or Bearer token like the rest of /easyxray/api/v1. Useful for generating clients or importing into API tooling.',
       },
       {
         method: 'GET',
-        path: '/panel/api/server/status',
+        path: '/easyxray/api/v1/server/status',
         summary:
           'Real-time machine snapshot: CPU, memory, swap, disk, network IO, load averages, open connections, Xray state. Cached and refreshed every 2 seconds in the background.',
         response:
@@ -453,7 +453,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/server/fail2banStatus',
+        path: '/easyxray/api/v1/server/fail2banStatus',
         summary:
           'Reports whether per-client IP limits can be enforced on this host. The panel uses it to gate the "IP Limit" field, since enforcement depends on Fail2ban being installed.',
         response:
@@ -461,7 +461,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/server/cpuHistory/:bucket',
+        path: '/easyxray/api/v1/server/cpuHistory/:bucket',
         summary:
           'Legacy: aggregated CPU history. Use /history/cpu/:bucket instead — same data with a uniform {t, v} shape.',
         params: [
@@ -475,7 +475,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/server/history/:metric/:bucket',
+        path: '/easyxray/api/v1/server/history/:metric/:bucket',
         summary:
           'Aggregated time-series for one metric. Returns an array of {t, v} samples covering the last ~6 hours.',
         params: [
@@ -497,13 +497,13 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/server/xrayMetricsState',
+        path: '/easyxray/api/v1/server/xrayMetricsState',
         summary:
           'Xray runtime metrics state — whether the xray config has a `metrics` block, which expvar keys are flowing, and the current snapshot values for each. Returns an empty state when metrics are not configured.',
       },
       {
         method: 'GET',
-        path: '/panel/api/server/xrayMetricsHistory/:metric/:bucket',
+        path: '/easyxray/api/v1/server/xrayMetricsHistory/:metric/:bucket',
         summary:
           'Time-series history for one Xray runtime metric over the last ~6 hours. Same {t, v} shape as /history/:metric/:bucket.',
         params: [
@@ -523,13 +523,13 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/server/xrayObservatory',
+        path: '/easyxray/api/v1/server/xrayObservatory',
         summary:
           'Latest snapshot from the Xray observatory — per-outbound latency, health status, and last-probe time. Only populated when the Xray config has an observatory configured.',
       },
       {
         method: 'GET',
-        path: '/panel/api/server/xrayObservatoryHistory/:tag/:bucket',
+        path: '/easyxray/api/v1/server/xrayObservatoryHistory/:tag/:bucket',
         summary:
           'Time-series of observatory probe results for one outbound tag. Same {t, v} shape as the other history endpoints.',
         params: [
@@ -549,50 +549,50 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/server/getXrayVersion',
+        path: '/easyxray/api/v1/server/getXrayVersion',
         summary: 'List Xray binary versions available for install on this host.',
         response: '{\n  "success": true,\n  "obj": ["v25.10.31", "v25.9.15", "v25.8.1"]\n}',
       },
       {
         method: 'GET',
-        path: '/panel/api/server/getPanelUpdateInfo',
-        summary: 'Check whether a newer 3x-ui release is available on GitHub.',
+        path: '/easyxray/api/v1/server/getPanelUpdateInfo',
+        summary: 'Check whether a newer EasyXray release is available on GitHub.',
       },
       {
         method: 'GET',
-        path: '/panel/api/server/getUpdateStatus',
+        path: '/easyxray/api/v1/server/getUpdateStatus',
         summary:
           'Report the outcome of the most recently launched panel self-update (see POST updatePanel). Compare the returned runId against the one updatePanel returned to tell this run apart from a stale result.',
         responseSchema: 'PanelUpdateStatus',
       },
       {
         method: 'GET',
-        path: '/panel/api/server/getConfigJson',
+        path: '/easyxray/api/v1/server/getConfigJson',
         summary: 'Return the assembled Xray config that\u2019s currently running on this host.',
         response:
           '{\n  "success": true,\n  "obj": {\n    "log": { "loglevel": "warning" },\n    "inbounds": [...],\n    "outbounds": [...],\n    "routing": { "rules": [...] }\n  }\n}',
       },
       {
         method: 'GET',
-        path: '/panel/api/server/getDb',
+        path: '/easyxray/api/v1/server/getDb',
         summary:
           'Stream a full database backup as an attachment: the SQLite .db file on SQLite panels, or a pg_dump custom-format archive (.dump) on PostgreSQL panels. Use as a manual backup.',
       },
       {
         method: 'GET',
-        path: '/panel/api/server/getMigration',
+        path: '/easyxray/api/v1/server/getMigration',
         summary:
           'Stream a cross-engine migration file as an attachment: a .dump (SQL text) on SQLite, or a .db SQLite database built from the live data on PostgreSQL.',
       },
       {
         method: 'GET',
-        path: '/panel/api/server/getNewUUID',
+        path: '/easyxray/api/v1/server/getNewUUID',
         summary: 'Generate a fresh UUID v4. Convenience helper for client IDs.',
         responseSchema: 'NewUUIDResponse',
       },
       {
         method: 'GET',
-        path: '/panel/api/server/getWebCertFiles',
+        path: '/easyxray/api/v1/server/getWebCertFiles',
         summary:
           'Return this panel\'s own web TLS certificate and key file paths. The central panel calls it on a node (via the node API token) so "Set Cert from Panel" fills a node-assigned inbound with paths that exist on the node.',
         response:
@@ -600,7 +600,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/server/descendants',
+        path: '/easyxray/api/v1/server/descendants',
         summary:
           'Read-only summaries (guid, parentGuid, name, address, status, versions) of the nodes this panel manages. A parent panel calls it on a node (via the node API token) to surface transitive sub-nodes in a chained topology. Counts are computed by the parent, not returned here.',
         response:
@@ -608,26 +608,26 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/server/getNewX25519Cert',
+        path: '/easyxray/api/v1/server/getNewX25519Cert',
         summary: 'Generate a new X25519 keypair for Reality.',
         response:
           '{\n  "success": true,\n  "obj": {\n    "privateKey": "uN9qLfV3zH8w...",\n    "publicKey": "5v8xPqR2sM7k..."\n  }\n}',
       },
       {
         method: 'GET',
-        path: '/panel/api/server/getNewmldsa65',
+        path: '/easyxray/api/v1/server/getNewmldsa65',
         summary: 'Generate a new ML-DSA-65 keypair. Returns {seed, verify}.',
         responseSchema: 'MLDSA65Response',
       },
       {
         method: 'GET',
-        path: '/panel/api/server/getNewmlkem768',
+        path: '/easyxray/api/v1/server/getNewmlkem768',
         summary: 'Generate a new ML-KEM-768 keypair. Returns {seed, client}.',
         responseSchema: 'MLKEM768Response',
       },
       {
         method: 'GET',
-        path: '/panel/api/server/getNewVlessEnc',
+        path: '/easyxray/api/v1/server/getNewVlessEnc',
         summary:
           'Generate VLESS encryption auth options. Returns an auths array each with id, label, encryption, and decryption fields.',
         response:
@@ -635,20 +635,20 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/server/stopXrayService',
+        path: '/easyxray/api/v1/server/stopXrayService',
         summary: 'Stop the Xray binary. All proxies go offline immediately.',
         errorResponse: '{\n  "success": false,\n  "msg": "Xray is not running"\n}',
       },
       {
         method: 'POST',
-        path: '/panel/api/server/restartXrayService',
+        path: '/easyxray/api/v1/server/restartXrayService',
         summary:
           'Reload Xray with the current config. Typically required after structural inbound or routing changes.',
         errorResponse: '{\n  "success": false,\n  "msg": "Xray config is invalid: ..."\n}',
       },
       {
         method: 'POST',
-        path: '/panel/api/server/installXray/:version',
+        path: '/easyxray/api/v1/server/installXray/:version',
         summary:
           'Download and install the specified Xray version. Pass "latest" for the newest release.',
         params: [
@@ -662,7 +662,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/server/updatePanel',
+        path: '/easyxray/api/v1/server/updatePanel',
         summary: 'Self-update the panel to the latest version. The server restarts on success.',
         params: [
           {
@@ -677,7 +677,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/server/setUpdateChannel',
+        path: '/easyxray/api/v1/server/setUpdateChannel',
         summary:
           'Toggle the panel update channel between stable and the rolling per-commit dev release. Only effective on dev builds.',
         params: [
@@ -692,13 +692,13 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/server/updateGeofile',
+        path: '/easyxray/api/v1/server/updateGeofile',
         summary:
           'Refresh the default GeoIP / GeoSite data files. Use the /:fileName variant to update one file.',
       },
       {
         method: 'POST',
-        path: '/panel/api/server/updateGeofile/:fileName',
+        path: '/easyxray/api/v1/server/updateGeofile/:fileName',
         summary: 'Refresh a single Geo file by filename (e.g. geoip.dat, geosite.dat).',
         params: [
           {
@@ -711,7 +711,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/server/logs/:count',
+        path: '/easyxray/api/v1/server/logs/:count',
         summary: 'Return the last N lines of the panel\u2019s own log.',
         params: [
           { name: 'count', in: 'path', type: 'number', desc: 'Number of trailing log lines.' },
@@ -737,7 +737,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/server/xraylogs/:count',
+        path: '/easyxray/api/v1/server/xraylogs/:count',
         summary: 'Return the last N lines of the Xray process log.',
         params: [
           { name: 'count', in: 'path', type: 'number', desc: 'Number of trailing log lines.' },
@@ -777,7 +777,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/server/amneziawglogs/:count',
+        path: '/easyxray/api/v1/server/amneziawglogs/:count',
         summary:
           'Return live AmneziaWG peer activity (handshake, endpoint, transfer) plus the panel’s own AmneziaWG event lines.',
         params: [
@@ -800,7 +800,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/server/importDB',
+        path: '/easyxray/api/v1/server/importDB',
         summary:
           'Restore the panel DB from an uploaded backup (multipart form, field name "db"). SQLite panels accept a SQLite database (.db) or a SQLite migration dump (.dump); PostgreSQL panels accept a pg_dump archive (.dump), a SQLite database (.db), or a SQLite migration dump. The panel restarts after restore. Destructive.',
         params: [
@@ -822,7 +822,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/server/getNewEchCert',
+        path: '/easyxray/api/v1/server/getNewEchCert',
         summary:
           'Generate a new ECH (Encrypted Client Hello) keypair and config list for the given SNI.',
         params: [
@@ -839,7 +839,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/server/getCertHash',
+        path: '/easyxray/api/v1/server/getCertHash',
         summary:
           'Compute the hex SHA-256 of a certificate (DER) for pinning (pinnedPeerCertSha256). Provide either a server file path or inline PEM/DER content.',
         bodyRequiredOneOf: ['certFile', 'certContent'],
@@ -866,7 +866,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/server/getRemoteCertHash',
+        path: '/easyxray/api/v1/server/getRemoteCertHash',
         summary:
           'Run `xray tls ping` against a remote server and return its live leaf-certificate SHA-256 hash(es) for pinning (pinnedPeerCertSha256).',
         params: [
@@ -889,7 +889,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/server/scanRealityTarget',
+        path: '/easyxray/api/v1/server/scanRealityTarget',
         summary:
           'Run a live TLS 1.3 probe against a candidate REALITY target and return a feasibility verdict (TLS 1.3 + h2 + X25519 + trusted certificate) plus the certificate SAN DNS names. A target on a private/loopback address is reported with privateTarget=true and probed only when allowPrivate is set.',
         params: [
@@ -926,7 +926,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/server/scanRealityTargets',
+        path: '/easyxray/api/v1/server/scanRealityTargets',
         summary:
           'Probe/discover REALITY targets and return each verdict ranked by feasibility then latency. Each comma-separated token may be a domain (validated with SNI), a bare IP, or a CIDR range (discovered without SNI by reading the certificate domain). When empty, the realityScanCandidates setting is probed (the built-in seed list if that setting is empty).',
         params: [
@@ -944,7 +944,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/server/clientIps',
+        path: '/easyxray/api/v1/server/clientIps',
         summary:
           'Fetch the fully aggregated inbound_client_ips database table. Used by nodes to sync recently active IPs across the cluster.',
         responseSchema: 'InboundClientIps',
@@ -952,7 +952,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/server/clientIps',
+        path: '/easyxray/api/v1/server/clientIps',
         summary:
           'Submit a list of recently active IP timestamps. The panel merges them with the existing database to maintain a unified global IP-limit view.',
         requestSchema: {
@@ -982,11 +982,11 @@ export const sections: readonly Section[] = [
     id: 'clients',
     title: 'Clients',
     description:
-      'Manage clients as first-class entities that can be attached to one or more inbounds. A single client row drives the settings.clients entry in every inbound it belongs to. Endpoints live under /panel/api/clients.',
+      'Manage clients as first-class entities that can be attached to one or more inbounds. A single client row drives the settings.clients entry in every inbound it belongs to. Endpoints live under /easyxray/api/v1/clients.',
     endpoints: [
       {
         method: 'GET',
-        path: '/panel/api/clients/list',
+        path: '/easyxray/api/v1/clients/list',
         summary:
           'List every client with its attached inbound IDs and traffic record. The reverse field, if set, is returned as a nested JSON object (legacy JSON-encoded-string form is still accepted on write).',
         response:
@@ -994,7 +994,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/clients/list/paged',
+        path: '/easyxray/api/v1/clients/list/paged',
         summary:
           'Filter, sort, and paginate clients on the server. Each item is a slim row (no uuid/password/auth/flow/security/reverse/tgId) so the clients page can ship 25-ish rows in a few KB instead of the full table. The response also includes a summary computed across the full DB row set so dashboard counters stay stable as the user paginates or filters: the *Count fields are exact, while the email arrays beside them stop at 200 entries so the payload does not grow with the panel. Page size capped at 200; fetch /get/:email to obtain the full per-client payload for an edit/info modal.',
         params: [
@@ -1132,7 +1132,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/clients/get/:email',
+        path: '/easyxray/api/v1/clients/get/:email',
         summary:
           'Fetch one client by email, including the inbound IDs and external config IDs it is attached to.',
         params: [
@@ -1143,7 +1143,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/clients/get/tgId/:tgId',
+        path: '/easyxray/api/v1/clients/get/tgId/:tgId',
         summary:
           'Fetch clients by Telegram user ID. Returns an array since multiple clients can share the same Telegram ID.',
         params: [
@@ -1154,11 +1154,11 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/add',
+        path: '/easyxray/api/v1/clients/add',
         summary:
           'Create a new client and attach it to one or more inbounds in a single call. Body is JSON. Per-protocol secrets are generated server-side when omitted, so callers can send only the universal fields.',
         description:
-          'Fields the server fills in when they are omitted — a valid value sent by the caller is never overwritten. Re-adding an email that already exists, with its stored `subId`, reuses the stored `id`, `password`, `auth` and `secret` instead of minting new ones, so the identity stays in sync across its inbounds.\n\n- **VLESS / VMess** — `id`, a fresh UUID\n- **Trojan** — `password`\n- **Shadowsocks** — `password`. On a `2022-blake3-*` inbound a supplied password that does not base64-decode to the key length of the cipher (16 or 32 bytes) is replaced by a generated key and the call still succeeds, so read the client back if you did not let the server pick. Legacy ciphers keep any non-empty password\n- **Hysteria** — `auth`\n- **mtproto** — `secret`, a FakeTLS secret derived from the fronting domain of the inbound, or from `www.cloudflare.com` when it has none\n- **WireGuard** — `privateKey` and `publicKey` when both are blank, or `publicKey` alone when only a `privateKey` was sent, plus `allowedIPs`: one free `/32` taken from the /24 the existing peers of that inbound already sit in, or from `10.0.0.0/24` when it has none\n\nAccepted on the same body but never generated: `preSharedKey` and `keepAlive` (WireGuard), `adTag` (mtproto).\n\nWireGuard is the only one of these that can fail. Allocation widens the search to the containing /16 before giving up with `inbound <id>: wireguard: no free address available in <scope>`, and an `allowedIPs` supplied by the caller is validated instead of allocated: `inbound <id>: wireguard: allowedIPs entry <entry> overlaps <address> used by another client` when its range overlaps an address or prefix a different client of that same inbound holds, or `... used by a client on <inbound>` when the holder sits on another WireGuard or AmneziaWG inbound. Ranges are compared, not strings, so `10.0.0.9/24` collides with `10.0.0.5/32`; a `0.0.0.0/0` or `::/0` default route claims no address. Allocation likewise skips every address inside a prefix another client holds. The same validation runs on POST /panel/api/clients/{email}/attach, where a client that already carries an address brings it along.\n\nAn `inboundIds` entry that names no existing inbound rejects the whole call before anything is written. Past that, the inbounds are applied concurrently and independently: one that fails no longer stops the others, so a `success:false` response can still have created the client on the rest. Every error names the inbound it came from (`inbound 7: <message>`), and several failures are reported together, one per line. `limitHwid` is applied only when every inbound succeeded, so re-run the call after fixing the failure.',
+          'Fields the server fills in when they are omitted — a valid value sent by the caller is never overwritten. Re-adding an email that already exists, with its stored `subId`, reuses the stored `id`, `password`, `auth` and `secret` instead of minting new ones, so the identity stays in sync across its inbounds.\n\n- **VLESS / VMess** — `id`, a fresh UUID\n- **Trojan** — `password`\n- **Shadowsocks** — `password`. On a `2022-blake3-*` inbound a supplied password that does not base64-decode to the key length of the cipher (16 or 32 bytes) is replaced by a generated key and the call still succeeds, so read the client back if you did not let the server pick. Legacy ciphers keep any non-empty password\n- **Hysteria** — `auth`\n- **mtproto** — `secret`, a FakeTLS secret derived from the fronting domain of the inbound, or from `www.cloudflare.com` when it has none\n- **WireGuard** — `privateKey` and `publicKey` when both are blank, or `publicKey` alone when only a `privateKey` was sent, plus `allowedIPs`: one free `/32` taken from the /24 the existing peers of that inbound already sit in, or from `10.0.0.0/24` when it has none\n\nAccepted on the same body but never generated: `preSharedKey` and `keepAlive` (WireGuard), `adTag` (mtproto).\n\nWireGuard is the only one of these that can fail. Allocation widens the search to the containing /16 before giving up with `inbound <id>: wireguard: no free address available in <scope>`, and an `allowedIPs` supplied by the caller is validated instead of allocated: `inbound <id>: wireguard: allowedIPs entry <entry> overlaps <address> used by another client` when its range overlaps an address or prefix a different client of that same inbound holds, or `... used by a client on <inbound>` when the holder sits on another WireGuard or AmneziaWG inbound. Ranges are compared, not strings, so `10.0.0.9/24` collides with `10.0.0.5/32`; a `0.0.0.0/0` or `::/0` default route claims no address. Allocation likewise skips every address inside a prefix another client holds. The same validation runs on POST /easyxray/api/v1/clients/{email}/attach, where a client that already carries an address brings it along.\n\nAn `inboundIds` entry that names no existing inbound rejects the whole call before anything is written. Past that, the inbounds are applied concurrently and independently: one that fails no longer stops the others, so a `success:false` response can still have created the client on the rest. Every error names the inbound it came from (`inbound 7: <message>`), and several failures are reported together, one per line. `limitHwid` is applied only when every inbound succeeded, so re-run the call after fixing the failure.',
         params: [
           {
             name: 'client',
@@ -1178,7 +1178,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/renewalPreview',
+        path: '/easyxray/api/v1/clients/renewalPreview',
         summary: 'Preview client auto-renewal dates without saving or resetting anything.',
         description:
           'Uses the same calendar and catch-up calculation as auto-renew in the panel timezone. resetWeekday is 1 (Monday) to 7 (Sunday), 0 disables weekly mode; it cannot be combined with positive reset or resetDay. Existing resetDay takes precedence over reset. With expiryTime=0, calendar modes suggest a first cutoff but do not activate renewal. Negative expiryTime waits for first-use activation. resetMax and resetCount simulate the existing per-period allowance limit; the preview is informational and does not reserve an allowance or guarantee node availability.',
@@ -1224,7 +1224,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/update/:email',
+        path: '/easyxray/api/v1/clients/update/:email',
         summary:
           'Update an existing client by email. Changes propagate to every attached inbound. Body is the JSON client payload — supply the full set of fields you want to keep (the server replaces the row, it does not patch).',
         description:
@@ -1242,7 +1242,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/del/:email',
+        path: '/easyxray/api/v1/clients/del/:email',
         summary:
           'Delete a client by email. Removes it from every attached inbound and drops its traffic record unless keepTraffic=1 is passed.',
         description:
@@ -1260,10 +1260,10 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/:email/attach',
+        path: '/easyxray/api/v1/clients/:email/attach',
         summary: 'Attach an existing client to one or more additional inbounds. Body is JSON.',
         description:
-          'A WireGuard client brings its stored `allowedIPs` into the new inbound instead of being given a fresh address, so the call fails with `inbound <id>: wireguard: allowedIPs entry <entry> overlaps <address> used by another client` when its range overlaps an address or prefix a different client of the target inbound holds. Free the address on that inbound first — see POST /panel/api/clients/add for the full rule. Inbounds are applied independently, so the remaining ones are still attached and a `success:false` response can be partial.',
+          'A WireGuard client brings its stored `allowedIPs` into the new inbound instead of being given a fresh address, so the call fails with `inbound <id>: wireguard: allowedIPs entry <entry> overlaps <address> used by another client` when its range overlaps an address or prefix a different client of the target inbound holds. Free the address on that inbound first — see POST /easyxray/api/v1/clients/add for the full rule. Inbounds are applied independently, so the remaining ones are still attached and a `success:false` response can be partial.',
         params: [
           { name: 'email', in: 'path', type: 'string', desc: 'Client email (unique identifier).' },
           {
@@ -1278,7 +1278,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/:email/detach',
+        path: '/easyxray/api/v1/clients/:email/detach',
         summary: 'Detach a client from one or more inbounds without deleting the client.',
         description:
           'The inbounds are applied concurrently and independently: one that fails no longer stops the others. Every inbound error names the inbound it came from (`inbound 7: <message>`), and several failures are reported together, one per line. So a `success:false` response can still have detached the remaining inbounds. Detach writes nothing beyond the inbounds, so every error carries the prefix.',
@@ -1296,7 +1296,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/:email/externalLinks',
+        path: '/easyxray/api/v1/clients/:email/externalLinks',
         summary:
           "Replace a client's external links and external subscriptions. Sends the full set; the server replaces all rows. Disabled rows stay saved for editing but are not emitted in generated subscriptions. The owning client's disabled or expired state also stops these rows from being emitted on future subscription fetches; credentials already imported by an app remain valid until the external provider revokes them.",
         params: [
@@ -1313,28 +1313,28 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/resetAllTraffics',
+        path: '/easyxray/api/v1/clients/resetAllTraffics',
         summary:
           'Reset the up/down counters for every client globally. Quotas and expiry are not affected. Triggers an Xray restart if any counter actually moved.',
         response: '{\n  "success": true\n}',
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/delDepleted',
+        path: '/easyxray/api/v1/clients/delDepleted',
         summary:
           'Delete every client whose traffic quota is exhausted (used >= total, when reset is disabled) or whose expiry has passed. Returns the deleted count and triggers an Xray restart when any client was on a running inbound.',
         response: '{\n  "success": true,\n  "obj": {\n    "deleted": 0\n  }\n}',
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/delOrphans',
+        path: '/easyxray/api/v1/clients/delOrphans',
         summary:
           'Delete every client that is not attached to any inbound, along with its traffic record, IP log, HWID devices, and external links. Useful for clearing clients left unattached after their inbounds were removed. Returns the deleted count. Cannot be undone.',
         response: '{\n  "success": true,\n  "obj": {\n    "deleted": 0\n  }\n}',
       },
       {
         method: 'GET',
-        path: '/panel/api/clients/export',
+        path: '/easyxray/api/v1/clients/export',
         summary:
           'Return every client as a {client, inboundIds, traffic} array — the shape /import accepts — so the payload round-trips straight back through /import. traffic carries the usage counters (up, down, resetCount, lastOnline, lastSubFetch) and is omitted for a client with no traffic row; the quota itself stays in client.totalGB. Clients with no inbound attachment are included with an empty inboundIds list. The UI shows this in a CodeMirror viewer (copy / download); programmatic callers get the array in obj.',
         response:
@@ -1342,7 +1342,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/import',
+        path: '/easyxray/api/v1/clients/import',
         summary:
           'Import clients from a JSON body { "data": "<json>" }, where data is a string-encoded array produced by /export ([{client, inboundIds, traffic}]). Items with inboundIds are created and attached to those inbounds; items with an empty inboundIds list are restored as unattached client records. An optional traffic object restores the usage counters, only for clients this import creates. Existing emails are never overwritten — they are returned in skipped, and their live counters are left untouched. Triggers a single Xray restart at the end if any target inbound was running; a failure while restoring counters still reports success=false after the clients were created.',
         body: '{\n  "data": "[{\\"client\\":{\\"email\\":\\"alice@example.com\\",\\"enable\\":true},\\"inboundIds\\":[7]}]"\n}',
@@ -1351,7 +1351,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/bulkAdjust',
+        path: '/easyxray/api/v1/clients/bulkAdjust',
         summary:
           'Shift expiry and/or traffic quota for many clients in one call. addDays/addBytes may be negative. Clients with unlimited expiry (expiryTime=0) or unlimited traffic (totalGB=0) are skipped for the corresponding field — bulk extend never converts unlimited to limited. A client that was auto-disabled solely because it was depleted (expired or over quota) is automatically re-enabled — locally and on its node — when the adjustment lifts it out of depletion; a manually-disabled or still-depleted client is left disabled. The optional flow directive sets the XTLS flow on every client: "none" clears it, "xtls-rprx-vision"/"xtls-rprx-vision-udp443" set it where the inbound supports it (omit or "" to leave it unchanged). The optional limitHwid sets maximum registered devices (0 = unlimited). The optional adTag sets MTProto Telegram sponsor channel ("none" clears). Returns the adjusted count and per-email skip reasons.',
         body: '{\n  "emails": ["alice", "bob"],\n  "addDays": 30,\n  "addBytes": 53687091200,\n  "flow": "xtls-rprx-vision",\n  "limitHwid": 2,\n  "adTag": "0123456789abcdef0123456789abcdef"\n}',
@@ -1360,7 +1360,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/bulkEnable',
+        path: '/easyxray/api/v1/clients/bulkEnable',
         summary:
           'Enable many clients in one call. Emails are grouped by inbound and applied with a single read-modify-write per inbound; the running Xray (local or remote node) is updated to add each user. Note that enabling a client whose quota is exhausted or whose expiry has passed only flips the flag — the traffic loop will disable it again on the next tick. Returns the changed count and per-email skip reasons.',
         body: '{\n  "emails": ["alice", "bob"]\n}',
@@ -1369,7 +1369,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/bulkDisable',
+        path: '/easyxray/api/v1/clients/bulkDisable',
         summary:
           'Disable many clients in one call. Emails are grouped by inbound and applied with a single read-modify-write per inbound; the running Xray (local or remote node) is updated to remove each user. Returns the changed count and per-email skip reasons.',
         body: '{\n  "emails": ["alice", "bob"]\n}',
@@ -1378,7 +1378,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/bulkDel',
+        path: '/easyxray/api/v1/clients/bulkDel',
         summary:
           'Delete many clients in one call. The server processes the list sequentially so each delete sees the committed state of the previous one — avoids the race the per-email fan-out had on the panel side. Pass keepTraffic=true to retain the xray_client_traffic rows after deletion.',
         body: '{\n  "emails": ["alice", "bob"],\n  "keepTraffic": false\n}',
@@ -1387,7 +1387,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/bulkCreate',
+        path: '/easyxray/api/v1/clients/bulkCreate',
         summary:
           'Create many clients in one call. Body is a JSON array of {client, inboundIds} payloads — the same shape /add accepts. Items are processed sequentially; per-email skip reasons are returned for items that fail (e.g., duplicate email). Triggers a single Xray restart at the end if any inbound was running.',
         body: '[\n  {\n    "client": {\n      "email": "alice@example.com",\n      "totalGB": 53687091200,\n      "expiryTime": 0,\n      "limitHwid": 2,\n      "enable": true\n    },\n    "inboundIds": [7]\n  },\n  {\n    "client": {\n      "email": "bob@example.com",\n      "totalGB": 53687091200,\n      "expiryTime": 0,\n      "limitHwid": 0,\n      "enable": true\n    },\n    "inboundIds": [7, 9]\n  }\n]',
@@ -1396,7 +1396,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/groups/bulkAdd',
+        path: '/easyxray/api/v1/clients/groups/bulkAdd',
         summary:
           "Add many clients to a group in one call. Updates clients.group_name and patches the matching client entry inside every owning inbound's settings JSON in a single transaction. If the group name does not yet exist (in client_groups or as a derived label), it is auto-created as a persistent group. To clear the group label, use /groups/bulkRemove instead.",
         body: '{\n  "emails": ["alice", "bob"],\n  "group": "customer-a"\n}',
@@ -1404,7 +1404,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/groups/bulkRemove',
+        path: '/easyxray/api/v1/clients/groups/bulkRemove',
         summary:
           "Clear the group label on many clients in one call. Inverse of /groups/bulkAdd. Clients themselves are kept — only the group label is cleared from clients.group_name and from each owning inbound's settings JSON. Groups become empty if all their members are removed.",
         body: '{\n  "emails": ["alice", "bob"]\n}',
@@ -1412,7 +1412,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/bulkAttach',
+        path: '/easyxray/api/v1/clients/bulkAttach',
         summary:
           'Attach many existing clients to many inbounds in one call. Each client keeps its identity (email/UUID/password/subId) and a shared traffic row; all clients are added to a target inbound in a single AddInboundClient call. Clients already present on a target are reported under skipped. Returns per-email attached/skipped/errors lists and triggers a single Xray restart if any target inbound was running.',
         params: [
@@ -1435,7 +1435,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/bulkDetach',
+        path: '/easyxray/api/v1/clients/bulkDetach',
         summary:
           "Mirror of bulkAttach: detach many existing clients from many inbounds in one call. For each email, intersects the client's current inbounds with the requested set and detaches from those only; (email, inbound) pairs where the client is not currently attached are silently no-ops. Emails not attached to any of the requested inbounds are reported under skipped. Client records are kept even if they become orphaned — use bulkDel for full removal. Returns per-email detached/skipped/errors lists and triggers a single Xray restart if any target inbound was running.",
         params: [
@@ -1458,7 +1458,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/bulkResetTraffic',
+        path: '/easyxray/api/v1/clients/bulkResetTraffic',
         summary:
           'Zero up/down counters for many clients in one call. Loops the single-reset path so each client is re-enabled across its attached inbounds and pushed to Xray/remote nodes. Returns the count of successfully reset clients.',
         body: '{\n  "emails": ["alice", "bob"]\n}',
@@ -1466,7 +1466,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/clients/groups',
+        path: '/easyxray/api/v1/clients/groups',
         summary:
           'List all client groups with their member counts. Merges persisted groups (rows in client_groups, including empty placeholders) with the distinct group_name values currently set on clients. Sorted alphabetically (case-insensitive).',
         response:
@@ -1474,7 +1474,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/clients/groups/:name/emails',
+        path: '/easyxray/api/v1/clients/groups/:name/emails',
         summary:
           'Return just the email list of clients that currently belong to the given group. Useful for fanning a single bulk action over an entire group without round-tripping the full client list.',
         params: [{ name: 'name', in: 'path', type: 'string', desc: 'Group name (URL-encoded).' }],
@@ -1482,7 +1482,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/groups/create',
+        path: '/easyxray/api/v1/clients/groups/create',
         summary:
           'Create a new empty (placeholder) group. The group becomes selectable in client forms and the filter drawer even before any client is added to it. Errors if a group with the same name already exists.',
         body: '{\n  "name": "customer-a"\n}',
@@ -1490,7 +1490,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/groups/rename',
+        path: '/easyxray/api/v1/clients/groups/rename',
         summary:
           "Rename a group. The new name is applied to the client_groups row AND propagated to every matching client (both clients.group_name and the client entry inside every owning inbound's settings JSON) in a single transaction. Returns the number of clients whose label was updated.",
         body: '{\n  "oldName": "customer-a",\n  "newName": "tier-1"\n}',
@@ -1498,7 +1498,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/groups/delete',
+        path: '/easyxray/api/v1/clients/groups/delete',
         summary:
           'Remove a group. Deletes the client_groups row and clears the group label from every matching client (both clients.group_name and the inbound settings JSON). The clients themselves are NOT deleted — use /bulkDel after filtering by group for that. Returns the count of clients whose label was cleared.',
         body: '{\n  "name": "customer-a"\n}',
@@ -1506,7 +1506,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/groups/resetTraffic',
+        path: '/easyxray/api/v1/clients/groups/resetTraffic',
         summary:
           "Reset only the group-level traffic counter shown on the groups page. Snapshots the current up/down sum of the group's members as a baseline so the group total reads zero, while leaving each client's own counters (and their quotas) untouched. No Xray restart is triggered. Creates the client_groups row if the group exists only as a derived label.",
         body: '{\n  "name": "customer-a"\n}',
@@ -1514,14 +1514,14 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/resetTraffic/:email',
+        path: '/easyxray/api/v1/clients/resetTraffic/:email',
         summary:
           'Zero out a single client’s up/down counters. Re-enables the client across every attached inbound and pushes the change to Xray (or the remote node) so depleted users can connect again immediately.',
         params: [{ name: 'email', in: 'path', type: 'string', desc: 'Client email.' }],
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/updateTraffic/:email',
+        path: '/easyxray/api/v1/clients/updateTraffic/:email',
         summary:
           'Manually adjust a client’s upload + download counters. Useful for migrations from external accounting systems.',
         params: [{ name: 'email', in: 'path', type: 'string', desc: 'Client email.' }],
@@ -1529,20 +1529,20 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/ips/:email',
+        path: '/easyxray/api/v1/clients/ips/:email',
         summary:
           'List source IPs that have connected with the given client’s credentials. Returns an array of "ip (timestamp)" strings.',
         params: [{ name: 'email', in: 'path', type: 'string', desc: 'Client email.' }],
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/clearIps/:email',
+        path: '/easyxray/api/v1/clients/clearIps/:email',
         summary: 'Reset the recorded IP list for a client.',
         params: [{ name: 'email', in: 'path', type: 'string', desc: 'Client email.' }],
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/hwids/:email',
+        path: '/easyxray/api/v1/clients/hwids/:email',
         summary:
           'List registered HWID devices for a client with a short fingerprint. Full hashes are not exposed.',
         params: [{ name: 'email', in: 'path', type: 'string', desc: 'Client email.' }],
@@ -1551,14 +1551,14 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'DELETE',
-        path: '/panel/api/clients/hwids/:email',
+        path: '/easyxray/api/v1/clients/hwids/:email',
         summary:
           'Clear all registered HWID devices for a client so new devices can register again.',
         params: [{ name: 'email', in: 'path', type: 'string', desc: 'Client email.' }],
       },
       {
         method: 'DELETE',
-        path: '/panel/api/clients/hwids/:email/:id',
+        path: '/easyxray/api/v1/clients/hwids/:email/:id',
         summary:
           'Remove a single registered HWID device by its id, freeing one slot under the HWID limit.',
         params: [
@@ -1568,14 +1568,14 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/onlines',
+        path: '/easyxray/api/v1/clients/onlines',
         summary:
           'List the emails of currently connected clients (last seen within the heartbeat window), deduped across every node.',
         response: '{\n  "success": true,\n  "obj": ["user1", "user2"]\n}',
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/onlinesByGuid',
+        path: '/easyxray/api/v1/clients/onlinesByGuid',
         summary:
           'Online client emails grouped by the panelGuid of the node that physically hosts each client. The local panel uses its own GUID; each node (at any depth in a chain) uses its GUID. Lets the inbounds page attribute online status to the real node instead of the intermediate one it syncs through.',
         response:
@@ -1583,7 +1583,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/clientIpsByGuid',
+        path: '/easyxray/api/v1/clients/clientIpsByGuid',
         summary:
           'Per-client source IPs grouped by the panelGuid of the node that observed them. Lets the central panel attribute and enforce per-client IP limits using the real visitor IPs each node sees, instead of the address of the intermediate panel it syncs through.',
         response:
@@ -1591,7 +1591,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/activeInbounds',
+        path: '/easyxray/api/v1/clients/activeInbounds',
         summary:
           "Inbound tags that carried traffic within the heartbeat window, grouped by the hosting node's panelGuid. Pairs with onlinesByGuid so the inbounds page only marks a multi-inbound client online on the inbounds it actually used. Nodes that do not report per-inbound activity are absent.",
         response:
@@ -1599,14 +1599,14 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/lastOnline',
+        path: '/easyxray/api/v1/clients/lastOnline',
         summary: 'Map of client email → last-seen unix timestamp.',
         response:
           '{\n  "success": true,\n  "obj": {\n    "user1": 1700000000,\n    "user2": 1699999000\n  }\n}',
       },
       {
         method: 'GET',
-        path: '/panel/api/clients/traffic/:email',
+        path: '/easyxray/api/v1/clients/traffic/:email',
         summary: 'Traffic counters for a client identified by email.',
         params: [
           {
@@ -1620,7 +1620,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/clients/subLinks/:subId',
+        path: '/easyxray/api/v1/clients/subLinks/:subId',
         summary:
           'Return every protocol URL (vless://, vmess://, trojan://, ss://, hysteria://, hy2://) for clients matching the subscription ID. Same result set as the configured subPath endpoint, but as a JSON array — no base64. When an inbound has streamSettings.externalProxy set, one URL is emitted per external proxy. Empty array when the subId has no enabled clients.',
         params: [
@@ -1636,7 +1636,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/clients/happLink/:id',
+        path: '/easyxray/api/v1/clients/happLink/:id',
         summary:
           'Generate a fresh Happ crypt5 link locally from the current client subscription URL when Happ link generation is enabled. The panel applies a resource limit of 8192 UTF-8 bytes to the source URL; this is not a Happ client maximum. Longer sources return success: false with msg: happ_source_too_long and obj: null. The source URL is not sent to a generation provider, and the result is not stored or reused.',
         params: [{ name: 'id', in: 'path', type: 'integer', desc: 'Stable client record ID.' }],
@@ -1644,7 +1644,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/clients/links/:email',
+        path: '/easyxray/api/v1/clients/links/:email',
         summary:
           'Return every URL for one client across all attached inbounds, one per advertised endpoint: the managed hosts of the inbound, else its streamSettings.externalProxy entries, else its own address. Supported protocols: vmess, vless, trojan, shadowsocks, hysteria, mtproto. Protocols without a URL form (socks, http, mixed, wireguard, dokodemo, tunnel) contribute nothing.',
         params: [
@@ -1660,11 +1660,11 @@ export const sections: readonly Section[] = [
     id: 'nodes',
     title: 'Nodes',
     description:
-      'Manage remote 3x-ui panels acting as nodes for a central panel. All endpoints under /panel/api/nodes.',
+      'Manage remote EasyXray panels acting as nodes for a central panel. All endpoints under /easyxray/api/v1/nodes.',
     endpoints: [
       {
         method: 'GET',
-        path: '/panel/api/nodes/list',
+        path: '/easyxray/api/v1/nodes/list',
         summary:
           'List every configured node with its connection details, health, and last heartbeat patch.',
         responseSchema: 'NodeView',
@@ -1672,7 +1672,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/nodes/mtls/ca',
+        path: '/easyxray/api/v1/nodes/mtls/ca',
         summary:
           "This panel's node-auth CA certificate (public, PEM) to paste into a node's mTLS trust setting. Lazily mints the CA and the master client cert on first call. Pair with setting tlsVerifyMode=mtls on the node.",
         response:
@@ -1680,27 +1680,27 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/nodes/mtls/trustCA',
+        path: '/easyxray/api/v1/nodes/mtls/trustCA',
         summary:
           "Set the CA certificate this panel trusts for incoming node-API client certificates (this panel acting as a node). Paste the managing panel's CA (from nodes/mtls/ca). An empty caCert disables it. A non-empty value must be a PEM certificate. Applied on the next panel restart.",
         body: '{\n  "caCert": "-----BEGIN CERTIFICATE-----\\n...\\n-----END CERTIFICATE-----\\n"\n}',
       },
       {
         method: 'POST',
-        path: '/panel/api/nodes/mtls/reloadClient',
+        path: '/easyxray/api/v1/nodes/mtls/reloadClient',
         summary:
           'Validate the stored master mTLS client credential and invalidate cached transports. Each transport closes its old idle pool and rebuilds with the rotated certificate before its next request.',
       },
       {
         method: 'GET',
-        path: '/panel/api/nodes/get/:id',
+        path: '/easyxray/api/v1/nodes/get/:id',
         summary: 'Fetch a single node by ID.',
         params: [{ name: 'id', in: 'path', type: 'number', desc: 'Node ID.' }],
         responseSchema: 'NodeView',
       },
       {
         method: 'GET',
-        path: '/panel/api/nodes/webCert/:id',
+        path: '/easyxray/api/v1/nodes/webCert/:id',
         summary:
           'Fetch a node\'s own web TLS certificate/key file paths (proxied to the node). Used by the inbound form\'s "Set Cert from Panel" so a node-assigned inbound gets paths that exist on the node, not the central panel.',
         params: [{ name: 'id', in: 'path', type: 'number', desc: 'Node ID.' }],
@@ -1709,7 +1709,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/nodes/add',
+        path: '/easyxray/api/v1/nodes/add',
         summary:
           'Register a new remote node. Provide its URL, write-only apiToken, and optional remark / allowPrivateAddress flag. Responses expose hasApiToken only.',
         body: '{\n  "name": "de-fra-1",\n  "remark": "",\n  "scheme": "https",\n  "address": "node1.example.com",\n  "port": 2053,\n  "basePath": "/",\n  "apiToken": "abcdef...",\n  "clearApiToken": false,\n  "enable": true,\n  "allowPrivateAddress": false\n}',
@@ -1717,7 +1717,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/nodes/update/:id',
+        path: '/easyxray/api/v1/nodes/update/:id',
         summary:
           'Replace a node\u2019s connection details. apiToken is write-only: omit it or send an empty string to keep the stored token; set clearApiToken=true to clear it.',
         params: [{ name: 'id', in: 'path', type: 'number', desc: 'Node ID.' }],
@@ -1725,20 +1725,20 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/nodes/del/:id',
+        path: '/easyxray/api/v1/nodes/del/:id',
         summary: 'Delete a node. Inbounds bound to it are not auto-migrated.',
         params: [{ name: 'id', in: 'path', type: 'number', desc: 'Node ID.' }],
       },
       {
         method: 'POST',
-        path: '/panel/api/nodes/setEnable/:id',
+        path: '/easyxray/api/v1/nodes/setEnable/:id',
         summary: 'Pause or resume traffic sync with this node.',
         params: [{ name: 'id', in: 'path', type: 'number', desc: 'Node ID.' }],
         body: '{\n  "enable": true\n}',
       },
       {
         method: 'POST',
-        path: '/panel/api/nodes/test',
+        path: '/easyxray/api/v1/nodes/test',
         summary:
           'Probe a node without saving it. Uses the body as connection details and returns the same heartbeat snapshot a registered node would have.',
         body: '{\n  "scheme": "https",\n  "address": "node1.example.com",\n  "port": 2053,\n  "basePath": "/",\n  "apiToken": "abcdef..."\n}',
@@ -1746,7 +1746,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/nodes/certFingerprint',
+        path: '/easyxray/api/v1/nodes/certFingerprint',
         summary:
           "Connect to the node over HTTPS without verifying its certificate and return the leaf certificate's SHA-256 (base64). Used by the Add/Edit Node dialog to fetch and pin a self-signed certificate. Uses the same body as /test.",
         body: '{\n  "scheme": "https",\n  "address": "node1.example.com",\n  "port": 2053,\n  "basePath": "/"\n}',
@@ -1754,7 +1754,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/nodes/inbounds',
+        path: '/easyxray/api/v1/nodes/inbounds',
         summary:
           'Use unsaved node connection details to list the remote inbounds available for selective import.',
         body: '{\n  "name": "de-fra-1",\n  "scheme": "https",\n  "address": "node1.example.com",\n  "port": 2053,\n  "basePath": "/",\n  "apiToken": "abcdef..."\n}',
@@ -1763,13 +1763,13 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/nodes/probe/:id',
+        path: '/easyxray/api/v1/nodes/probe/:id',
         summary: 'Probe an existing node, updating its cached health state.',
         params: [{ name: 'id', in: 'path', type: 'number', desc: 'Node ID.' }],
       },
       {
         method: 'POST',
-        path: '/panel/api/nodes/updatePanel',
+        path: '/easyxray/api/v1/nodes/updatePanel',
         summary:
           'Trigger the official panel self-updater on each given node (downloads the latest release and restarts). Only enabled, online nodes are updated; offline/disabled ones are reported as skipped. Set "dev": true to move the nodes to the rolling per-commit dev channel instead of the latest stable release. Returns a per-node result list.',
         body: '{\n  "ids": [1, 2, 3],\n  "dev": false\n}',
@@ -1778,7 +1778,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/nodes/history/:id/:metric/:bucket',
+        path: '/easyxray/api/v1/nodes/history/:id/:metric/:bucket',
         summary:
           'Aggregated metric history for a node — same shape as /server/history, scoped to one node.',
         params: [
@@ -1799,11 +1799,11 @@ export const sections: readonly Section[] = [
     id: 'hosts',
     title: 'Hosts',
     description:
-      'Per-inbound override endpoints. Each enabled host renders one extra subscription link/proxy with its own address/port/TLS, superseding the legacy externalProxy array. All endpoints under /panel/api/hosts.',
+      'Per-inbound override endpoints. Each enabled host renders one extra subscription link/proxy with its own address/port/TLS, superseding the legacy externalProxy array. All endpoints under /easyxray/api/v1/hosts.',
     endpoints: [
       {
         method: 'GET',
-        path: '/panel/api/hosts/list',
+        path: '/easyxray/api/v1/hosts/list',
         summary:
           'List every host across all inbounds, grouped by inbound then ordered by sort order.',
         responseSchema: 'HostGroup',
@@ -1811,14 +1811,14 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/hosts/get/:groupId',
+        path: '/easyxray/api/v1/hosts/get/:groupId',
         summary: 'Fetch a single host group by Group ID.',
         params: [{ name: 'groupId', in: 'path', type: 'string', desc: 'Host Group ID.' }],
         responseSchema: 'HostGroup',
       },
       {
         method: 'GET',
-        path: '/panel/api/hosts/byInbound/:inboundId',
+        path: '/easyxray/api/v1/hosts/byInbound/:inboundId',
         summary: "Fetch one inbound's hosts, grouped by host group.",
         params: [{ name: 'inboundId', in: 'path', type: 'number', desc: 'Inbound ID.' }],
         responseSchema: 'HostGroup',
@@ -1826,13 +1826,13 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/hosts/tags',
+        path: '/easyxray/api/v1/hosts/tags',
         summary: 'Distinct, sorted set of tags used across all hosts.',
         response: '{\n  "success": true,\n  "obj": ["CDN", "EU", "FAST"]\n}',
       },
       {
         method: 'POST',
-        path: '/panel/api/hosts/add',
+        path: '/easyxray/api/v1/hosts/add',
         summary: 'Create a host group on inbounds.',
         body: '{\n  "inboundIds": [1],\n  "remark": "cdn-front",\n  "hosts": ["cdn.example.com"],\n  "port": 8443,\n  "security": "same",\n  "tags": ["CDN"]\n}',
         responseSchema: 'Host',
@@ -1840,7 +1840,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/hosts/update/:groupId',
+        path: '/easyxray/api/v1/hosts/update/:groupId',
         summary: 'Replace a host group’s content.',
         params: [{ name: 'groupId', in: 'path', type: 'string', desc: 'Host Group ID.' }],
         body: '{\n  "inboundIds": [1],\n  "remark": "cdn-front",\n  "hosts": ["cdn.example.com"],\n  "port": 8443,\n  "security": "same",\n  "tags": ["CDN"]\n}',
@@ -1849,26 +1849,26 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/hosts/del/:groupId',
+        path: '/easyxray/api/v1/hosts/del/:groupId',
         summary: 'Delete a host group.',
         params: [{ name: 'groupId', in: 'path', type: 'string', desc: 'Host Group ID.' }],
       },
       {
         method: 'POST',
-        path: '/panel/api/hosts/setEnable/:groupId',
+        path: '/easyxray/api/v1/hosts/setEnable/:groupId',
         summary: 'Enable or disable a host group.',
         params: [{ name: 'groupId', in: 'path', type: 'string', desc: 'Host Group ID.' }],
         body: '{\n  "enable": true\n}',
       },
       {
         method: 'POST',
-        path: '/panel/api/hosts/reorder',
+        path: '/easyxray/api/v1/hosts/reorder',
         summary: 'Set host group sort order by the position of each groupId in the array.',
         body: '{\n  "ids": ["abc-123", "def-456"]\n}',
       },
       {
         method: 'POST',
-        path: '/panel/api/hosts/bulk/add',
+        path: '/easyxray/api/v1/hosts/bulk/add',
         summary: 'Add a host group to inbounds (same as /add).',
         body: '{\n  "inboundIds": [1, 2],\n  "hosts": ["cdn.example.com", "cdn2.example.com:443"],\n  "remark": "Cloudflare CDN",\n  "port": 0,\n  "security": "same",\n  "isDisabled": false\n}',
         responseSchema: 'Host',
@@ -1876,13 +1876,13 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/hosts/bulk/setEnable',
+        path: '/easyxray/api/v1/hosts/bulk/setEnable',
         summary: 'Enable or disable many host groups in one call.',
         body: '{\n  "ids": ["abc-123", "def-456"],\n  "enable": false\n}',
       },
       {
         method: 'POST',
-        path: '/panel/api/hosts/bulk/del',
+        path: '/easyxray/api/v1/hosts/bulk/del',
         summary: 'Delete many host groups in one call.',
         body: '{\n  "ids": ["abc-123", "def-456"]\n}',
       },
@@ -1896,7 +1896,7 @@ export const sections: readonly Section[] = [
     endpoints: [
       {
         method: 'POST',
-        path: '/panel/api/backuptotgbot',
+        path: '/easyxray/api/v1/backuptotgbot',
         summary:
           'Send a fresh DB backup to every Telegram chat configured as an admin recipient. No body, no params.',
       },
@@ -1907,11 +1907,11 @@ export const sections: readonly Section[] = [
     id: 'settings',
     title: 'Settings',
     description:
-      'Panel configuration and user credentials. All endpoints live under /panel/api/setting and require a logged-in session or Bearer token.',
+      'Panel configuration and user credentials. All endpoints live under /easyxray/api/v1/setting and require a logged-in session or Bearer token.',
     endpoints: [
       {
         method: 'POST',
-        path: '/panel/api/setting/all',
+        path: '/easyxray/api/v1/setting/all',
         summary:
           'Return every panel setting: web server, Telegram bot, subscription, security, LDAP. The full JSON blob that the Settings page edits.',
         response:
@@ -1919,26 +1919,26 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/setting/defaultSettings',
+        path: '/easyxray/api/v1/setting/defaultSettings',
         summary:
           'Return the computed default settings based on the request host. Useful to preview what a fresh install would use.',
       },
       {
         method: 'POST',
-        path: '/panel/api/setting/factoryDefaults',
+        path: '/easyxray/api/v1/setting/factoryDefaults',
         summary:
           'Return the shipped (factory) default value per browser-safe setting key, so clients can tell a stored value apart from the default it would fall back to. Per-install material (secret, panelGuid, mTLS keys) and credential fields are never included.',
       },
       {
         method: 'POST',
-        path: '/panel/api/setting/update',
+        path: '/easyxray/api/v1/setting/update',
         summary:
           'Persist every setting at once. The body mirrors the shape returned by /all. Invalid values (bad ports, missing cert pairs, etc.) are rejected before write.',
         body: '{\n  "webPort": 2053,\n  "webBasePath": "/",\n  "subPort": 10882,\n  "subPath": "/sub/",\n  "subClashAutoDetect": false,\n  "subClashUserAgentRegex": "",\n  "subJsonEnable": false,\n  "subJsonAutoDetect": false,\n  "subJsonAlwaysArray": false,\n  "subJsonUserAgentRegex": "",\n  "subJsonPath": "/json/",\n  "subJsonURI": "https://sub.example.com/json/",\n  "subClashEnable": true,\n  "subClashPath": "/clash/",\n  "subClashURI": "https://sub.example.com/clash/",\n  "tgBotEnable": false,\n  ...\n}',
       },
       {
         method: 'POST',
-        path: '/panel/api/setting/validateRegex',
+        path: '/easyxray/api/v1/setting/validateRegex',
         summary:
           'Validate any regular expression with the backend Go RE2 compiler without saving it.',
         body: '{\n  "regex": "(?m)^general-purpose$"\n}',
@@ -1946,7 +1946,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/setting/updateUser',
+        path: '/easyxray/api/v1/setting/updateUser',
         summary:
           'Change the panel admin username and password. Requires the current credentials for verification. The session is refreshed with the new values on success.',
         params: [
@@ -1959,13 +1959,13 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/setting/restartPanel',
+        path: '/easyxray/api/v1/setting/restartPanel',
         summary:
-          'Restart the entire 3x-ui process after a 3-second grace period. The connection drops immediately; the panel comes back online ~5-10 seconds later.',
+          'Restart the entire EasyXray process after a 3-second grace period. The connection drops immediately; the panel comes back online ~5-10 seconds later.',
       },
       {
         method: 'POST',
-        path: '/panel/api/setting/testSmtp',
+        path: '/easyxray/api/v1/setting/testSmtp',
         summary:
           'Test SMTP connection with stage-by-stage reporting (connect, auth, send). Returns structured result with stage and message.',
         response:
@@ -1973,19 +1973,19 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/setting/testTgBot',
+        path: '/easyxray/api/v1/setting/testTgBot',
         summary: 'Test Telegram bot connection by sending a test message to the configured chat.',
         response: '{\n  "success": true,\n  "msg": "Test message sent to Telegram"\n}',
       },
       {
         method: 'POST',
-        path: '/panel/api/setting/testDiscord',
+        path: '/easyxray/api/v1/setting/testDiscord',
         summary: 'Test Discord bot connection by sending a test embed to the configured channel.',
         response: '{\n  "success": true,\n  "msg": "Test notification sent successfully"\n}',
       },
       {
         method: 'GET',
-        path: '/panel/api/setting/getDefaultJsonConfig',
+        path: '/easyxray/api/v1/setting/getDefaultJsonConfig',
         summary:
           'Return the built-in default Xray JSON config template that ships with this panel version.',
       },
@@ -2000,7 +2000,7 @@ export const sections: readonly Section[] = [
     endpoints: [
       {
         method: 'GET',
-        path: '/panel/api/setting/apiTokens',
+        path: '/easyxray/api/v1/setting/apiTokens',
         summary:
           'List every API token, enabled or not. The token value is never returned — only metadata.',
         response:
@@ -2008,7 +2008,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/setting/apiTokens/create',
+        path: '/easyxray/api/v1/setting/apiTokens/create',
         summary:
           'Mint a scoped API token. The server-generated plaintext is returned only once and stored as a hash.',
         params: [
@@ -2040,7 +2040,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/setting/apiTokens/delete/:id',
+        path: '/easyxray/api/v1/setting/apiTokens/delete/:id',
         summary:
           'Permanently delete a token. Any caller using it stops authenticating immediately.',
         params: [
@@ -2057,7 +2057,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/setting/apiTokens/setEnabled/:id',
+        path: '/easyxray/api/v1/setting/apiTokens/setEnabled/:id',
         summary:
           'Toggle a token enabled/disabled without deleting it. Disabled tokens are rejected by checkAPIAuth on the next request.',
         params: [
@@ -2080,11 +2080,11 @@ export const sections: readonly Section[] = [
     id: 'xray-settings',
     title: 'Xray Settings',
     description:
-      'Xray configuration template, outbound management, Warp/Nord/PIA integration, and config testing. All endpoints under /panel/api/xray.',
+      'Xray configuration template, outbound management, Warp/Nord/PIA integration, and config testing. All endpoints under /easyxray/api/v1/xray.',
     endpoints: [
       {
         method: 'POST',
-        path: '/panel/api/xray/',
+        path: '/easyxray/api/v1/xray/',
         summary:
           'Return the Xray config template (JSON string), available inbound tags, client reverse tags, and the configured outbound test URL in one response.',
         response:
@@ -2092,25 +2092,25 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/xray/getDefaultJsonConfig',
+        path: '/easyxray/api/v1/xray/getDefaultJsonConfig',
         summary:
-          'Return the built-in default Xray config shipped with the panel (identical to /panel/api/setting/getDefaultJsonConfig).',
+          'Return the built-in default Xray config shipped with the panel (identical to /easyxray/api/v1/setting/getDefaultJsonConfig).',
       },
       {
         method: 'GET',
-        path: '/panel/api/xray/getOutboundsTraffic',
+        path: '/easyxray/api/v1/xray/getOutboundsTraffic',
         summary:
           'Return traffic statistics for every outbound. Each outbound shows up/down/total counters.',
       },
       {
         method: 'GET',
-        path: '/panel/api/xray/getXrayResult',
+        path: '/easyxray/api/v1/xray/getXrayResult',
         summary:
           'Return the most recent Xray process stdout/stderr output. Useful to check for startup errors or runtime warnings.',
       },
       {
         method: 'POST',
-        path: '/panel/api/xray/update',
+        path: '/easyxray/api/v1/xray/update',
         summary:
           'Save the Xray JSON config template and optionally the outbound test URL. Both are sent as form fields.',
         params: [
@@ -2131,7 +2131,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/xray/warp/:action',
+        path: '/easyxray/api/v1/xray/warp/:action',
         summary: 'Manage Cloudflare Warp integration. The action parameter selects the operation.',
         params: [
           {
@@ -2172,7 +2172,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/xray/nord/:action',
+        path: '/easyxray/api/v1/xray/nord/:action',
         summary: 'Manage NordVPN integration. The action parameter selects the operation.',
         params: [
           {
@@ -2206,7 +2206,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/xray/pia/:action',
+        path: '/easyxray/api/v1/xray/pia/:action',
         summary: 'Manage PIA WireGuard integration. The action parameter selects the operation.',
         params: [
           {
@@ -2247,7 +2247,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/xray/resetOutboundsTraffic',
+        path: '/easyxray/api/v1/xray/resetOutboundsTraffic',
         summary: 'Reset traffic counters for a specific outbound by tag.',
         params: [
           {
@@ -2261,7 +2261,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/xray/testOutbound',
+        path: '/easyxray/api/v1/xray/testOutbound',
         summary:
           'Test an outbound configuration. Sends the outbound JSON (required), optionally all outbounds (to resolve sockopt.dialerProxy dependencies), and a mode flag.',
         params: [
@@ -2290,7 +2290,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/xray/testOutbounds',
+        path: '/easyxray/api/v1/xray/testOutbounds',
         summary:
           'Test a batch of outbounds (max 50) through one shared temp xray instance. Returns an array of results in input order, each with the outbound tag, delay, HTTP status and a connect/TLS/TTFB timing breakdown.',
         params: [
@@ -2319,7 +2319,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/xray/balancerStatus',
+        path: '/easyxray/api/v1/xray/balancerStatus',
         summary:
           'Live state of routing balancers in the running core (RoutingService.GetBalancerInfo): current override and the targets the strategy prefers. Returns a map keyed by balancer tag.',
         params: [
@@ -2334,7 +2334,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/xray/balancerOverride',
+        path: '/easyxray/api/v1/xray/balancerOverride',
         summary:
           'Force a balancer in the running core to always pick one outbound (RoutingService.OverrideBalancerTarget). Applied live without a restart and kept across config saves; cleared when Xray restarts or the target outbound is removed.',
         params: [
@@ -2351,7 +2351,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/xray/routeTest',
+        path: '/easyxray/api/v1/xray/routeTest',
         summary:
           'Ask the running core which outbound its router would pick for a synthetic connection (RoutingService.TestRoute). No traffic is sent.',
         bodyRequiredOneOf: ['domain', 'ip'],
@@ -2412,13 +2412,13 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/xray/geodata/files',
+        path: '/easyxray/api/v1/xray/geodata/files',
         summary:
           'List the geo databases (.dat files) in the Xray asset folder, with the layout detected from their contents, size, modification time and category count. A database that fails to parse is still listed, with the reason in "error".',
       },
       {
         method: 'GET',
-        path: '/panel/api/xray/geodata/categories',
+        path: '/easyxray/api/v1/xray/geodata/categories',
         summary:
           'One page of a database\'s categories, each with its entry count and the attributes its domains carry (e.g. "ads", "cn").',
         params: [
@@ -2453,7 +2453,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/xray/geodata/entries',
+        path: '/easyxray/api/v1/xray/geodata/entries',
         summary:
           'One page of the rules inside a category — domain rules typed as domain/full/keyword/regexp for geosite databases, CIDRs for geoip ones.',
         params: [
@@ -2494,7 +2494,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/xray/geodata/validate',
+        path: '/easyxray/api/v1/xray/geodata/validate',
         summary:
           'Check routing tokens against the databases on disk and return only the ones that do not resolve. Plain domains and CIDRs are ignored. Each issue carries a reason: syntax, fileMissing or categoryMissing.',
         params: [
@@ -2516,20 +2516,20 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
-        path: '/panel/api/xray/outbound-subs',
+        path: '/easyxray/api/v1/xray/outbound-subs',
         summary:
           'List all outbound subscriptions (remote URLs that supply additional outbounds), newest first.',
       },
       {
         method: 'POST',
-        path: '/panel/api/xray/outbound-subs',
+        path: '/easyxray/api/v1/xray/outbound-subs',
         summary:
           'Create an outbound subscription. The URL is fetched, parsed into outbounds with stable tags, and merged additively into the running Xray config.',
         params: outboundSubscriptionBodyParams,
       },
       {
         method: 'POST',
-        path: '/panel/api/xray/outbound-subs/:id',
+        path: '/easyxray/api/v1/xray/outbound-subs/:id',
         summary:
           'Update an existing outbound subscription by id. Accepts the same form fields as create.',
         params: [
@@ -2539,27 +2539,27 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'DELETE',
-        path: '/panel/api/xray/outbound-subs/:id',
+        path: '/easyxray/api/v1/xray/outbound-subs/:id',
         summary: 'Delete an outbound subscription by id.',
         params: [{ name: 'id', in: 'path', type: 'integer', desc: 'Subscription id.' }],
       },
       {
         method: 'POST',
-        path: '/panel/api/xray/outbound-subs/:id/del',
+        path: '/easyxray/api/v1/xray/outbound-subs/:id/del',
         summary:
           'Delete an outbound subscription by id (POST alias of DELETE for clients that cannot send DELETE).',
         params: [{ name: 'id', in: 'path', type: 'integer', desc: 'Subscription id.' }],
       },
       {
         method: 'POST',
-        path: '/panel/api/xray/outbound-subs/:id/refresh',
+        path: '/easyxray/api/v1/xray/outbound-subs/:id/refresh',
         summary:
           'Force an immediate re-fetch of the subscription and return the parsed outbounds. Signals Xray to reload.',
         params: [{ name: 'id', in: 'path', type: 'integer', desc: 'Subscription id.' }],
       },
       {
         method: 'POST',
-        path: '/panel/api/xray/outbound-subs/:id/move',
+        path: '/easyxray/api/v1/xray/outbound-subs/:id/move',
         summary:
           'Reorder a subscription one step up or down in priority (controls its position in the merged outbounds).',
         params: [
@@ -2575,7 +2575,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/xray/outbound-subs/parse',
+        path: '/easyxray/api/v1/xray/outbound-subs/parse',
         summary:
           'Preview a subscription URL: fetch and parse it into outbounds without persisting anything.',
         params: [
@@ -2619,14 +2619,14 @@ export const sections: readonly Section[] = [
     endpoints: [
       {
         method: 'GET',
-        path: '/panel/api/sub-balancers',
+        path: '/easyxray/api/v1/sub-balancers',
         summary: 'List all subscription balancers in sort order (sort_order asc, id asc).',
         responseSchema: 'SubBalancer',
         responseSchemaArray: true,
       },
       {
         method: 'POST',
-        path: '/panel/api/sub-balancers',
+        path: '/easyxray/api/v1/sub-balancers',
         summary:
           'Create a subscription balancer. It appears in the JSON subscription of every client that sits on at least one selected inbound.',
         params: subBalancerBodyParams,
@@ -2634,7 +2634,7 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
-        path: '/panel/api/sub-balancers/:id',
+        path: '/easyxray/api/v1/sub-balancers/:id',
         summary:
           'Update a balancer by id. Accepts the same form fields as create (full-row update); omitting memberWeights clears stored weights, while omitting enabled keeps its current value.',
         params: [
@@ -2645,14 +2645,14 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'DELETE',
-        path: '/panel/api/sub-balancers/:id',
+        path: '/easyxray/api/v1/sub-balancers/:id',
         summary: 'Delete a balancer by id.',
         params: [{ name: 'id', in: 'path', type: 'integer', desc: 'Balancer id.' }],
         responseSchema: 'SubBalancer',
       },
       {
         method: 'POST',
-        path: '/panel/api/sub-balancers/:id/del',
+        path: '/easyxray/api/v1/sub-balancers/:id/del',
         summary:
           'Delete a balancer by id (POST alias of DELETE for clients that cannot send DELETE).',
         params: [{ name: 'id', in: 'path', type: 'integer', desc: 'Balancer id.' }],
@@ -2779,11 +2779,11 @@ export const sections: readonly Section[] = [
     id: 'websocket',
     title: 'WebSocket',
     description:
-      'Real-time status updates via WebSocket. Connect once at <code>ws://<panel>/ws</code> to receive a stream of JSON messages without polling. Requires an authenticated session cookie (Bearer token auth is not supported). Each message has a <code>type</code> field that identifies the payload shape.',
+      'Real-time status updates via WebSocket. Connect once at <code>ws://<panel>/easyxray/ws</code> to receive a stream of JSON messages without polling. Requires an authenticated session cookie (Bearer token auth is not supported). Each message has a <code>type</code> field that identifies the payload shape.',
     endpoints: [
       {
         method: 'GET',
-        path: '/ws',
+        path: '/easyxray/ws',
         summary:
           'Upgrade an HTTP connection to a WebSocket. Requires an authenticated session cookie (Bearer token auth is not supported here). Returns 101 Switching Protocols on success. The server then pushes JSON messages described below.',
         responses: {

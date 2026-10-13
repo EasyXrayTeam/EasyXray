@@ -4,7 +4,7 @@ description: >-
   کلاینت‌ها را به‌عنوان موجودیت‌های مستقل مدیریت کنید که می‌توانند به یک یا چند
   inbound متصل شوند. هر رکورد کلاینت، ورودی settings.clients را در تمام
   inboundهایی که به آن‌ها تعلق دارد هدایت می‌کند. این endpointها زیر مسیر
-  /panel/api/clients قرار دارند.
+  /easyxray/api/v1/clients قرار دارند.
 full: true
 _openapi:
   preload:
@@ -650,7 +650,7 @@ _openapi:
           entry already used by another client: <address>` when a different
           client of that same inbound already holds it. The check is per
           inbound, so the same address on two different inbounds is accepted.
-          The same validation runs on POST /panel/api/clients/{email}/attach,
+          The same validation runs on POST /easyxray/api/v1/clients/{email}/attach,
           where a client that already carries an address brings it along.
         heading: create-a-new-client-and-attach-it-to-one-or-more-inbounds-in-a-single-call-body-is-json-per-protocol-secrets-are-generated-server-side-when-omitted-so-callers-can-send-only-the-universal-fields
       - content: 'A WireGuard client brings its stored `allowedIPs` into the new inbound
@@ -658,7 +658,7 @@ _openapi:
           `wireguard: allowedIPs entry already used by another client:
           <address>` when a different client of the target inbound already holds
           it. Free the address on that inbound first — see POST
-          /panel/api/clients/add for the full rule.'
+          /easyxray/api/v1/clients/add for the full rule.'
         heading: attach-an-existing-client-to-one-or-more-additional-inbounds-body-is-json
 ---
 
@@ -671,7 +671,7 @@ export default function Layout(props) {
   return (
     <>
       {props.children}
-      <Comp document="./public/openapi.json" webhooks={[]} operations={[{"path":"/panel/api/clients/list","method":"get"},{"path":"/panel/api/clients/list/paged","method":"get"},{"path":"/panel/api/clients/get/{email}","method":"get"},{"path":"/panel/api/clients/add","method":"post"},{"path":"/panel/api/clients/update/{email}","method":"post"},{"path":"/panel/api/clients/del/{email}","method":"post"},{"path":"/panel/api/clients/{email}/attach","method":"post"},{"path":"/panel/api/clients/{email}/detach","method":"post"},{"path":"/panel/api/clients/{email}/externalLinks","method":"post"},{"path":"/panel/api/clients/resetAllTraffics","method":"post"},{"path":"/panel/api/clients/delDepleted","method":"post"},{"path":"/panel/api/clients/delOrphans","method":"post"},{"path":"/panel/api/clients/export","method":"get"},{"path":"/panel/api/clients/import","method":"post"},{"path":"/panel/api/clients/bulkAdjust","method":"post"},{"path":"/panel/api/clients/bulkEnable","method":"post"},{"path":"/panel/api/clients/bulkDisable","method":"post"},{"path":"/panel/api/clients/bulkDel","method":"post"},{"path":"/panel/api/clients/bulkCreate","method":"post"},{"path":"/panel/api/clients/groups/bulkAdd","method":"post"},{"path":"/panel/api/clients/groups/bulkRemove","method":"post"},{"path":"/panel/api/clients/bulkAttach","method":"post"},{"path":"/panel/api/clients/bulkDetach","method":"post"},{"path":"/panel/api/clients/bulkResetTraffic","method":"post"},{"path":"/panel/api/clients/groups","method":"get"},{"path":"/panel/api/clients/groups/{name}/emails","method":"get"},{"path":"/panel/api/clients/groups/create","method":"post"},{"path":"/panel/api/clients/groups/rename","method":"post"},{"path":"/panel/api/clients/groups/delete","method":"post"},{"path":"/panel/api/clients/resetTraffic/{email}","method":"post"},{"path":"/panel/api/clients/updateTraffic/{email}","method":"post"},{"path":"/panel/api/clients/ips/{email}","method":"post"},{"path":"/panel/api/clients/clearIps/{email}","method":"post"},{"path":"/panel/api/clients/onlines","method":"post"},{"path":"/panel/api/clients/onlinesByGuid","method":"post"},{"path":"/panel/api/clients/clientIpsByGuid","method":"post"},{"path":"/panel/api/clients/activeInbounds","method":"post"},{"path":"/panel/api/clients/lastOnline","method":"post"},{"path":"/panel/api/clients/traffic/{email}","method":"get"},{"path":"/panel/api/clients/subLinks/{subId}","method":"get"},{"path":"/panel/api/clients/links/{email}","method":"get"}]} showTitle />
+      <Comp document="./public/openapi.json" webhooks={[]} operations={[{"path":"/easyxray/api/v1/clients/list","method":"get"},{"path":"/easyxray/api/v1/clients/list/paged","method":"get"},{"path":"/easyxray/api/v1/clients/get/{email}","method":"get"},{"path":"/easyxray/api/v1/clients/add","method":"post"},{"path":"/easyxray/api/v1/clients/update/{email}","method":"post"},{"path":"/easyxray/api/v1/clients/del/{email}","method":"post"},{"path":"/easyxray/api/v1/clients/{email}/attach","method":"post"},{"path":"/easyxray/api/v1/clients/{email}/detach","method":"post"},{"path":"/easyxray/api/v1/clients/{email}/externalLinks","method":"post"},{"path":"/easyxray/api/v1/clients/resetAllTraffics","method":"post"},{"path":"/easyxray/api/v1/clients/delDepleted","method":"post"},{"path":"/easyxray/api/v1/clients/delOrphans","method":"post"},{"path":"/easyxray/api/v1/clients/export","method":"get"},{"path":"/easyxray/api/v1/clients/import","method":"post"},{"path":"/easyxray/api/v1/clients/bulkAdjust","method":"post"},{"path":"/easyxray/api/v1/clients/bulkEnable","method":"post"},{"path":"/easyxray/api/v1/clients/bulkDisable","method":"post"},{"path":"/easyxray/api/v1/clients/bulkDel","method":"post"},{"path":"/easyxray/api/v1/clients/bulkCreate","method":"post"},{"path":"/easyxray/api/v1/clients/groups/bulkAdd","method":"post"},{"path":"/easyxray/api/v1/clients/groups/bulkRemove","method":"post"},{"path":"/easyxray/api/v1/clients/bulkAttach","method":"post"},{"path":"/easyxray/api/v1/clients/bulkDetach","method":"post"},{"path":"/easyxray/api/v1/clients/bulkResetTraffic","method":"post"},{"path":"/easyxray/api/v1/clients/groups","method":"get"},{"path":"/easyxray/api/v1/clients/groups/{name}/emails","method":"get"},{"path":"/easyxray/api/v1/clients/groups/create","method":"post"},{"path":"/easyxray/api/v1/clients/groups/rename","method":"post"},{"path":"/easyxray/api/v1/clients/groups/delete","method":"post"},{"path":"/easyxray/api/v1/clients/resetTraffic/{email}","method":"post"},{"path":"/easyxray/api/v1/clients/updateTraffic/{email}","method":"post"},{"path":"/easyxray/api/v1/clients/ips/{email}","method":"post"},{"path":"/easyxray/api/v1/clients/clearIps/{email}","method":"post"},{"path":"/easyxray/api/v1/clients/onlines","method":"post"},{"path":"/easyxray/api/v1/clients/onlinesByGuid","method":"post"},{"path":"/easyxray/api/v1/clients/clientIpsByGuid","method":"post"},{"path":"/easyxray/api/v1/clients/activeInbounds","method":"post"},{"path":"/easyxray/api/v1/clients/lastOnline","method":"post"},{"path":"/easyxray/api/v1/clients/traffic/{email}","method":"get"},{"path":"/easyxray/api/v1/clients/subLinks/{subId}","method":"get"},{"path":"/easyxray/api/v1/clients/links/{email}","method":"get"}]} showTitle />
     </>
   );
 }

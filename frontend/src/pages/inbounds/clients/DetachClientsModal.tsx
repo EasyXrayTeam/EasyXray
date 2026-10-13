@@ -107,7 +107,7 @@ export default function DetachClientsModal({
     setSaving(true);
     try {
       const msg = await HttpUtil.post(
-        '/panel/api/clients/bulkDetach',
+        '/easyxray/api/v1/clients/bulkDetach',
         { emails: selectedEmails, inboundIds: [source.id] },
         { headers: { 'Content-Type': 'application/json' } },
       );

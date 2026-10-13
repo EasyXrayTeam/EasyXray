@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/util/wirecodec"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/util/wirecodec"
 )
 
 // TestRemoteSendsEnvelopeWhenNodeAdvertisesCap: once a node has advertised the
@@ -39,7 +39,7 @@ func TestRemoteSendsEnvelopeWhenNodeAdvertisesCap(t *testing.T) {
 
 	body := url.Values{}
 	body.Set("settings", strings.Repeat("x", 4096))
-	if _, err := r.do(context.Background(), http.MethodPost, "panel/api/inbounds/add", body); err != nil {
+	if _, err := r.do(context.Background(), http.MethodPost, "easyxray/api/v1/inbounds/add", body); err != nil {
 		t.Fatalf("push: %v", err)
 	}
 
@@ -79,7 +79,7 @@ func TestRemoteSendsPlainWhenNoCap(t *testing.T) {
 	r := NewRemote(nodeForPlainServer(t, srv, "verify", "tok"), nil)
 	body := url.Values{}
 	body.Set("settings", strings.Repeat("x", 4096))
-	if _, err := r.do(context.Background(), http.MethodPost, "panel/api/inbounds/add", body); err != nil {
+	if _, err := r.do(context.Background(), http.MethodPost, "easyxray/api/v1/inbounds/add", body); err != nil {
 		t.Fatalf("push: %v", err)
 	}
 

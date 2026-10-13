@@ -1,7 +1,7 @@
-# 3x-ui frontend
+# EasyXray frontend
 
 React 19 + Ant Design 6 + TypeScript + Vite 8. Three SPA bundles —
-`index.html` (admin panel SPA, all `/panel/*` routes), `login.html`
+`index.html` (admin panel SPA, all `/easyxray/*` routes), `login.html`
 (login + 2FA), and `subpage.html` (public subscription viewer). All
 three are built into `../internal/web/dist/` and embedded into the Go binary
 via `embed.FS`.
@@ -18,11 +18,11 @@ npm install
 npm run dev
 ```
 
-Vite serves on `http://localhost:5173/`. API calls and `/panel/*`
+Vite serves on `http://localhost:5173/`. API calls and `/easyxray/*`
 routes proxy to the Go panel at `http://localhost:2053/`, so start
 the Go panel first (`go run main.go`) and then Vite. The proxy
-auto-rewrites `/panel`, `/panel/settings`, `/panel/inbounds`,
-`/panel/xray` to the matching Vite-served HTML, so the sidebar's
+auto-rewrites `/easyxray`, `/easyxray/settings`, `/easyxray/inbounds`,
+`/easyxray/xray` to the matching Vite-served HTML, so the sidebar's
 production-style links work without round-tripping through Go.
 
 ## Scripts
@@ -103,7 +103,7 @@ frontend/
 └── src/
     ├── entries/         # Per-page bootstrap (createRoot + render)
     ├── main.tsx         # Shared root for the admin SPA (index.html)
-    ├── routes.tsx       # react-router routes mounted under /panel/
+    ├── routes.tsx       # react-router routes mounted under /easyxray/
     ├── pages/           # One folder per route, page component + helpers
     │   ├── index/, login/, inbounds/, clients/, xray/, nodes/,
     │   ├── settings/, api-docs/, sub/
@@ -212,7 +212,7 @@ Reusable components in `src/components/` are developed and documented in
 **Storybook** (`@storybook/react-vite`). It is a component workbench, not part
 of the shipped panel — nothing here is embedded into the Go binary. The built
 Storybook is published with the docs site at
-[docs.sanaei.dev/storybook](https://docs.sanaei.dev/storybook/) by
+[easyxrayteam.github.io/EasyXray/storybook](https://easyxrayteam.github.io/EasyXray/storybook/) by
 `.github/workflows/docs-deploy.yml`.
 
 ```sh
@@ -242,7 +242,7 @@ Most new routes go inside the admin SPA (`index.html`) via
 `routes.tsx` — no new HTML or Vite entry needed.
 
 1. Add the page component under `src/pages/<page>/`.
-2. Register it in `src/routes.tsx` under the `/panel/...` tree.
+2. Register it in `src/routes.tsx` under the `/easyxray/...` tree.
 3. If you need a brand-new top-level bundle (login-style standalone
    page), add the HTML at `frontend/<page>.html`, an entry at
    `src/entries/<page>.tsx`, and register it in `rollupOptions.input`

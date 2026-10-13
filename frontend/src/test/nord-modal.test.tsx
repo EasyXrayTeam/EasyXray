@@ -36,16 +36,16 @@ const SERVER_DATA = {
 };
 
 function nordApiPost(url: string) {
-  if (url === '/panel/api/xray/nord/data') {
+  if (url === '/easyxray/api/v1/xray/nord/data') {
     return new Msg(true, '', JSON.stringify(NORD_DATA));
   }
-  if (url === '/panel/api/xray/nord/countries') {
+  if (url === '/easyxray/api/v1/xray/nord/countries') {
     return new Msg(true, '', JSON.stringify(COUNTRIES));
   }
-  if (url === '/panel/api/xray/nord/servers') {
+  if (url === '/easyxray/api/v1/xray/nord/servers') {
     return new Msg(true, '', JSON.stringify(SERVER_DATA));
   }
-  if (url === '/panel/api/xray/nord/del') return new Msg(true, '', '');
+  if (url === '/easyxray/api/v1/xray/nord/del') return new Msg(true, '', '');
   return new Msg(false, `Unexpected POST ${url}`, null);
 }
 
@@ -119,7 +119,7 @@ function NordHarness({
 describe('NordVPN modal', () => {
   it('shows access-token and private-key entry while signed out', async () => {
     vi.mocked(HttpUtil.post).mockImplementation(async (url: string) => {
-      if (url === '/panel/api/xray/nord/data') return new Msg(true, '', '');
+      if (url === '/easyxray/api/v1/xray/nord/data') return new Msg(true, '', '');
       return new Msg(false, `Unexpected POST ${url}`, null);
     });
 
@@ -355,19 +355,19 @@ describe('NordVPN modal', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Log Out' }));
     await waitFor(() => expect(screen.getByPlaceholderText('Access token')).toBeTruthy());
     expect(screen.getByTestId('outbound-state').textContent).toContain('nord-us1.nordvpn.com');
-    expect(vi.mocked(HttpUtil.post)).toHaveBeenCalledWith('/panel/api/xray/nord/del');
+    expect(vi.mocked(HttpUtil.post)).toHaveBeenCalledWith('/easyxray/api/v1/xray/nord/del');
   });
 
   it('does not add a server that omits its NordLynx public key', async () => {
     const onAddOutbound = vi.fn();
     vi.mocked(HttpUtil.post).mockImplementation(async (url: string) => {
-      if (url === '/panel/api/xray/nord/data') {
+      if (url === '/easyxray/api/v1/xray/nord/data') {
         return new Msg(true, '', JSON.stringify(NORD_DATA));
       }
-      if (url === '/panel/api/xray/nord/countries') {
+      if (url === '/easyxray/api/v1/xray/nord/countries') {
         return new Msg(true, '', JSON.stringify(COUNTRIES));
       }
-      if (url === '/panel/api/xray/nord/servers') {
+      if (url === '/easyxray/api/v1/xray/nord/servers') {
         return new Msg(
           true,
           '',
@@ -403,13 +403,13 @@ describe('NordVPN modal', () => {
   it('reads the NordLynx public key without coupling to a numeric technology ID', async () => {
     const onAddOutbound = vi.fn();
     vi.mocked(HttpUtil.post).mockImplementation(async (url: string) => {
-      if (url === '/panel/api/xray/nord/data') {
+      if (url === '/easyxray/api/v1/xray/nord/data') {
         return new Msg(true, '', JSON.stringify(NORD_DATA));
       }
-      if (url === '/panel/api/xray/nord/countries') {
+      if (url === '/easyxray/api/v1/xray/nord/countries') {
         return new Msg(true, '', JSON.stringify(COUNTRIES));
       }
-      if (url === '/panel/api/xray/nord/servers') {
+      if (url === '/easyxray/api/v1/xray/nord/servers') {
         return new Msg(
           true,
           '',

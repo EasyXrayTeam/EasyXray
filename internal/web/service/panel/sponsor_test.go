@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/config"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/config"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/dbtest"
 )
 
 var sponsorTestNow = time.Date(2026, 10, 15, 0, 0, 0, 0, time.UTC)
@@ -132,7 +132,7 @@ func TestActiveSponsorsResolvesLogoAndSlots(t *testing.T) {
 
 func setupSponsorServer(t *testing.T, body string) *atomic.Int32 {
 	t.Helper()
-	t.Setenv("XUI_DB_FOLDER", t.TempDir())
+	t.Setenv("EASYXRAY_DB_FOLDER", t.TempDir())
 	dbtest.InitDB(t, config.GetDBPath())
 
 	var hits atomic.Int32
@@ -302,16 +302,16 @@ func TestGetSponsorsRejectsOversizeBody(t *testing.T) {
 
 func TestGetSponsorsDebugReadsLocalCheckout(t *testing.T) {
 	hits := setupSponsorServer(t, `{"sponsors":[]}`)
-	t.Setenv("XUI_DEBUG", "true")
+	t.Setenv("EASYXRAY_DEBUG", "true")
 	root := t.TempDir()
-	local := filepath.Join(root, "sponsors", "3X")
+	local := filepath.Join(root, "sponsors")
 	if err := os.MkdirAll(local, 0o700); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.Mkdir(filepath.Join(root, "3x-ui"), 0o700); err != nil {
+	if err := os.Mkdir(filepath.Join(root, "EasyXray"), 0o700); err != nil {
 		t.Fatal(err)
 	}
-	t.Chdir(filepath.Join(root, "3x-ui"))
+	t.Chdir(filepath.Join(root, "EasyXray"))
 	write := func(id string) {
 		t.Helper()
 		body := `{"sponsors":[{"id":"` + id + `","slots":["page"],"until":"2099-01-01T00:00:00Z","link":"https://a.example/"}]}`

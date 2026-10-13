@@ -6,7 +6,7 @@ import { keys } from '@/api/queryKeys';
 import { InboundOptionsSchema, type InboundOption } from '@/schemas/client';
 
 async function fetchInboundOptions(): Promise<InboundOption[]> {
-  const msg = await HttpUtil.get('/panel/api/inbounds/options', undefined, { silent: true });
+  const msg = await HttpUtil.get('/easyxray/api/v1/inbounds/options', undefined, { silent: true });
   if (!msg?.success) throw new Error(msg?.msg || 'Failed to fetch inbound options');
   const validated = parseMsg(msg, InboundOptionsSchema, 'inbounds/options');
   return Array.isArray(validated.obj) ? validated.obj : [];

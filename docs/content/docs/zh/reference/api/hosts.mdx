@@ -2,7 +2,7 @@
 title: 主机
 description: >-
   按入站逐项覆盖的端点。每个启用的主机都会额外生成一条订阅链接/代理，可拥有独立的
-  地址/端口/TLS，从而取代已弃用的 externalProxy 数组。所有端点均位于 /panel/api/hosts
+  地址/端口/TLS，从而取代已弃用的 externalProxy 数组。所有端点均位于 /easyxray/api/v1/hosts
   之下。
 full: true
 _openapi:
@@ -102,7 +102,7 @@ export default function Layout(props) {
   return (
     <>
       {props.children}
-      <Comp document="./public/openapi.json" webhooks={[]} operations={[{"path":"/panel/api/hosts/list","method":"get"},{"path":"/panel/api/hosts/get/{groupId}","method":"get"},{"path":"/panel/api/hosts/byInbound/{inboundId}","method":"get"},{"path":"/panel/api/hosts/tags","method":"get"},{"path":"/panel/api/hosts/add","method":"post"},{"path":"/panel/api/hosts/update/{groupId}","method":"post"},{"path":"/panel/api/hosts/del/{groupId}","method":"post"},{"path":"/panel/api/hosts/setEnable/{groupId}","method":"post"},{"path":"/panel/api/hosts/reorder","method":"post"},{"path":"/panel/api/hosts/bulk/setEnable","method":"post"},{"path":"/panel/api/hosts/bulk/del","method":"post"}]} showTitle />
+      <Comp document="./public/openapi.json" webhooks={[]} operations={[{"path":"/easyxray/api/v1/hosts/list","method":"get"},{"path":"/easyxray/api/v1/hosts/get/{groupId}","method":"get"},{"path":"/easyxray/api/v1/hosts/byInbound/{inboundId}","method":"get"},{"path":"/easyxray/api/v1/hosts/tags","method":"get"},{"path":"/easyxray/api/v1/hosts/add","method":"post"},{"path":"/easyxray/api/v1/hosts/update/{groupId}","method":"post"},{"path":"/easyxray/api/v1/hosts/del/{groupId}","method":"post"},{"path":"/easyxray/api/v1/hosts/setEnable/{groupId}","method":"post"},{"path":"/easyxray/api/v1/hosts/reorder","method":"post"},{"path":"/easyxray/api/v1/hosts/bulk/setEnable","method":"post"},{"path":"/easyxray/api/v1/hosts/bulk/del","method":"post"}]} showTitle />
     </>
   );
 }

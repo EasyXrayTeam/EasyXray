@@ -17,14 +17,17 @@ tmp/
 # Ignore build and distribution directories
 backup/
 bin/
-x-ui/
-dist/
+easyxray/
+**/dist/*
+# The panel embeds internal/web/dist with go:embed all:dist. The build output is
+# generated, but its directory has to exist for a bare `go build` to compile.
+!internal/web/dist/.gitkeep
 release/
 node_modules/
 
 # Ignore compiled binaries
 main
-3x-ui
+EasyXray
 
 # Ignore OS specific files
 .DS_Store
@@ -32,9 +35,9 @@ Thumbs.db
 
 # Ignore Go build files
 *.exe
-x-ui.db
-x-ui.db-shm
-x-ui.db-wal
+EasyXray.db
+EasyXray.db-shm
+EasyXray.db-wal
 system_metrics.gob
 *.dump
 

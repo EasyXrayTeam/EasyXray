@@ -61,18 +61,18 @@ func TestMaxBodyBytesSkipSuffix(t *testing.T) {
 		}
 		c.String(http.StatusOK, "ok")
 	}
-	r.POST("/prefix/panel/api/server/importDB", read)
-	r.POST("/prefix/panel/api/server/importDB/other", read)
+	r.POST("/prefix/easyxray/api/v1/server/importDB", read)
+	r.POST("/prefix/easyxray/api/v1/server/importDB/other", read)
 	r.POST("/x", read)
 
 	large := bytes.Repeat([]byte("x"), limit+1)
 	w := httptest.NewRecorder()
-	r.ServeHTTP(w, httptest.NewRequest(http.MethodPost, "/prefix/panel/api/server/importDB", bytes.NewReader(large)))
+	r.ServeHTTP(w, httptest.NewRequest(http.MethodPost, "/prefix/easyxray/api/v1/server/importDB", bytes.NewReader(large)))
 	if w.Code != http.StatusOK {
 		t.Fatalf("restore route should accept an over-limit body, got %d", w.Code)
 	}
 
-	for _, path := range []string{"/x", "/prefix/panel/api/server/importDB/other"} {
+	for _, path := range []string{"/x", "/prefix/easyxray/api/v1/server/importDB/other"} {
 		w = httptest.NewRecorder()
 		r.ServeHTTP(w, httptest.NewRequest(http.MethodPost, path, bytes.NewReader(large)))
 		if w.Code == http.StatusOK {

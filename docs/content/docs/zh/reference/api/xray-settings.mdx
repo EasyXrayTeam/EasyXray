@@ -1,7 +1,7 @@
 ---
 title: Xray 设置
 description: >-
-  Xray 配置模板、出站管理、Warp/Nord 集成以及配置测试。所有端点均位于 /panel/api/xray
+  Xray 配置模板、出站管理、Warp/Nord 集成以及配置测试。所有端点均位于 /easyxray/api/v1/xray
   下。
 full: true
 _openapi:
@@ -18,7 +18,7 @@ _openapi:
     - depth: 2
       title: >-
         Return the built-in default Xray config shipped with the panel
-        (identical to /panel/api/setting/getDefaultJsonConfig).
+        (identical to /easyxray/api/v1/setting/getDefaultJsonConfig).
       url: >-
         #return-the-built-in-default-xray-config-shipped-with-the-panel-identical-to-panelapisettinggetdefaultjsonconfig
     - depth: 2
@@ -142,7 +142,7 @@ _openapi:
           return-the-xray-config-template-json-string-available-inbound-tags-client-reverse-tags-and-the-configured-outbound-test-url-in-one-response
       - content: >-
           Return the built-in default Xray config shipped with the panel
-          (identical to /panel/api/setting/getDefaultJsonConfig).
+          (identical to /easyxray/api/v1/setting/getDefaultJsonConfig).
         id: >-
           return-the-built-in-default-xray-config-shipped-with-the-panel-identical-to-panelapisettinggetdefaultjsonconfig
       - content: >-
@@ -251,7 +251,7 @@ export default function Layout(props) {
   return (
     <>
       {props.children}
-      <Comp document="./public/openapi.json" webhooks={[]} operations={[{"path":"/panel/api/xray/","method":"post"},{"path":"/panel/api/xray/getDefaultJsonConfig","method":"get"},{"path":"/panel/api/xray/getOutboundsTraffic","method":"get"},{"path":"/panel/api/xray/getXrayResult","method":"get"},{"path":"/panel/api/xray/update","method":"post"},{"path":"/panel/api/xray/warp/{action}","method":"post"},{"path":"/panel/api/xray/nord/{action}","method":"post"},{"path":"/panel/api/xray/resetOutboundsTraffic","method":"post"},{"path":"/panel/api/xray/testOutbound","method":"post"},{"path":"/panel/api/xray/testOutbounds","method":"post"},{"path":"/panel/api/xray/balancerStatus","method":"post"},{"path":"/panel/api/xray/balancerOverride","method":"post"},{"path":"/panel/api/xray/routeTest","method":"post"},{"path":"/panel/api/xray/outbound-subs","method":"get"},{"path":"/panel/api/xray/outbound-subs","method":"post"},{"path":"/panel/api/xray/outbound-subs/{id}","method":"post"},{"path":"/panel/api/xray/outbound-subs/{id}","method":"delete"},{"path":"/panel/api/xray/outbound-subs/{id}/del","method":"post"},{"path":"/panel/api/xray/outbound-subs/{id}/refresh","method":"post"},{"path":"/panel/api/xray/outbound-subs/{id}/move","method":"post"},{"path":"/panel/api/xray/outbound-subs/parse","method":"post"}]} showTitle />
+      <Comp document="./public/openapi.json" webhooks={[]} operations={[{"path":"/easyxray/api/v1/xray/","method":"post"},{"path":"/easyxray/api/v1/xray/getDefaultJsonConfig","method":"get"},{"path":"/easyxray/api/v1/xray/getOutboundsTraffic","method":"get"},{"path":"/easyxray/api/v1/xray/getXrayResult","method":"get"},{"path":"/easyxray/api/v1/xray/update","method":"post"},{"path":"/easyxray/api/v1/xray/warp/{action}","method":"post"},{"path":"/easyxray/api/v1/xray/nord/{action}","method":"post"},{"path":"/easyxray/api/v1/xray/resetOutboundsTraffic","method":"post"},{"path":"/easyxray/api/v1/xray/testOutbound","method":"post"},{"path":"/easyxray/api/v1/xray/testOutbounds","method":"post"},{"path":"/easyxray/api/v1/xray/balancerStatus","method":"post"},{"path":"/easyxray/api/v1/xray/balancerOverride","method":"post"},{"path":"/easyxray/api/v1/xray/routeTest","method":"post"},{"path":"/easyxray/api/v1/xray/outbound-subs","method":"get"},{"path":"/easyxray/api/v1/xray/outbound-subs","method":"post"},{"path":"/easyxray/api/v1/xray/outbound-subs/{id}","method":"post"},{"path":"/easyxray/api/v1/xray/outbound-subs/{id}","method":"delete"},{"path":"/easyxray/api/v1/xray/outbound-subs/{id}/del","method":"post"},{"path":"/easyxray/api/v1/xray/outbound-subs/{id}/refresh","method":"post"},{"path":"/easyxray/api/v1/xray/outbound-subs/{id}/move","method":"post"},{"path":"/easyxray/api/v1/xray/outbound-subs/parse","method":"post"}]} showTitle />
     </>
   );
 }

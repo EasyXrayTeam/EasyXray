@@ -14,7 +14,7 @@ interface GoRegexInputProps {
 
 export async function validateGoRegex(value: string): Promise<string> {
   const result = await HttpUtil.post(
-    '/panel/api/setting/validateRegex',
+    '/easyxray/api/v1/setting/validateRegex',
     { regex: value },
     { silent: true },
   );

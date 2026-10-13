@@ -1,6 +1,6 @@
-# Contributing to 3x-ui-docs
+# Contributing to easyxray-docs
 
-Thanks for helping improve the 3x-ui documentation and product site!
+Thanks for helping improve the EasyXray documentation and product site!
 
 ## Prerequisites
 

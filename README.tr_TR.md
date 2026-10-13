@@ -2,71 +2,70 @@
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./media/3x-ui-dark.png">
-    <img alt="3x-ui" src="./media/3x-ui-light.png">
+    <source media="(prefers-color-scheme: dark)" srcset="./media/easyxray-dark.png">
+    <img alt="EasyXray" src="./media/easyxray-light.png">
   </picture>
 </p>
 
 <p align="center">
-  <a href="https://github.com/MHSanaei/3x-ui/releases"><img src="https://img.shields.io/github/v/release/mhsanaei/3x-ui" alt="Release"></a>
-  <a href="https://github.com/MHSanaei/3x-ui/actions"><img src="https://img.shields.io/github/actions/workflow/status/mhsanaei/3x-ui/release.yml.svg" alt="Build"></a>
-  <a href="#"><img src="https://img.shields.io/github/go-mod/go-version/mhsanaei/3x-ui.svg" alt="GO Version"></a>
-  <a href="https://github.com/MHSanaei/3x-ui/releases/latest"><img src="https://img.shields.io/github/downloads/mhsanaei/3x-ui/total.svg" alt="Downloads"></a>
+  <a href="https://github.com/EasyXrayTeam/EasyXray/actions"><img src="https://img.shields.io/github/actions/workflow/status/easyxrayteam/easyxray/release.yml.svg" alt="Build"></a>
+  <a href="#"><img src="https://img.shields.io/github/go-mod/go-version/easyxrayteam/easyxray.svg" alt="Go Version"></a>
   <a href="https://www.gnu.org/licenses/gpl-3.0.en.html"><img src="https://img.shields.io/badge/license-GPL%20V3-blue.svg?longCache=true" alt="License"></a>
-  <a href="https://pkg.go.dev/github.com/mhsanaei/3x-ui/v3"><img src="https://pkg.go.dev/badge/github.com/mhsanaei/3x-ui/v3.svg" alt="Go Reference"></a>
-  <a href="https://docs.sanaei.dev"><img src="https://img.shields.io/badge/docs-docs.sanaei.dev-22d3ee" alt="Documentation"></a>
+  <a href="https://easyxrayteam.github.io/EasyXray/"><img src="https://img.shields.io/badge/docs-easyxrayteam.github.io%2FEasyXray-22d3ee" alt="Documentation"></a>
 </p>
 
-**3X-UI**, [Xray-core](https://github.com/XTLS/Xray-core) sunucularını yönetmek için geliştirilmiş profesyonel, açık kaynaklı bir web kontrol panelidir. Tek bir sanal sunucudan (VPS) çok düğümlü (multi-node) dağıtımlara kadar çok çeşitli proxy ve VPN protokollerini kurmak, yapılandırmak ve izlemek için temiz, çok dilli bir arayüz sağlar.
+**EasyXray**, [Xray-core](https://github.com/XTLS/Xray-core) sunucularını çalıştırmak ve yönetmek için geliştirilmiş açık kaynaklı bir web kontrol panelidir. Tek bir VPS'ten çok düğümlü kurulumlara kadar geniş bir proxy ve VPN protokolü yelpazesini kurmak, yapılandırmak ve izlemek için temiz, çok dilli bir arayüz sunar.
 
-Orijinal X-UI projesinin geliştirilmiş bir çatallaması (fork) olarak inşa edilen 3X-UI; çok daha geniş protokol desteği, artırılmış kararlılık, kullanıcı başına trafik hesaplama ve kullanım kolaylığı sağlayan birçok yeni özellik sunar.
+Panelin arayüzü ve özellik altyapısı, özgün X-UI projesinden ve onu sürdüren çalışmalardan gelir. EasyXray bu birikimi kendi adıyla ileri taşır: kendi ikili dosyası, servisi, kurulum yolları, ortam değişkeni öneki ve HTTP API ad alanı vardır. Hukuki durum ve projenin kökeni için [Atıf ve lisans](#atıf-ve-lisans) bölümüne bakın.
 
 > [!IMPORTANT]
-> Bu proje yalnızca kişisel kullanım için tasarlanmıştır. Lütfen yasadışı amaçlar için veya üretim (production) ortamında kullanmayın.
+> Bu proje yalnızca kişisel kullanım için tasarlanmıştır. Lütfen yasa dışı amaçlarla veya üretim ortamlarında kullanmayın.
 
 ## Özellikler
 
-- **Çoklu protokol destekli gelen bağlantılar (Inbounds)** — VLESS, VMess, Trojan, Shadowsocks, WireGuard, AmneziaWG, TUIC v5, Hysteria2, MTProto, HTTP, SOCKS (Karma), Dokodemo-door / Tunnel ve TUN.
-- **Modern aktarımlar (transports) ve güvenlik** — TCP (Raw), mKCP, WebSocket, gRPC, HTTPUpgrade ve XHTTP; TLS, XTLS ve REALITY ile güvene alınmıştır.
-- **Dahili AmneziaWG** — DPI'ya dayanıklı WireGuard, panelin içinde bir kullanıcı alanı ağ yığını üzerinde çalışır; çekirdek modülü, DKMS veya ek paket kurulumu gerektirmez.
-- **Dahili TUIC v5** — Yerel UDP geçişi trafik ölçümü, 0-RTT el sıkışmaları ve BBR tıkanıklık kontrolü ile QUIC tabanlı yüksek performanslı proxy.
-- **MTProto proxy'leri** — İstemci başına FakeTLS gizli anahtarları, reklam etiketleri (ad-tag) ve kotalar, mevcut bağlantılar kopmadan anlık olarak uygulanır.
-- **Geri Dönüş (Fallbacks)** — Xray'in fallback desteğini kullanarak tek bir port üzerinde birden fazla protokole (ör. 443 üzerinde hem VLESS hem Trojan) hizmet verin.
-- **Kullanıcı başına yönetim** — Trafik kotaları, bitiş tarihleri, güvenilir adreslere muafiyet tanınabilen IP sınırları, HWID cihaz sınırları, zamanlanmış yenileme döngüleri, canlı çevrimiçi (online) durumu ve tek tıkla paylaşım bağlantıları, QR kodları ve abonelikler.
-- **Trafik istatistikleri** — Gelen bağlantı (Inbound), istemci ve giden bağlantı (Outbound) bazında istatistikler ve sıfırlama kontrolleri.
-- **Çoklu düğüm (Multi-node) desteği** — Tek bir panel üzerinden birden fazla sunucuyu yönetin ve ölçeklendirin; gelen bağlantıları diğer düğümlere klonlayın.
-- **Giden bağlantı (Outbound) ve yönlendirme** — WARP, NordVPN, PIA, özel yönlendirme kuralları, dengeleyiciler arası yük devretme destekli yük dengeleyiciler (load balancers) ve giden bağlantı proxy zincirleme (proxy chaining). Pakete dahil geosite ve geoip kategorileri doğrudan kural düzenleyicisinden taranabilir.
-- **Dahili abonelik sunucusu** — İstemcinin User-Agent bilgisine göre otomatik seçilen raw, JSON ve Clash çıktısı ve [özel sayfa şablonları](docs/custom-subscription-templates.md).
-- Uzaktan izleme ve yönetim için **Telegram ve Discord botları**.
-- Kapsamı sınırlanmış, isteğe bağlı olarak süresi dolan token'lar ve panel içi API referansı sunan **RESTful API**.
-- **Kurulabilir panel (PWA)** — 3X-UI'yi masaüstüne veya telefon ana ekranına sabitleyin.
+- **Çok protokollü gelen bağlantılar** — VLESS, VMess, Trojan, Shadowsocks, WireGuard, AmneziaWG, TUIC v5, Hysteria2, MASQUE, MTProto, HTTP, SOCKS (Mixed), Dokodemo-door / Tunnel ve TUN.
+- **Modern taşıma katmanları ve güvenlik** — TCP (Raw), mKCP, WebSocket, gRPC, HTTPUpgrade ve XHTTP; TLS, XTLS ve REALITY ile birlikte.
+- **Yerleşik AmneziaWG** — DPI'a dayanıklı WireGuard, panel süreci içinde kullanıcı alanı ağ yığını üzerinde çalışır; çekirdek modülü, DKMS veya ek paket gerekmez.
+- **Yerel TUIC v5 sunucusu** — Süreç içinde çalışan Go tabanlı QUIC sunucusu; Xray yönlendirmesi ve istemci bazlı trafik muhasebesi sunar, sunucu tarafında BBR ve New Reno kullanılabilir. CUBIC istemci profilinde korunur, ancak sunucuda şimdilik New Reno'ya düşer.
+- **MTProto proxy'leri** — İstemci bazlı FakeTLS sırları, ad-tag'ler ve kotalar; mevcut bağlantılar düşürülmeden anında uygulanır.
+- **Fallback** — Xray'in fallback desteğiyle tek portta birden fazla protokol sunma (örneğin 443 üzerinde VLESS ve Trojan).
+- **İstemci bazlı yönetim** — Trafik kotaları, bitiş tarihleri, güvenilir adres muafiyetli IP limitleri, HWID cihaz limitleri, planlanmış yenileme döngüleri, canlı çevrimiçi durumu ve tek tıkla paylaşım bağlantıları, QR kodları ve abonelikler.
+- **Trafik istatistikleri** — Gelen bağlantı, istemci ve giden bağlantı bazında; sıfırlama denetimleriyle birlikte.
+- **Çok düğümlü destek** — Tek panelden birden fazla sunucuyu yönetip ölçeklendirin; gelen bağlantıları diğer düğümlere klonlayabilirsiniz.
+- **Giden bağlantılar ve yönlendirme** — WARP, NordVPN, PIA, özel yönlendirme kuralları, yük dengeleyiciler arası devretmeli yük dengeleyiciler ve giden proxy zincirleme. Paketle gelen geosite ve geoip kategorileri doğrudan kural düzenleyicisinden göz atılabilir.
+- **Yerleşik abonelik sunucusu** — raw, JSON ve Clash çıktısı; istemcinin User-Agent bilgisine göre otomatik seçilir, ayrıca [özel sayfa şablonları](docs/custom-subscription-templates.md) desteklenir.
+- **Uzaktan izleme ve yönetim için Telegram ve Discord botları.**
+- **RESTful API** — Kapsamı sınırlandırılabilen ve süresi dolabilen token'lar ile panel içi API başvurusu.
+- **Kurulabilir panel (PWA)** — EasyXray'i masaüstüne veya telefon ana ekranına sabitleyin.
 - **Esnek depolama** — SQLite (varsayılan) veya PostgreSQL.
-- Koyu ve açık tema seçenekleriyle **13 farklı UI dili**.
-- Kullanıcı başına IP limitlerini zorunlu kılmak için **Fail2ban entegrasyonu**.
+- **Koyu ve açık temalı 13 arayüz dili.**
+- **Fail2ban entegrasyonu** ile istemci bazlı IP limitlerinin uygulanması.
 
 ## Ekran Görüntüleri
+
+Aşağıdaki ekran görüntüleri güncel EasyXray arayüzünü gösterir. Panelin yerleşimi ve tasarımı önceki projeden devralınmıştır; bu sürüm için yeniden tasarlanmamıştır.
 
 <details>
 <summary>Genişletmek için tıklayın</summary>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./media/01-overview-dark.png">
-  <img alt="Genel Bakış" src="./media/01-overview-light.png">
+  <img alt="Genel bakış" src="./media/01-overview-light.png">
 </picture>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./media/02-add-inbound-dark.png">
-  <img alt="Gelen Bağlantılar (Inbounds)" src="./media/02-add-inbound-light.png">
+  <img alt="Gelen bağlantılar" src="./media/02-add-inbound-light.png">
 </picture>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./media/03-add-client-dark.png">
-  <img alt="Kullanıcı Ekle" src="./media/03-add-client-light.png">
+  <img alt="İstemci ekle" src="./media/03-add-client-light.png">
 </picture>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./media/05-add-nodes-dark.png">
-  <img alt="Yapılandırmalar" src="./media/05-add-nodes-light.png">
+  <img alt="Düğümler" src="./media/05-add-nodes-light.png">
 </picture>
 
 </details>
@@ -74,158 +73,194 @@ Orijinal X-UI projesinin geliştirilmiş bir çatallaması (fork) olarak inşa e
 ## Hızlı Başlangıç
 
 ```bash
-bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
+bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh)
 ```
 
-Belirli bir sürümü kurmak için, etiketini (ör. `v3.7.0`) ekleyin:
+Belirli bir sürümü kurmak için etiketini ekleyin (örneğin `v1.0.0`):
 
 ```bash
-bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh) v3.7.0
+bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh) v1.0.0
 ```
 
-Sürekli güncellenen **dev** sürümünü (kararlı bir sürüm değil; `main` dalından her commit'te oluşturulan en son ön sürüm) kurmak için `dev-latest` değerini geçirin:
+Sürekli güncellenen **dev** derlemesini (kararlı bir sürüm değil, `main` dalındaki her commit için üretilen en son ön sürüm) kurmak için `dev-latest` parametresini verin:
 
 ```bash
-bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh) dev-latest
+bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh) dev-latest
 ```
 
-Kurulum sırasında rastgele bir kullanıcı adı, şifre ve erişim yolu oluşturulur. Kurulumdan sonra, hizmeti başlatabileceğiniz/durdurabileceğiniz, giriş bilgilerinizi görüntüleyebileceğiniz veya sıfırlayabileceğiniz, SSL sertifikalarını yönetebileceğiniz ve çok daha fazlasını yapabileceğiniz yönetim menüsünü açmak için terminalde `x-ui` komutunu çalıştırın.
+Kurulum sırasında rastgele bir kullanıcı adı, parola ve erişim yolu oluşturulur. Kurulum bittiğinde `easyxray` komutunu çalıştırarak yönetim menüsünü açabilirsiniz; buradan servisi başlatıp durdurabilir, giriş bilgilerinizi görüntüleyip sıfırlayabilir, SSL sertifikalarını yönetebilir ve daha fazlasını yapabilirsiniz.
 
-Her yayın dosyası, yanında bir `.sha256` sağlama toplamıyla birlikte yayımlanır. Hem `install.sh` hem de güncelleyici, arşivi bu toplama karşı doğrular ve uyuşmazlık halinde işlemi durdurur.
+Yayımlanan her arşivin yanında bir `.sha256` dosyası bulunur. Hem `install.sh` hem de güncelleyici, arşivi bu özetle doğrular ve uyuşmazlık halinde işlemi durdurur.
 
-Tam dokümantasyon — kurulum, yapılandırma, işletim ve eksiksiz API referansı — için **[docs.sanaei.dev](https://docs.sanaei.dev)** adresini ziyaret edin.
+Kurulum, yapılandırma, günlük işletim ve eksiksiz API başvurusu dahil tüm belgeler **[easyxrayteam.github.io/EasyXray](https://easyxrayteam.github.io/EasyXray/)** adresindedir.
 
 ### Etkileşimsiz kurulum
 
-Yükleyici, cloud-init için **etkileşimsiz** olarak da çalışır.
-`XUI_NONINTERACTIVE=1` ayarlayın (veya TTY olmadan boru hattına aktarın); kurulum baştan
-sona hiçbir soru sormadan tamamlanır, rastgele kimlik bilgileri oluşturup bunları
-`/etc/x-ui/install-result.env` dosyasına yazar. Şunlar için [`deploy/`](deploy/) klasörüne bakın:
+Kurulum betiği cloud-init için **etkileşimsiz** de çalışır.
+`EASYXRAY_NONINTERACTIVE=1` ayarlayın (veya TTY olmayan bir boru üzerinden çalıştırın);
+kurulum hiçbir soru sormadan baştan sona tamamlanır, rastgele kimlik bilgileri üretilir
+ve bunlar `/etc/easyxray/install-result.env` dosyasına yazılır. Örnekler için [`deploy/`](deploy/) dizinine bakın:
 
-- [Cloud-init user-data](deploy/cloud-init/) — herhangi bir bulutta etkileşimsiz kurulum (Hetzner/AWS/DO/Vultr/GCP/Azure/Oracle)
-- [Hetzner Cloud notları](deploy/marketplace/hetzner/) — Hetzner üzerinde cloud-init tabanlı dağıtım
+- [Cloud-init user-data](deploy/cloud-init/) — herhangi bir bulut sağlayıcıda (Hetzner/AWS/DO/Vultr/GCP/Azure/Oracle) etkileşimsiz kurulum
+- [Hetzner Cloud notları](deploy/marketplace/hetzner/) — Hetzner üzerinde cloud-init ile dağıtım
+
+## Kurulum düzeni ve servis adları
+
+EasyXray'in tüm bileşenleri projeyle aynı adı taşır; böylece aynı sunucudaki başka bir panelle çakışmazlar.
+
+| Öğe | Değer |
+| --- | --- |
+| İkili dosya | `easyxray` |
+| Yönetim menüsü | `easyxray` (`easyxray.sh` üzerinden `/usr/bin/easyxray` konumuna kurulur) |
+| Kurulum dizini | `/usr/local/easyxray` |
+| Yapılandırma ve veritabanı dizini | `/etc/easyxray` |
+| SQLite veritabanı | `/etc/easyxray/EasyXray.db` |
+| Günlük dizini / dosyası | `/var/log/easyxray` , `easyxray.log` |
+| Ortam değişkenleri | `EASYXRAY_*` |
+| systemd birimi | `easyxray.service` (varyantlar: `easyxray.service.debian`, `.arch`, `.rhel`) |
+| OpenRC servisi | `easyxray` (`easyxray.rc` dosyasından) |
+| Go modülü | `github.com/EasyXrayTeam/EasyXray/v3` |
+| Panel sürümü | `1.0.0` |
+
+## Panel arayüzü ve HTTP API
+
+Web kök yolu varsayılan değeri olan `/` iken panel şu adreslerden sunulur:
+
+| Yüzey | Yol |
+| --- | --- |
+| Panel arayüzü | `/easyxray/…` |
+| REST API | `/easyxray/api/v1/…` — örneğin `/easyxray/api/v1/inbounds/list` |
+| WebSocket | `/easyxray/ws` |
+| OpenAPI tanımı | `/easyxray/api/v1/openapi.json` |
+
+Bu adreslerin tümü yapılandırdığınız web kök yolunun **altında** yer alır; kök yolu `/panelim` olan bir panelde arayüz `/panelim/easyxray/…`, API ise `/panelim/easyxray/api/v1/…` olur.
+
+> [!WARNING]
+> Bu sürüm API ad alanının tamamını yeniden adlandırıyor. Eski `/easyxray/api/v1/…` yolları geriye dönük uyumluluk için **takma ad olarak korunmuyor** — bu yollara yapılan istekler yanıtlanmaz. 3x-ui dönemine ait API'ye göre yazılmış her harici entegrasyonun, çalışmaya devam etmesi için `/easyxray/api/v1/…` yollarına güncellenmesi gerekir.
+
+## 3x-ui'den geçiş
+
+EasyXray **sıfırdan bir kurulumdur**. Var olan bir 3x-ui kurulumunu algılamaz, devralmaz veya taşımaz ve hiçbir şey otomatik olarak dönüştürülmez: servis adı, kurulum dizini, yapılandırma ve veritabanı dizini, ortam değişkeni öneki, veritabanı dosya adı ve API ad alanı farklıdır ve ikisi arasında bir geçiş yolu sunulmaz.
+
+3x-ui'den geçiyorsanız eski paneli çalışır durumda bırakın, ihtiyacınız olanları oradan dışa aktarın (gelen bağlantı ve istemci listeleri, paylaşım bağlantıları, Xray yapılandırması, sertifikalar), ardından EasyXray'i kurup bu yapılandırmayı yeni panelde yeniden oluşturun. Herhangi bir şeyi silmeden veya değiştirmeden önce eski veritabanının yedeğini alın.
 
 ## Desteklenen Platformlar
 
 **İşletim sistemleri:** Ubuntu, Debian, Armbian, Fedora, CentOS, RHEL, AlmaLinux, Rocky Linux, Oracle Linux, Amazon Linux, Virtuozzo, Arch, Manjaro, Parch, openSUSE (Tumbleweed / Leap), Alpine ve Windows.
 
-**Mimariler:** `amd64` · `386` · `arm64` (aarch64) · `armv7` · `armv6` · `armv5` · `s390x`.
+**Mimari:** `amd64` · `386` · `arm64` (aarch64) · `armv7` · `armv6` · `armv5` · `s390x`.
 
 ## Veritabanı Seçenekleri
 
-3X-UI kurulum sırasında seçilebilecek iki arka uç (backend) destekler:
+EasyXray, kurulum sırasında seçilen iki arka ucu destekler:
 
-- **SQLite** (varsayılan) — `/etc/x-ui/x-ui.db` konumunda tek bir dosya. Kurulum gerektirmez, küçük ve orta ölçekli dağıtımlar için idealdir.
-- **PostgreSQL** — Yüksek kullanıcı sayıları veya çoklu düğüm (multi-node) kurulumları için önerilir. Yükleyici sizin için yerel olarak PostgreSQL kurabilir veya mevcut bir sunucuya DSN bağlantısı kabul edebilir.
+- **SQLite** (varsayılan) — `/etc/easyxray/EasyXray.db` konumunda tek bir dosya. Hiç kurulum gerektirmez; küçük ve orta ölçekli kurulumlar için idealdir.
+- **PostgreSQL** — çok sayıda istemci veya çok düğümlü kurulumlar için önerilir. Kurulum betiği PostgreSQL'i sizin için yerel olarak kurabilir ya da mevcut bir sunucuya ait DSN kabul edebilir.
 
-Çalışma anında veritabanı türü ortam değişkenleri (environment variables) ile seçilir (yükleyici bunları sizin için `/etc/default/x-ui` dosyasına yazar):
+Çalışma anında arka uç ortam değişkenleriyle seçilir (kurulum betiği bunları sizin için `/etc/default/easyxray` dosyasına yazar):
 
 ```
-XUI_DB_TYPE=postgres
-XUI_DB_DSN=postgres://xui:password@127.0.0.1:5432/xui?sslmode=disable
+EASYXRAY_DB_TYPE=postgres
+EASYXRAY_DB_DSN=postgres://easyxray:password@127.0.0.1:5432/easyxray?sslmode=disable
 ```
 
-### Mevcut bir SQLite Kurulumunu PostgreSQL'e Taşıma
+### Mevcut bir SQLite kurulumunu PostgreSQL'e taşıma
 
 ```bash
-x-ui migrate-db --dsn "postgres://xui:password@127.0.0.1:5432/xui?sslmode=disable"
-# ardından /etc/default/x-ui içindeki XUI_DB_TYPE ve XUI_DB_DSN değerlerini ayarlayıp yeniden başlatın:
-systemctl restart x-ui
+easyxray migrate-db --dsn "postgres://easyxray:password@127.0.0.1:5432/easyxray?sslmode=disable"
+# ardından /etc/default/easyxray içindeki EASYXRAY_DB_TYPE ve EASYXRAY_DB_DSN değerlerini ayarlayıp yeniden başlatın:
+systemctl restart easyxray
 ```
 
-Kaynak SQLite dosyasına dokunulmaz; yeni veritabanının düzgün çalıştığını doğruladıktan sonra eski SQLite dosyasını manuel olarak silebilirsiniz.
+Kaynak SQLite dosyası olduğu gibi bırakılır; yeni arka ucu doğruladıktan sonra elle silin.
 
 ### Docker
 
-Varsayılan `docker compose up -d` komutu SQLite kullanmaya devam eder. Birlikte paketlenmiş PostgreSQL servisi ile çalıştırmak için, `docker-compose.yml` dosyasındaki iki `XUI_DB_*` değişken satırının yorumunu kaldırın ve profille başlatın:
+Varsayılan `docker compose up -d` komutu SQLite kullanmaya devam eder. Paketle gelen PostgreSQL servisiyle çalıştırmak için `docker-compose.yml` dosyasındaki iki `EASYXRAY_DB_*` ortam satırının yorumunu kaldırın ve profile ile başlatın:
 
 ```bash
 docker compose --profile postgres up -d
 ```
 
-Docker imajı, kullanıcı başına **IP limitlerini** zorunlu kılmak için Fail2ban ile (varsayılan olarak etkindir) paketlenmiştir. Fail2ban, ihlalcileri `iptables` ile engeller ve bunun için `NET_ADMIN` yetkisine ihtiyaç duyar. `docker-compose.yml` bunu zaten `cap_add` üzerinden vermektedir; ancak konteyneri bunun yerine `docker run` ile başlatırsanız bu yetkileri kendiniz eklemelisiniz, aksi takdirde yasaklamalar günlüğe kaydedilir ancak uygulanmaz:
+İmaj, istemci bazlı **IP limitlerini** uygulamak için Fail2ban'i (varsayılan olarak etkin) içerir. Fail2ban ihlal edenleri `iptables` ile engeller; bu da `NET_ADMIN` yeteneğini gerektirir. `docker-compose.yml` bunu `cap_add` ile zaten veriyor; kapsayıcıyı `docker run` ile başlatırsanız yetenekleri kendiniz ekleyin, aksi halde engellemeler yalnızca günlüğe yazılır ve hiçbir zaman uygulanmaz:
 
 ```bash
-docker run -d --cap-add=NET_ADMIN --cap-add=NET_RAW ... ghcr.io/mhsanaei/3x-ui
+docker run -d --cap-add=NET_ADMIN --cap-add=NET_RAW ... ghcr.io/easyxrayteam/easyxray
 ```
 
-## Ortam Değişkenleri (Environment Variables)
+## Ortam Değişkenleri
 
 | Değişken | Açıklama | Varsayılan |
 | --- | --- | --- |
-| `XUI_DB_TYPE` | Veritabanı türü: `sqlite` veya `postgres` | `sqlite` |
-| `XUI_DB_DSN` | PostgreSQL bağlantı dizesi (eğer `XUI_DB_TYPE=postgres` ise) | — |
-| `XUI_DB_FOLDER` | SQLite veritabanı dizini | `/etc/x-ui` |
-| `XUI_DB_MAX_OPEN_CONNS` | Maksimum açık bağlantı sayısı (PostgreSQL havuzu) | — |
-| `XUI_DB_MAX_IDLE_CONNS` | Maksimum boşta bekleme bağlantısı (PostgreSQL havuzu) | — |
-| `XUI_INIT_WEB_BASE_PATH` | Web paneli için başlangıç URI yolu | `/` |
-| `XUI_ENABLE_FAIL2BAN` | Fail2ban tabanlı IP limit uygulamasını etkinleştir | `true` |
-| `XUI_LOG_LEVEL` | Günlük (Log) ayrıntı seviyesi (`debug`, `info`, `warning`, `error`) | `info` |
-| `XUI_DEBUG` | Hata ayıklama (debug) modunu etkinleştir | `false` |
-| `XUI_TUNNEL_HEALTH_MONITOR` | Tünel sağlık izleyicisini etkinleştir (bir URL'yi yoklar ve tekrarlanan başarısızlıklardan sonra xray'i yeniden başlatır; yeniden başlatma tüm istemcilerin bağlantısını düşürür) | `false` |
-| `XUI_TUNNEL_HEALTH_PROXY` | Yoklamanın gönderildiği proxy; yoklamanın tüneli test etmesi için bunu yerel bir xray gelen bağlantısına yönlendirin (ör. `socks5://127.0.0.1:1080`). Boş bırakılırsa yoklama yalnızca ana makine bağlantısını kontrol eder | — |
-| `XUI_TUNNEL_HEALTH_URL` | Tünel sağlığı için yoklanan URL | `https://www.cloudflare.com/cdn-cgi/trace` |
-| `XUI_TUNNEL_HEALTH_INTERVAL` | Yoklamalar arasındaki aralık | `30s` |
-| `XUI_TUNNEL_HEALTH_TIMEOUT` | Yoklama başına zaman aşımı | `10s` |
-| `XUI_TUNNEL_HEALTH_FAILURES` | Yeniden başlatma tetiklenmeden önceki ardışık başarısızlık sayısı | `3` |
-| `XUI_TUNNEL_HEALTH_COOLDOWN` | Ardışık yeniden başlatmalar arasındaki minimum gecikme | `5m` |
-| `NODE_TOKEN_ENCRYPTION` | Düğüm API token'ları için beklemede şifreleme: `off`, `migration` veya `required` (`XUI_` öneki yoktur) | `off` |
-| `XUI_NODE_TOKEN_KEY_FILE` | Etkin anahtar kimliğini ve base64 kodlu 32 baytlık anahtarlarını içeren JSON anahtarlığı (mod `0600`) | `/etc/x-ui/node_token_key.json` |
-| `XUI_NODE_TOKEN_KEY` | Tek bir base64 kodlu 32 baytlık anahtar; yalnızca anahtar dosyası yüklenemediğinde kullanılır | — |
+| `EASYXRAY_DB_TYPE` | Veritabanı arka ucu: `sqlite` veya `postgres` | `sqlite` |
+| `EASYXRAY_DB_DSN` | PostgreSQL bağlantı dizesi (`EASYXRAY_DB_TYPE=postgres` iken) | — |
+| `EASYXRAY_DB_FOLDER` | SQLite veritabanı dosyasının dizini | `/etc/easyxray` |
+| `EASYXRAY_DB_MAX_OPEN_CONNS` | En fazla açık bağlantı sayısı (PostgreSQL havuzu) | — |
+| `EASYXRAY_DB_MAX_IDLE_CONNS` | En fazla boşta bağlantı sayısı (PostgreSQL havuzu) | — |
+| `EASYXRAY_PORT` | Panel portunu geçersiz kılar (1–65535); kayıtlı ayardan önceliklidir | — |
+| `EASYXRAY_INIT_WEB_BASE_PATH` | Web panelinin başlangıç URI yolu | `/` |
+| `EASYXRAY_ENABLE_FAIL2BAN` | Fail2ban tabanlı IP limiti uygulamasını etkinleştirir | `true` |
+| `EASYXRAY_SKIP_HSTS` | HSTS başlığını atlar; TLS'i ters proxy sonlandırıyorsa bunu açın | `false` |
+| `EASYXRAY_LOG_LEVEL` | Günlük ayrıntı düzeyi (`debug`, `info`, `warning`, `error`) | `info` |
+| `EASYXRAY_LOG_FOLDER` | Günlük çıktı dizini | `/var/log/easyxray` |
+| `EASYXRAY_DEBUG` | Hata ayıklama modunu açar | `false` |
+| `EASYXRAY_TUNNEL_HEALTH_MONITOR` | Tünel sağlık izleyicisini açar (bir URL'yi yoklar ve art arda başarısızlıkta Xray'i yeniden başlatır; yeniden başlatma tüm istemcileri düşürür) | `false` |
+| `EASYXRAY_TUNNEL_HEALTH_PROXY` | Yoklamanın gönderileceği proxy; yerel bir Xray gelen bağlantısına yönlendirirseniz yoklama gerçekten tüneli test eder (örneğin `socks5://127.0.0.1:1080`). Boş bırakılırsa yalnızca sunucu bağlantısı kontrol edilir | — |
+| `EASYXRAY_TUNNEL_HEALTH_URL` | Tünel sağlığı için yoklanan URL | `https://www.cloudflare.com/cdn-cgi/trace` |
+| `EASYXRAY_TUNNEL_HEALTH_INTERVAL` | Yoklamalar arası süre | `30s` |
+| `EASYXRAY_TUNNEL_HEALTH_TIMEOUT` | Yoklama başına zaman aşımı | `10s` |
+| `EASYXRAY_TUNNEL_HEALTH_FAILURES` | Yeniden başlatmayı tetikleyen art arda başarısızlık sayısı | `3` |
+| `EASYXRAY_TUNNEL_HEALTH_COOLDOWN` | Ardışık yeniden başlatmalar arasındaki en kısa süre | `5m` |
+| `NODE_TOKEN_ENCRYPTION` | Düğüm API token'ları için diskte şifreleme: `off`, `migration` veya `required` (dikkat: `EASYXRAY_` öneki yok) | `off` |
+| `EASYXRAY_NODE_TOKEN_KEY_FILE` | Etkin anahtar kimliğini ve base64 32 baytlık anahtarlarını tutan JSON anahtarlık dosyası (izin `0600`) | `/etc/easyxray/node_token_key.json` |
+| `EASYXRAY_NODE_TOKEN_KEY` | Tek bir base64 32 baytlık anahtar; yalnızca anahtarlık dosyası okunamadığında kullanılır | — |
 
-Tam liste [ortam değişkenleri referansında](https://docs.sanaei.dev/docs/reference/env-vars) yer alır.
+Listenin tamamı [dokümantasyon sitesindeki](https://easyxrayteam.github.io/EasyXray/) ortam değişkenleri başvurusunda yer alır.
 
 ## Desteklenen Diller
 
-Panel arayüzü 13 farklı dilde mevcuttur:
+Panel arayüzü 13 dilde sunulur:
 
-İngilizce · Farsça · Arapça · Çince (Basitleştirilmiş) · Çince (Geleneksel) · İspanyolca · Rusça · Ukraynaca · Türkçe · Vietnamca · Japonca · Endonezce · Portekizce (Brezilya)
+English · فارسی · العربية · 中文（简体） · 中文（繁體） · Español · Русский · Українська · Türkçe · Tiếng Việt · 日本語 · Bahasa Indonesia · Português (Brasil)
 
 ## Katkıda Bulunma
 
-Katkılarınızı her zaman bekliyoruz. Bir sorun (issue) açmadan veya pull request (PR) göndermeden önce lütfen [Katkıda Bulunma Kılavuzunu](/CONTRIBUTING.md) okuyun.
+Katkılara açığız. Bir issue veya pull request açmadan önce lütfen [Katkı Rehberi](/CONTRIBUTING.md) belgesini okuyun.
 
-## Özel Teşekkürler
+## Atıf ve lisans
 
-- [alireza0](https://github.com/alireza0/)
+EasyXray, [MHSanaei/3x-ui](https://github.com/MHSanaei/3x-ui) projesinin **değiştirilmiş bir türevidir**. Bu kod tabanı, `74c3cc38` numaralı upstream commit'ini (3.10.0 serisi) temel alır ve EasyXrayTeam tarafından EasyXray adıyla geliştirilip dağıtılır.
+
+EasyXray'in bu temele göre değiştirdikleri: proje baştan sona yeniden adlandırıldı. Ürün adı, ikili dosya ve systemd/OpenRC servisi, kurulum, yapılandırma, veritabanı ve günlük yolları, ortam değişkeni öneki (artık `EASYXRAY_*`), yönetim betiği, panel arayüzü ve REST API ad alanları, Go modül yolu ve paketlenen Docker imajı EasyXray adını taşır. Bu yeniden adlandırmanın dışında panelin davranışı — özellik kümesi, sunduğu protokoller ve Xray-core'u yönetme biçimi — upstream projeden devralınmıştır. Somut adlar ve yollar için [Kurulum düzeni ve servis adları](#kurulum-düzeni-ve-servis-adları) ile [Panel arayüzü ve HTTP API](#panel-arayüzü-ve-http-api) bölümlerine bakın.
+
+EasyXray, **GNU Genel Kamu Lisansı sürüm 3.0** (GPL-3.0) ile lisanslanmıştır. Lisansın tam metni [`LICENSE`](LICENSE) dosyasındadır. Projeye dahil edilen veya projenin bağımlı olduğu üçüncü taraf bileşenler `NOTICE` ve `THIRD_PARTY_NOTICES.md` dosyalarında kayıtlıdır.
+
+Burada dağıtılan ikili dosyalara karşılık gelen kaynak kod bu depodur: [EasyXrayTeam/EasyXray](https://github.com/EasyXrayTeam/EasyXray).
+
+Bu proje, 3x-ui'nin upstream yazarı tarafından **onaylanmamış, desteklenmemiş ve onunla hiçbir şekilde ilişkili değildir**. GNU GPL koşulları altında yayımlanan bağımsız bir türev çalışmadır.
 
 ## Teşekkür & Atıf
 
-- [Iran v2ray rules](https://github.com/chocolate4u/Iran-v2ray-rules) (Lisans: **GPL-3.0**): _Geliştirilmiş v2ray/xray ve v2ray/xray-clients yönlendirme (routing) kuralları; yerleşik İran alan adları ile güvenlik ve reklam engelleme odaklıdır._
-- [Russia v2ray rules](https://github.com/runetfreedom/russia-v2ray-rules-dat) (Lisans: **GPL-3.0**): _Bu depo, Rusya'daki engellenen alan adları ve adreslere dayalı otomatik olarak güncellenen V2Ray yönlendirme kurallarını içerir._
+EasyXray panelinin arayüz ve özellik altyapısı, özgün **X-UI** projesinden ve onu sürdüren çalışmalardan gelir; bu temel emeği için [alireza0](https://github.com/alireza0/)'a özellikle teşekkür ederiz.
+
+Ayrıca panel şu projelere dayanır veya onlarla birlikte dağıtılır:
+
+- [Iran v2ray rules](https://github.com/chocolate4u/Iran-v2ray-rules) (Lisans: **GPL-3.0**): _İran alan adları yerleşik, güvenlik ve reklam engelleme odaklı gelişmiş v2ray/xray ve v2ray/xray-clients yönlendirme kuralları._
+- [Russia v2ray rules](https://github.com/runetfreedom/russia-v2ray-rules-dat) (Lisans: **GPL-3.0**): _Bu depo, Rusya'da engellenen alan adları ve adreslere ilişkin verilere dayanarak otomatik güncellenen V2Ray yönlendirme kurallarını içerir._
 
 ## Topluluk Araçları
 
-3x-ui çevresindeki topluluk tarafından oluşturulmuş araçlar ve entegrasyonlar.
+Bu panelin geldiği proje etrafında topluluk tarafından geliştirilmiş araçlar ve entegrasyonlar. Bunların upstream API ad alanını hedeflediğini unutmayın; EasyXray'in yeniden adlandırılmış `/easyxray/api/v1/…` uç noktalarıyla çalışmadan önce güncellenmeleri gerekebilir.
 
-- [terraform-provider-3x-ui](https://github.com/batonogov/terraform-provider-threexui) (Lisans: **MIT**): _Gelen bağlantılarnı, kullanıcıları, panel ayarlarını ve Xray yapılandırmasını Terraform / OpenTofu ile kod olarak (as code) yönetin._
-- [3X-UI Manager](https://github.com/yukh975/3X-UI-Manager) (Lisans: **MIT**): _3x-ui için yerel Android istemcisi — kontrol paneli, gelen bağlantılar, QR ile paylaşımlı kullanıcılar, düğümler ve çoklu panel yönetimi. F-Droid'de mevcut._
-
-## Projeyi Destekleyin
-
-**Eğer bu proje size faydalı olduysa, bir yıldız verebilirsiniz**:star2:
-
-<a href="https://www.buymeacoffee.com/MHSanaei" target="_blank">
-<img src="./media/default-yellow.png" alt="Bana Bir Kahve Ismarla" style="height: 70px !important;width: 277px !important;" >
-</a>
-
-</br>
-<a href="https://nowpayments.io/donation/hsanaei" target="_blank" rel="noreferrer noopener">
-   <img src="./media/donation-button-black.svg" alt="NOWPayments üzerinden Kripto Bağış Butonu">
-</a>
+- [terraform-provider-3x-ui](https://github.com/batonogov/terraform-provider-threexui) (Lisans: **MIT**): _Gelen bağlantıları, istemcileri, panel ayarlarını ve Xray yapılandırmasını Terraform / OpenTofu ile kod olarak yönetin._
+- [3X-UI Manager](https://github.com/yukh975/3X-UI-Manager) (Lisans: **MIT**): _3x-ui için yerel Android istemcisi — kontrol paneli, gelen bağlantılar, QR ile paylaşımlı istemciler, düğümler ve çoklu panel yönetimi. F-Droid'de mevcut._
 
 ## Yıldız Geçmişi
 
-<a href="https://www.star-history.com/?repos=mhsanaei%2F3x-ui&type=date&legend=top-left">
+<a href="https://www.star-history.com/?repos=EasyXrayTeam%2FEasyXray&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=mhsanaei/3x-ui&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=mhsanaei/3x-ui&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=mhsanaei/3x-ui&type=date&legend=top-left" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=easyxrayteam/easyxray&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=easyxrayteam/easyxray&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=easyxrayteam/easyxray&type=date&legend=top-left" />
  </picture>
 </a>
-
-<p align="center">
- <a href="https://www.star-history.com/mhsanaei/3x-ui">
-  <picture><source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/badge?repo=MHSanaei/3x-ui&type=rank&theme=dark" /><source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/badge?repo=MHSanaei/3x-ui&type=rank" /><img alt="Star History Rank" src="https://api.star-history.com/badge?repo=MHSanaei/3x-ui&type=rank" /></picture> <picture><source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/badge?repo=MHSanaei/3x-ui&type=trending&theme=dark" /><source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/badge?repo=MHSanaei/3x-ui&type=trending" /><img alt="GitHub Trending Repository of the Day" src="https://api.star-history.com/badge?repo=MHSanaei/3x-ui&type=trending" /></picture>
- </a>
-</p>

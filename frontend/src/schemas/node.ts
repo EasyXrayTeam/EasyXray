@@ -27,7 +27,7 @@ export const NodeRecordSchema = z
     depletedCount: z.number().optional(),
     lastHeartbeat: z.number().optional(),
     lastError: z.string().optional(),
-    // Xray state captured from the remote node's own /panel/api/server/status.
+    // Xray state captured from the remote node's own /easyxray/api/v1/server/status.
     // Lets the nodes list show a distinct indicator when the panel API is reachable
     // (status=online) but the Xray core on that node has failed.
     xrayState: z.string().optional(),

@@ -1,4 +1,4 @@
-// Package model defines the database models and data structures used by the 3x-ui panel.
+// Package model defines the database models and data structures used by the EasyXray panel.
 package model
 
 import (
@@ -9,8 +9,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/util/json_util"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/util/json_util"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/xray"
 )
 
 // Protocol represents the protocol type for Xray inbounds.
@@ -37,7 +37,7 @@ const (
 	MASQUE      Protocol = "masque"
 )
 
-// User represents a user account in the 3x-ui panel.
+// User represents a user account in the EasyXray panel.
 type User struct {
 	Id         int    `json:"id" gorm:"primaryKey;autoIncrement"`
 	Username   string `json:"username"`
@@ -810,15 +810,15 @@ func HealMtprotoClientSecrets(settings string) (string, bool) {
 	return string(out), true
 }
 
-// Setting stores key-value configuration settings for the 3x-ui panel.
+// Setting stores key-value configuration settings for the EasyXray panel.
 type Setting struct {
 	Id    int    `json:"id" form:"id" gorm:"primaryKey;autoIncrement"`
 	Key   string `json:"key" form:"key" gorm:"index:idx_settings_key"`
 	Value string `json:"value" form:"value"`
 }
 
-// Node represents a remote 3x-ui panel registered with the central panel.
-// The central panel polls each node's existing /panel/api/server/status
+// Node represents a remote EasyXray panel registered with the central panel.
+// The central panel polls each node's existing /easyxray/api/v1/server/status
 // endpoint over HTTP using the per-node ApiToken to populate the runtime
 // status fields below.
 type Node struct {
@@ -860,7 +860,7 @@ type Node struct {
 	NetDown       uint64  `json:"netDown" gorm:"column:net_down" example:"2097152"`
 	LastError     string  `json:"lastError"`
 
-	// XrayState and XrayError are captured from the remote node's /panel/api/server/status
+	// XrayState and XrayError are captured from the remote node's /easyxray/api/v1/server/status
 	// during heartbeats. They let the central panel distinguish "panel API reachable"
 	// (status=online) from "Xray core itself has failed on the node" for monitoring.
 	XrayState string `json:"xrayState" gorm:"column:xray_state"`

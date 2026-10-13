@@ -303,9 +303,13 @@ describe('ClientQrModal Happ presentation', () => {
 
     await waitFor(() => {
       expect(HttpUtil.post).toHaveBeenCalledOnce();
-      expect(HttpUtil.post).toHaveBeenCalledWith('/panel/api/clients/happLink/42', undefined, {
-        silent: true,
-      });
+      expect(HttpUtil.post).toHaveBeenCalledWith(
+        '/easyxray/api/v1/clients/happLink/42',
+        undefined,
+        {
+          silent: true,
+        },
+      );
     });
     expect(confirmSpy).not.toHaveBeenCalled();
     expect(screen.queryAllByRole('dialog')).toHaveLength(dialogCount);

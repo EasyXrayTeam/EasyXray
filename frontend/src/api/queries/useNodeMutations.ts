@@ -30,7 +30,8 @@ export function useNodeMutations() {
   };
 
   const createMut = useMutation({
-    mutationFn: (payload: Partial<NodeRecord>) => HttpUtil.post('/panel/api/nodes/add', payload),
+    mutationFn: (payload: Partial<NodeRecord>) =>
+      HttpUtil.post('/easyxray/api/v1/nodes/add', payload),
     onSuccess: (msg) => {
       if (msg?.success) invalidate();
     },
@@ -38,14 +39,14 @@ export function useNodeMutations() {
 
   const updateMut = useMutation({
     mutationFn: ({ id, payload }: { id: number; payload: Partial<NodeRecord> }) =>
-      HttpUtil.post(`/panel/api/nodes/update/${id}`, payload),
+      HttpUtil.post(`/easyxray/api/v1/nodes/update/${id}`, payload),
     onSuccess: (msg) => {
       if (msg?.success) invalidate();
     },
   });
 
   const removeMut = useMutation({
-    mutationFn: (id: number) => HttpUtil.post(`/panel/api/nodes/del/${id}`),
+    mutationFn: (id: number) => HttpUtil.post(`/easyxray/api/v1/nodes/del/${id}`),
     onSuccess: (msg) => {
       if (msg?.success) invalidate();
     },
@@ -53,7 +54,7 @@ export function useNodeMutations() {
 
   const setEnableMut = useMutation({
     mutationFn: ({ id, enable }: { id: number; enable: boolean }) =>
-      HttpUtil.post(`/panel/api/nodes/setEnable/${id}`, { enable }),
+      HttpUtil.post(`/easyxray/api/v1/nodes/setEnable/${id}`, { enable }),
     onSuccess: (msg) => {
       if (msg?.success) invalidate();
     },
@@ -61,7 +62,7 @@ export function useNodeMutations() {
 
   const probeMut = useMutation({
     mutationFn: async (id: number): Promise<Msg<ProbeResult>> => {
-      const raw = await HttpUtil.post(`/panel/api/nodes/probe/${id}`);
+      const raw = await HttpUtil.post(`/easyxray/api/v1/nodes/probe/${id}`);
       return parseMsg(raw, ProbeResultSchema, 'nodes/probe');
     },
     onSuccess: (msg) => {
@@ -72,7 +73,7 @@ export function useNodeMutations() {
   const updatePanelsMut = useMutation({
     mutationFn: ({ ids, dev }: { ids: number[]; dev: boolean }) =>
       HttpUtil.post<NodeUpdateResult[]>(
-        '/panel/api/nodes/updatePanel',
+        '/easyxray/api/v1/nodes/updatePanel',
         { ids, dev },
         {
           headers: { 'Content-Type': 'application/json' },
@@ -92,12 +93,12 @@ export function useNodeMutations() {
     updatePanels: (ids: number[], dev: boolean): Promise<Msg<NodeUpdateResult[]>> =>
       updatePanelsMut.mutateAsync({ ids, dev }),
     testConnection: async (payload: Partial<NodeRecord>): Promise<Msg<ProbeResult>> => {
-      const raw = await HttpUtil.post('/panel/api/nodes/test', payload);
+      const raw = await HttpUtil.post('/easyxray/api/v1/nodes/test', payload);
       return parseMsg(raw, ProbeResultSchema, 'nodes/test');
     },
     fetchFingerprint: (payload: Partial<NodeRecord>): Promise<Msg<string>> =>
-      HttpUtil.post<string>('/panel/api/nodes/certFingerprint', payload),
+      HttpUtil.post<string>('/easyxray/api/v1/nodes/certFingerprint', payload),
     fetchInbounds: (payload: Partial<NodeRecord>): Promise<Msg<RemoteInboundOption[]>> =>
-      HttpUtil.post<RemoteInboundOption[]>('/panel/api/nodes/inbounds', payload),
+      HttpUtil.post<RemoteInboundOption[]>('/easyxray/api/v1/nodes/inbounds', payload),
   };
 }

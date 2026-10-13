@@ -31,7 +31,7 @@ describe('useXraySetting', () => {
   it('refreshes server-derived outbounds while the editor is dirty', async () => {
     let payload = xrayPayload({ subscriptionOutbounds: [{ tag: 'before' }] });
     vi.spyOn(HttpUtil, 'post').mockImplementation(async (url) => {
-      if (url === '/panel/api/xray/') return new Msg(true, '', JSON.stringify(payload));
+      if (url === '/easyxray/api/v1/xray/') return new Msg(true, '', JSON.stringify(payload));
       return new Msg(true, '');
     });
     const queryClient = makeTestQueryClient();
@@ -58,7 +58,7 @@ describe('useXraySetting', () => {
       },
     });
     vi.spyOn(HttpUtil, 'post').mockImplementation(async (url) => {
-      if (url === '/panel/api/xray/') return new Msg(true, '', JSON.stringify(payload));
+      if (url === '/easyxray/api/v1/xray/') return new Msg(true, '', JSON.stringify(payload));
       return new Msg(true, '');
     });
     const queryClient = makeTestQueryClient();
@@ -78,7 +78,7 @@ describe('useXraySetting', () => {
   it('keeps the outbound test URL input empty when it is cleared', async () => {
     const payload = xrayPayload({ outboundTestUrl: 'https://www.google.com/generate_204' });
     vi.spyOn(HttpUtil, 'post').mockImplementation(async (url) => {
-      if (url === '/panel/api/xray/') return new Msg(true, '', JSON.stringify(payload));
+      if (url === '/easyxray/api/v1/xray/') return new Msg(true, '', JSON.stringify(payload));
       return new Msg(true, '');
     });
     const queryClient = makeTestQueryClient();
@@ -118,7 +118,7 @@ describe('useXraySetting', () => {
   ])('%s', async (_name, outbound, want) => {
     const bodies: Array<Record<string, unknown>> = [];
     vi.spyOn(HttpUtil, 'post').mockImplementation(async (url, data) => {
-      if (url === '/panel/api/xray/') {
+      if (url === '/easyxray/api/v1/xray/') {
         return new Msg(true, '', JSON.stringify(xrayPayload()));
       }
       bodies.push(data as Record<string, unknown>);

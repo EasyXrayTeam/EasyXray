@@ -11,9 +11,9 @@ import (
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/locale"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/session"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/locale"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/session"
 )
 
 func newSPAFallbackTestEngine(t *testing.T) *gin.Engine {
@@ -31,7 +31,7 @@ func newSPAFallbackTestEngineWithBasePath(t *testing.T, basePath string) *gin.En
 	t.Cleanup(func() { SetDistFS(oldDistFS) })
 
 	engine := gin.New()
-	engine.Use(sessions.Sessions("3x-ui", cookie.NewStore([]byte("spa-fallback-test-secret"))))
+	engine.Use(sessions.Sessions("easyxray", cookie.NewStore([]byte("spa-fallback-test-secret"))))
 	engine.Use(func(c *gin.Context) {
 		c.Set("base_path", basePath)
 		c.Set("I18n", func(_ locale.I18nType, key string, _ ...string) string { return key })
@@ -41,7 +41,7 @@ func newSPAFallbackTestEngineWithBasePath(t *testing.T, basePath string) *gin.En
 		c.Next()
 	})
 
-	ctrl := NewXUIController(engine.Group(basePath))
+	ctrl := NewPanelController(engine.Group(basePath))
 	engine.NoRoute(func(c *gin.Context) {
 		if ctrl.HandleNoRoutePanelSPA(c) {
 			return
@@ -53,7 +53,7 @@ func newSPAFallbackTestEngineWithBasePath(t *testing.T, basePath string) *gin.En
 
 func TestPanelSPAFallbackServesRootBasePath(t *testing.T) {
 	engine := newSPAFallbackTestEngineWithBasePath(t, "/")
-	req := httptest.NewRequest(http.MethodGet, "/panel/hosts", nil)
+	req := httptest.NewRequest(http.MethodGet, "/easyxray/hosts", nil)
 	req.Header.Set("Accept", "text/html")
 	req.Header.Set("X-Test-Login", "1")
 	w := httptest.NewRecorder()
@@ -72,8 +72,8 @@ func TestPanelSPAFallbackServesAuthenticatedClientRoutes(t *testing.T) {
 	engine := newSPAFallbackTestEngine(t)
 
 	for _, target := range []string{
-		"/admin-random/panel/hosts",
-		"/admin-random/panel/some/future/route",
+		"/admin-random/easyxray/hosts",
+		"/admin-random/easyxray/some/future/route",
 	} {
 		t.Run(target, func(t *testing.T) {
 			req := httptest.NewRequest(http.MethodGet, target, nil)
@@ -100,7 +100,7 @@ func TestPanelSPAFallbackPreservesAuthSemantics(t *testing.T) {
 	engine := newSPAFallbackTestEngine(t)
 
 	t.Run("browser redirects to login", func(t *testing.T) {
-		req := httptest.NewRequest(http.MethodGet, "/admin-random/panel/hosts", nil)
+		req := httptest.NewRequest(http.MethodGet, "/admin-random/easyxray/hosts", nil)
 		req.Header.Set("Accept", "text/html")
 		w := httptest.NewRecorder()
 
@@ -115,7 +115,7 @@ func TestPanelSPAFallbackPreservesAuthSemantics(t *testing.T) {
 	})
 
 	t.Run("ajax gets json unauthorized", func(t *testing.T) {
-		req := httptest.NewRequest(http.MethodGet, "/admin-random/panel/hosts", nil)
+		req := httptest.NewRequest(http.MethodGet, "/admin-random/easyxray/hosts", nil)
 		req.Header.Set("Accept", "text/html")
 		req.Header.Set("X-Requested-With", "XMLHttpRequest")
 		w := httptest.NewRecorder()
@@ -138,10 +138,10 @@ func TestPanelSPAFallbackExclusions(t *testing.T) {
 		target string
 		want   int
 	}{
-		{target: "/admin-random/panel/api", want: http.StatusNotFound},
-		{target: "/admin-random/panel/api/unknown", want: http.StatusNotFound},
-		{target: "/admin-random/panel/csrf-token/", want: http.StatusMovedPermanently},
-		{target: "/admin-random/panel/missing.js", want: http.StatusNotFound},
+		{target: "/admin-random/easyxray/api/v1", want: http.StatusNotFound},
+		{target: "/admin-random/easyxray/api/v1/unknown", want: http.StatusNotFound},
+		{target: "/admin-random/easyxray/csrf-token/", want: http.StatusMovedPermanently},
+		{target: "/admin-random/easyxray/missing.js", want: http.StatusNotFound},
 	} {
 		t.Run(tc.target, func(t *testing.T) {
 			req := httptest.NewRequest(http.MethodGet, tc.target, nil)
@@ -164,7 +164,7 @@ func TestPanelSPAFallbackExclusions(t *testing.T) {
 func TestPanelCSRFTokenRemainsExplicit(t *testing.T) {
 	engine := newSPAFallbackTestEngine(t)
 
-	req := httptest.NewRequest(http.MethodGet, "/admin-random/panel/csrf-token", nil)
+	req := httptest.NewRequest(http.MethodGet, "/admin-random/easyxray/csrf-token", nil)
 	req.Header.Set("Accept", "text/html")
 	req.Header.Set("X-Test-Login", "1")
 	w := httptest.NewRecorder()
@@ -194,20 +194,20 @@ func TestPanelSPAFallbackPredicate(t *testing.T) {
 		accept string
 		want   bool
 	}{
-		{name: "panel root", method: http.MethodGet, path: "/admin-random/panel", accept: "text/html", want: true},
-		{name: "panel descendant", method: http.MethodGet, path: "/admin-random/panel/hosts", accept: "*/*", want: true},
-		{name: "empty accept", method: http.MethodGet, path: "/admin-random/panel/future", want: true},
-		{name: "post excluded", method: http.MethodPost, path: "/admin-random/panel/hosts", accept: "text/html"},
-		{name: "json accept excluded", method: http.MethodGet, path: "/admin-random/panel/hosts", accept: "application/json"},
-		{name: "api root excluded", method: http.MethodGet, path: "/admin-random/panel/api", accept: "text/html"},
-		{name: "api descendant excluded", method: http.MethodGet, path: "/admin-random/panel/api/unknown", accept: "text/html"},
-		{name: "csrf excluded", method: http.MethodGet, path: "/admin-random/panel/csrf-token", accept: "text/html"},
-		{name: "csrf descendant excluded", method: http.MethodGet, path: "/admin-random/panel/csrf-token/", accept: "text/html"},
-		{name: "file excluded", method: http.MethodGet, path: "/admin-random/panel/missing.css", accept: "text/html"},
+		{name: "panel root", method: http.MethodGet, path: "/admin-random/easyxray", accept: "text/html", want: true},
+		{name: "panel descendant", method: http.MethodGet, path: "/admin-random/easyxray/hosts", accept: "*/*", want: true},
+		{name: "empty accept", method: http.MethodGet, path: "/admin-random/easyxray/future", want: true},
+		{name: "post excluded", method: http.MethodPost, path: "/admin-random/easyxray/hosts", accept: "text/html"},
+		{name: "json accept excluded", method: http.MethodGet, path: "/admin-random/easyxray/hosts", accept: "application/json"},
+		{name: "api root excluded", method: http.MethodGet, path: "/admin-random/easyxray/api/v1", accept: "text/html"},
+		{name: "api descendant excluded", method: http.MethodGet, path: "/admin-random/easyxray/api/v1/unknown", accept: "text/html"},
+		{name: "csrf excluded", method: http.MethodGet, path: "/admin-random/easyxray/csrf-token", accept: "text/html"},
+		{name: "csrf descendant excluded", method: http.MethodGet, path: "/admin-random/easyxray/csrf-token/", accept: "text/html"},
+		{name: "file excluded", method: http.MethodGet, path: "/admin-random/easyxray/missing.css", accept: "text/html"},
 		{name: "outside panel excluded", method: http.MethodGet, path: "/admin-random/hosts", accept: "text/html"},
-		{name: "dotted email route param served", method: http.MethodGet, path: "/admin-random/panel/clients/user@example.com", accept: "text/html", want: true},
-		{name: "dotted version route param served", method: http.MethodGet, path: "/admin-random/panel/sub/1.2.3", accept: "text/html", want: true},
-		{name: "uppercase asset extension excluded", method: http.MethodGet, path: "/admin-random/panel/app.JS", accept: "text/html"},
+		{name: "dotted email route param served", method: http.MethodGet, path: "/admin-random/easyxray/clients/user@example.com", accept: "text/html", want: true},
+		{name: "dotted version route param served", method: http.MethodGet, path: "/admin-random/easyxray/sub/1.2.3", accept: "text/html", want: true},
+		{name: "uppercase asset extension excluded", method: http.MethodGet, path: "/admin-random/easyxray/app.JS", accept: "text/html"},
 	}
 
 	for _, tc := range cases {

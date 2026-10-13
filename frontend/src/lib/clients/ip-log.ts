@@ -1,5 +1,5 @@
 // Shape of one entry in a client's IP log, as returned by
-// POST /panel/api/clients/ips/:email. `node` is the name of the node the IP is
+// POST /easyxray/api/v1/clients/ips/:email. `node` is the name of the node the IP is
 // connecting through, or '' when it is on this local panel (or unattributed).
 export type ClientIpInfo = {
   ip: string;

@@ -42,12 +42,12 @@ describe('sponsor dismissal', () => {
   test('prunes expired entries on the next dismiss', () => {
     dismissSponsor('old', 'login', t0);
     dismissSponsor('new', 'login', t0 + SPONSOR_DISMISS_MS);
-    const stored = JSON.parse(localStorage.getItem('xui.sponsor.dismissed') || '{}');
+    const stored = JSON.parse(localStorage.getItem('easyxray.sponsor.dismissed') || '{}');
     expect(Object.keys(stored)).toEqual(['new:login']);
   });
 
   test('corrupt storage is treated as nothing dismissed', () => {
-    localStorage.setItem('xui.sponsor.dismissed', 'not json');
+    localStorage.setItem('easyxray.sponsor.dismissed', 'not json');
     expect(isSponsorDismissed('acme', 'sidebar', t0)).toBe(false);
   });
 });

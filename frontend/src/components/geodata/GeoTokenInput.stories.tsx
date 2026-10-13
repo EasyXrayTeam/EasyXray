@@ -185,14 +185,14 @@ function validate(tokens: string[], isIP: boolean): GeodataTokenIssue[] {
 
 const routes: GeoRoutes = {
   '/csrf-token': () => 'storybook-csrf-token',
-  '/panel/api/xray/geodata/files': () => FILES,
-  '/panel/api/xray/geodata/categories': (query) => {
+  '/easyxray/api/v1/xray/geodata/files': () => FILES,
+  '/easyxray/api/v1/xray/geodata/categories': (query) => {
     const dataset = DATASETS[query.get('file') ?? ''];
     const needle = (query.get('q') ?? '').trim().toLowerCase();
     const items = (dataset?.categories ?? []).filter((category) => category.code.includes(needle));
     return { total: items.length, items };
   },
-  '/panel/api/xray/geodata/entries': (query) => {
+  '/easyxray/api/v1/xray/geodata/entries': (query) => {
     const dataset = DATASETS[query.get('file') ?? ''];
     const needle = (query.get('q') ?? '').trim().toLowerCase();
     const matched = (dataset?.entries[query.get('code') ?? ''] ?? []).filter((entry) =>
@@ -202,7 +202,7 @@ const routes: GeoRoutes = {
     const limit = Number(query.get('limit') ?? 100);
     return { total: matched.length, items: matched.slice(offset, offset + limit) };
   },
-  '/panel/api/xray/geodata/validate': (_query, form) =>
+  '/easyxray/api/v1/xray/geodata/validate': (_query, form) =>
     validate(parseTokens(form.get('tokens') ?? ''), form.get('kind') === 'ip'),
 };
 
@@ -243,7 +243,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Routing rule field for the xray rule editor: a comma separated list of domains/CIDRs and `geosite:` / `geoip:` tokens, with a database button in the addon that opens the geo category browser. Typed tokens are validated against the databases on disk after a short pause, and anything the running core would not resolve is called out under the field. The stories answer `/panel/api/xray/geodata/*` from an in-memory fixture, so validation and the browser both work without a panel backend.',
+          'Routing rule field for the xray rule editor: a comma separated list of domains/CIDRs and `geosite:` / `geoip:` tokens, with a database button in the addon that opens the geo category browser. Typed tokens are validated against the databases on disk after a short pause, and anything the running core would not resolve is called out under the field. The stories answer `/easyxray/api/v1/xray/geodata/*` from an in-memory fixture, so validation and the browser both work without a panel backend.',
       },
     },
   },

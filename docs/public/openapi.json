@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "3X-UI Panel API",
+    "title": "EasyXray Panel API",
     "version": "3.x",
-    "description": "Programmatic interface to a 3X-UI panel. Authenticate either by logging in (cookie) or with an API token from Settings → Security → API Token (Bearer). All endpoints under /panel/api/* honour both modes — an API token is a full-admin credential, so treat it like the panel password."
+    "description": "Programmatic interface to an EasyXray panel. Authenticate either by logging in (cookie) or with an API token from Settings → Security → API Token (Bearer). All endpoints under /easyxray/api/v1/* honour both modes — an API token is a full-admin credential, so treat it like the panel password."
   },
   "servers": [
     {
@@ -21,7 +21,7 @@
       "cookieAuth": {
         "type": "apiKey",
         "in": "cookie",
-        "name": "3x-ui",
+        "name": "EasyXray",
         "description": "Session cookie set by POST /login. Browser-only."
       }
     },
@@ -3507,7 +3507,7 @@
         "type": "object"
       },
       "Node": {
-        "description": "Node represents a remote 3x-ui panel registered with the central panel.\nThe central panel polls each node's existing /panel/api/server/status\nendpoint over HTTP using the per-node ApiToken to populate the runtime\nstatus fields below.",
+        "description": "Node represents a remote EasyXray panel registered with the central panel.\nThe central panel polls each node's existing /easyxray/api/v1/server/status\nendpoint over HTTP using the per-node ApiToken to populate the runtime\nstatus fields below.",
         "properties": {
           "activeCount": {
             "example": 23,
@@ -3678,7 +3678,7 @@
             "type": "string"
           },
           "xrayState": {
-            "description": "XrayState and XrayError are captured from the remote node's /panel/api/server/status\nduring heartbeats. They let the central panel distinguish \"panel API reachable\"\n(status=online) from \"Xray core itself has failed on the node\" for monitoring.",
+            "description": "XrayState and XrayError are captured from the remote node's /easyxray/api/v1/server/status\nduring heartbeats. They let the central panel distinguish \"panel API reachable\"\n(status=online) from \"Xray core itself has failed on the node\" for monitoring.",
             "type": "string"
           },
           "xrayVersion": {
@@ -4476,7 +4476,7 @@
         "type": "object"
       },
       "Setting": {
-        "description": "Setting stores key-value configuration settings for the 3x-ui panel.",
+        "description": "Setting stores key-value configuration settings for the EasyXray panel.",
         "properties": {
           "id": {
             "type": "integer"
@@ -4514,7 +4514,7 @@
             "type": "string"
           },
           "link": {
-            "example": "https://acme.example/?utm_source=3x-ui",
+            "example": "https://acme.example/?utm_source=EasyXray",
             "type": "string"
           },
           "logo": {
@@ -4759,7 +4759,7 @@
         "type": "object"
       },
       "User": {
-        "description": "User represents a user account in the 3x-ui panel.",
+        "description": "User represents a user account in the EasyXray panel.",
         "properties": {
           "id": {
             "type": "integer"
@@ -4823,27 +4823,27 @@
   "tags": [
     {
       "name": "Authentication",
-      "description": "Two authentication modes are supported. UI sessions use a cookie set by the login endpoint. Programmatic clients (bots, scripts, remote panels) authenticate with a Bearer token taken from Settings → Security → API Token. Both work for every endpoint under /panel/api/*."
+      "description": "Two authentication modes are supported. UI sessions use a cookie set by the login endpoint. Programmatic clients (bots, scripts, remote panels) authenticate with a Bearer token taken from Settings → Security → API Token. Both work for every endpoint under /easyxray/api/v1/*."
     },
     {
       "name": "Inbounds",
-      "description": "Manage inbound configurations and their clients. All endpoints live under /panel/api/inbounds and require a logged-in session or Bearer token. Link-generating endpoints honour forwarded headers only when the request comes from a configured trusted proxy."
+      "description": "Manage inbound configurations and their clients. All endpoints live under /easyxray/api/v1/inbounds and require a logged-in session or Bearer token. Link-generating endpoints honour forwarded headers only when the request comes from a configured trusted proxy."
     },
     {
       "name": "Server",
-      "description": "System status, log retrieval, certificate generators, Xray binary management, and backup/restore. All under /panel/api/server."
+      "description": "System status, log retrieval, certificate generators, Xray binary management, and backup/restore. All under /easyxray/api/v1/server."
     },
     {
       "name": "Clients",
-      "description": "Manage clients as first-class entities that can be attached to one or more inbounds. A single client row drives the settings.clients entry in every inbound it belongs to. Endpoints live under /panel/api/clients."
+      "description": "Manage clients as first-class entities that can be attached to one or more inbounds. A single client row drives the settings.clients entry in every inbound it belongs to. Endpoints live under /easyxray/api/v1/clients."
     },
     {
       "name": "Nodes",
-      "description": "Manage remote 3x-ui panels acting as nodes for a central panel. All endpoints under /panel/api/nodes."
+      "description": "Manage remote EasyXray panels acting as nodes for a central panel. All endpoints under /easyxray/api/v1/nodes."
     },
     {
       "name": "Hosts",
-      "description": "Per-inbound override endpoints. Each enabled host renders one extra subscription link/proxy with its own address/port/TLS, superseding the legacy externalProxy array. All endpoints under /panel/api/hosts."
+      "description": "Per-inbound override endpoints. Each enabled host renders one extra subscription link/proxy with its own address/port/TLS, superseding the legacy externalProxy array. All endpoints under /easyxray/api/v1/hosts."
     },
     {
       "name": "Backup",
@@ -4851,7 +4851,7 @@
     },
     {
       "name": "Settings",
-      "description": "Panel configuration and user credentials. All endpoints live under /panel/api/setting and require a logged-in session or Bearer token."
+      "description": "Panel configuration and user credentials. All endpoints live under /easyxray/api/v1/setting and require a logged-in session or Bearer token."
     },
     {
       "name": "API Tokens",
@@ -4859,7 +4859,7 @@
     },
     {
       "name": "Xray Settings",
-      "description": "Xray configuration template, outbound management, Warp/Nord/PIA integration, and config testing. All endpoints under /panel/api/xray."
+      "description": "Xray configuration template, outbound management, Warp/Nord/PIA integration, and config testing. All endpoints under /easyxray/api/v1/xray."
     },
     {
       "name": "Subscription Balancers",
@@ -4871,7 +4871,7 @@
     },
     {
       "name": "WebSocket",
-      "description": "Real-time status updates via WebSocket. Connect once at <code>ws://<panel>/ws</code> to receive a stream of JSON messages without polling. Requires an authenticated session cookie (Bearer token auth is not supported). Each message has a <code>type</code> field that identifies the payload shape."
+      "description": "Real-time status updates via WebSocket. Connect once at <code>ws://<panel>/easyxray/ws</code> to receive a stream of JSON messages without polling. Requires an authenticated session cookie (Bearer token auth is not supported). Each message has a <code>type</code> field that identifies the payload shape."
     }
   ],
   "paths": {
@@ -5066,7 +5066,7 @@
                         "enable": true,
                         "from": "2026-10-01T00:00:00Z",
                         "id": "acme-2026-10",
-                        "link": "https://acme.example/?utm_source=3x-ui",
+                        "link": "https://acme.example/?utm_source=EasyXray",
                         "logo": "/sponsors/logo/acme.png",
                         "name": "Acme VPS",
                         "slots": [
@@ -5119,13 +5119,13 @@
         }
       }
     },
-    "/panel/api/inbounds/list": {
+    "/easyxray/api/v1/inbounds/list": {
       "get": {
         "tags": [
           "Inbounds"
         ],
         "summary": "List every inbound owned by the authenticated user, including each inbound’s clientStats traffic counters. settings, streamSettings, and sniffing are returned as nested JSON objects (no escaped strings); legacy callers that send them back as JSON-encoded strings are still accepted on write.",
-        "operationId": "get_panel_api_inbounds_list",
+        "operationId": "get_easyxray_api_v1_inbounds_list",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -5207,13 +5207,13 @@
         }
       }
     },
-    "/panel/api/inbounds/list/slim": {
+    "/easyxray/api/v1/inbounds/list/slim": {
       "get": {
         "tags": [
           "Inbounds"
         ],
         "summary": "Same shape as /list but with settings.clients[] stripped down to {email, enable, comment} and ClientStats not enriched with UUID/SubId. Use this for list pages; fetch /get/:id when you need the full per-client payload (uuid, password, flow, ...).",
-        "operationId": "get_panel_api_inbounds_list_slim",
+        "operationId": "get_easyxray_api_v1_inbounds_list_slim",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -5256,13 +5256,13 @@
         }
       }
     },
-    "/panel/api/inbounds/options": {
+    "/easyxray/api/v1/inbounds/options": {
       "get": {
         "tags": [
           "Inbounds"
         ],
         "summary": "Lightweight picker projection of the authenticated user’s inbounds. Returns id, remark, tag, protocol, port, a server-computed tlsFlowCapable flag (true for VLESS on TCP with tls or reality, or on XHTTP with VLESS encryption / vlessenc enabled), and ssMethod (the Shadowsocks cipher, empty for non-Shadowsocks inbounds — used by the client UI to generate a valid Shadowsocks 2022 PSK). Use this for dropdowns and attach pickers — it skips settings, streamSettings, and clientStats so the payload stays small even on panels with thousands of clients.",
-        "operationId": "get_panel_api_inbounds_options",
+        "operationId": "get_easyxray_api_v1_inbounds_options",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -5319,13 +5319,13 @@
         }
       }
     },
-    "/panel/api/inbounds/allLinks": {
+    "/easyxray/api/v1/inbounds/allLinks": {
       "get": {
         "tags": [
           "Inbounds"
         ],
         "summary": "Return every protocol URL (vless://, vmess://, trojan://, ss://, hysteria://, mtproto) across all inbounds and all of their clients. Links are rendered through the subscription engine, so the configured remark template (name-only display part) is applied per client — the same output the client info/QR pages use. Protocols without a URL form (socks, http, mixed, wireguard, dokodemo, tunnel) contribute nothing. Used by the panel’s \"Export all inbound links\" action.",
-        "operationId": "get_panel_api_inbounds_allLinks",
+        "operationId": "get_easyxray_api_v1_inbounds_allLinks",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -5362,13 +5362,13 @@
         }
       }
     },
-    "/panel/api/inbounds/get/{id}": {
+    "/easyxray/api/v1/inbounds/get/{id}": {
       "get": {
         "tags": [
           "Inbounds"
         ],
         "summary": "Fetch a single inbound by numeric ID.",
-        "operationId": "get_panel_api_inbounds_get_id",
+        "operationId": "get_easyxray_api_v1_inbounds_get_id",
         "parameters": [
           {
             "name": "id",
@@ -5403,13 +5403,13 @@
         }
       }
     },
-    "/panel/api/inbounds/add": {
+    "/easyxray/api/v1/inbounds/add": {
       "post": {
         "tags": [
           "Inbounds"
         ],
         "summary": "Create a new inbound. Send the full inbound payload (protocol, port, settings, streamSettings, sniffing, remark, expiryTime, total, enable). settings, streamSettings, and sniffing may be sent as nested JSON objects (preferred) or as JSON-encoded strings (legacy).",
-        "operationId": "post_panel_api_inbounds_add",
+        "operationId": "post_easyxray_api_v1_inbounds_add",
         "requestBody": {
           "required": true,
           "content": {
@@ -5499,13 +5499,13 @@
         }
       }
     },
-    "/panel/api/inbounds/del/{id}": {
+    "/easyxray/api/v1/inbounds/del/{id}": {
       "post": {
         "tags": [
           "Inbounds"
         ],
         "summary": "Delete an inbound by ID. Also removes its associated client stats rows.",
-        "operationId": "post_panel_api_inbounds_del_id",
+        "operationId": "post_easyxray_api_v1_inbounds_del_id",
         "parameters": [
           {
             "name": "id",
@@ -5540,13 +5540,13 @@
         }
       }
     },
-    "/panel/api/inbounds/bulkDel": {
+    "/easyxray/api/v1/inbounds/bulkDel": {
       "post": {
         "tags": [
           "Inbounds"
         ],
         "summary": "Delete many inbounds in one call. Processes the list sequentially; failures are reported per id and the rest still proceed. Restarts xray at most once.",
-        "operationId": "post_panel_api_inbounds_bulkDel",
+        "operationId": "post_easyxray_api_v1_inbounds_bulkDel",
         "requestBody": {
           "required": true,
           "content": {
@@ -5599,13 +5599,13 @@
         }
       }
     },
-    "/panel/api/inbounds/update/{id}": {
+    "/easyxray/api/v1/inbounds/update/{id}": {
       "post": {
         "tags": [
           "Inbounds"
         ],
-        "summary": "Replace an inbound’s configuration. Body shape mirrors /add, but the inbound keeps its stored client list and enable flag: settings.clients and enable in the body are ignored. Manage clients through the /panel/api/clients endpoints and toggle the inbound with /setEnable.",
-        "operationId": "post_panel_api_inbounds_update_id",
+        "summary": "Replace an inbound’s configuration. Body shape mirrors /add, but the inbound keeps its stored client list and enable flag: settings.clients and enable in the body are ignored. Manage clients through the /easyxray/api/v1/clients endpoints and toggle the inbound with /setEnable.",
+        "operationId": "post_easyxray_api_v1_inbounds_update_id",
         "parameters": [
           {
             "name": "id",
@@ -5684,13 +5684,13 @@
         }
       }
     },
-    "/panel/api/inbounds/setEnable/{id}": {
+    "/easyxray/api/v1/inbounds/setEnable/{id}": {
       "post": {
         "tags": [
           "Inbounds"
         ],
         "summary": "Toggle only the enable flag without serialising the whole settings JSON. Recommended for UI switches on large inbounds.",
-        "operationId": "post_panel_api_inbounds_setEnable_id",
+        "operationId": "post_easyxray_api_v1_inbounds_setEnable_id",
         "parameters": [
           {
             "name": "id",
@@ -5738,13 +5738,13 @@
         }
       }
     },
-    "/panel/api/inbounds/{id}/subSortIndex": {
+    "/easyxray/api/v1/inbounds/{id}/subSortIndex": {
       "post": {
         "tags": [
           "Inbounds"
         ],
         "summary": "Set only the subscription sort order. Reads the stored inbound, so a reorder cannot carry a stale client list over a concurrent edit.",
-        "operationId": "post_panel_api_inbounds_id_subSortIndex",
+        "operationId": "post_easyxray_api_v1_inbounds_id_subSortIndex",
         "parameters": [
           {
             "name": "id",
@@ -5792,13 +5792,13 @@
         }
       }
     },
-    "/panel/api/inbounds/{id}/resetTraffic": {
+    "/easyxray/api/v1/inbounds/{id}/resetTraffic": {
       "post": {
         "tags": [
           "Inbounds"
         ],
         "summary": "Zero out upload + download counters for a single inbound. Does not touch per-client counters.",
-        "operationId": "post_panel_api_inbounds_id_resetTraffic",
+        "operationId": "post_easyxray_api_v1_inbounds_id_resetTraffic",
         "parameters": [
           {
             "name": "id",
@@ -5833,13 +5833,13 @@
         }
       }
     },
-    "/panel/api/inbounds/{id}/delAllClients": {
+    "/easyxray/api/v1/inbounds/{id}/delAllClients": {
       "post": {
         "tags": [
           "Inbounds"
         ],
         "summary": "Remove every client attached to a single inbound while keeping the inbound itself. Collects emails from settings.clients[] and feeds them into the optimized bulk-delete path (runtime user removal + traffic-row cleanup + SyncInbound). Destructive and cannot be undone.",
-        "operationId": "post_panel_api_inbounds_id_delAllClients",
+        "operationId": "post_easyxray_api_v1_inbounds_id_delAllClients",
         "parameters": [
           {
             "name": "id",
@@ -5880,13 +5880,13 @@
         }
       }
     },
-    "/panel/api/inbounds/resetAllTraffics": {
+    "/easyxray/api/v1/inbounds/resetAllTraffics": {
       "post": {
         "tags": [
           "Inbounds"
         ],
         "summary": "Reset upload + download counters on every inbound. Destructive — accounting history is lost.",
-        "operationId": "post_panel_api_inbounds_resetAllTraffics",
+        "operationId": "post_easyxray_api_v1_inbounds_resetAllTraffics",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -5910,13 +5910,13 @@
         }
       }
     },
-    "/panel/api/inbounds/import": {
+    "/easyxray/api/v1/inbounds/import": {
       "post": {
         "tags": [
           "Inbounds"
         ],
         "summary": "Bulk-import an inbound from a JSON blob (e.g. one exported via the UI). The body uses form encoding with a single \"data\" field.",
-        "operationId": "post_panel_api_inbounds_import",
+        "operationId": "post_easyxray_api_v1_inbounds_import",
         "requestBody": {
           "required": true,
           "content": {
@@ -5959,13 +5959,13 @@
         }
       }
     },
-    "/panel/api/inbounds/pushClientTraffics": {
+    "/easyxray/api/v1/inbounds/pushClientTraffics": {
       "post": {
         "tags": [
           "Inbounds"
         ],
         "summary": "Receive a master panel's aggregated per-client usage, keyed by the master's GUID. Stored in a side table used only for the UI display overlay and local quota enforcement — never folded into the local counters that masters poll, so delta accounting stays intact. Called panel-to-panel by the node traffic sync job.",
-        "operationId": "post_panel_api_inbounds_pushClientTraffics",
+        "operationId": "post_easyxray_api_v1_inbounds_pushClientTraffics",
         "requestBody": {
           "required": true,
           "content": {
@@ -6029,13 +6029,13 @@
         }
       }
     },
-    "/panel/api/inbounds/{id}/fallbacks": {
+    "/easyxray/api/v1/inbounds/{id}/fallbacks": {
       "get": {
         "tags": [
           "Inbounds"
         ],
         "summary": "List the fallback rules attached to a master VLESS/Trojan TCP-TLS inbound. Each rule links one child inbound (the dest) to optional SNI/ALPN/path/dest/xver match criteria. When dest is empty the child inbound's listen+port is used.",
-        "operationId": "get_panel_api_inbounds_id_fallbacks",
+        "operationId": "get_easyxray_api_v1_inbounds_id_fallbacks",
         "parameters": [
           {
             "name": "id",
@@ -6090,7 +6090,7 @@
           "Inbounds"
         ],
         "summary": "Replace the entire fallback list for a master inbound. Body is JSON. Triggers an Xray restart.",
-        "operationId": "post_panel_api_inbounds_id_fallbacks",
+        "operationId": "post_easyxray_api_v1_inbounds_id_fallbacks",
         "parameters": [
           {
             "name": "id",
@@ -6165,13 +6165,13 @@
         }
       }
     },
-    "/panel/api/openapi.json": {
+    "/easyxray/api/v1/openapi.json": {
       "get": {
         "tags": [
           "Server"
         ],
-        "summary": "Serve this API description as an OpenAPI 3 document — the same file that powers the API Docs page. Requires a session or Bearer token like the rest of /panel/api. Useful for generating clients or importing into API tooling.",
-        "operationId": "get_panel_api_openapi_json",
+        "summary": "Serve this API description as an OpenAPI 3 document — the same file that powers the API Docs page. Requires a session or Bearer token like the rest of /easyxray/api/v1. Useful for generating clients or importing into API tooling.",
+        "operationId": "get_easyxray_api_v1_openapi_json",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6195,13 +6195,13 @@
         }
       }
     },
-    "/panel/api/server/status": {
+    "/easyxray/api/v1/server/status": {
       "get": {
         "tags": [
           "Server"
         ],
         "summary": "Real-time machine snapshot: CPU, memory, swap, disk, network IO, load averages, open connections, Xray state. Cached and refreshed every 2 seconds in the background.",
-        "operationId": "get_panel_api_server_status",
+        "operationId": "get_easyxray_api_v1_server_status",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6257,13 +6257,13 @@
         }
       }
     },
-    "/panel/api/server/fail2banStatus": {
+    "/easyxray/api/v1/server/fail2banStatus": {
       "get": {
         "tags": [
           "Server"
         ],
         "summary": "Reports whether per-client IP limits can be enforced on this host. The panel uses it to gate the \"IP Limit\" field, since enforcement depends on Fail2ban being installed.",
-        "operationId": "get_panel_api_server_fail2banStatus",
+        "operationId": "get_easyxray_api_v1_server_fail2banStatus",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6296,13 +6296,13 @@
         }
       }
     },
-    "/panel/api/server/cpuHistory/{bucket}": {
+    "/easyxray/api/v1/server/cpuHistory/{bucket}": {
       "get": {
         "tags": [
           "Server"
         ],
         "summary": "Legacy: aggregated CPU history. Use /history/cpu/:bucket instead — same data with a uniform {t, v} shape.",
-        "operationId": "get_panel_api_server_cpuHistory_bucket",
+        "operationId": "get_easyxray_api_v1_server_cpuHistory_bucket",
         "parameters": [
           {
             "name": "bucket",
@@ -6337,13 +6337,13 @@
         }
       }
     },
-    "/panel/api/server/history/{metric}/{bucket}": {
+    "/easyxray/api/v1/server/history/{metric}/{bucket}": {
       "get": {
         "tags": [
           "Server"
         ],
         "summary": "Aggregated time-series for one metric. Returns an array of {t, v} samples covering the last ~6 hours.",
-        "operationId": "get_panel_api_server_history_metric_bucket",
+        "operationId": "get_easyxray_api_v1_server_history_metric_bucket",
         "parameters": [
           {
             "name": "metric",
@@ -6400,13 +6400,13 @@
         }
       }
     },
-    "/panel/api/server/xrayMetricsState": {
+    "/easyxray/api/v1/server/xrayMetricsState": {
       "get": {
         "tags": [
           "Server"
         ],
         "summary": "Xray runtime metrics state — whether the xray config has a `metrics` block, which expvar keys are flowing, and the current snapshot values for each. Returns an empty state when metrics are not configured.",
-        "operationId": "get_panel_api_server_xrayMetricsState",
+        "operationId": "get_easyxray_api_v1_server_xrayMetricsState",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6430,13 +6430,13 @@
         }
       }
     },
-    "/panel/api/server/xrayMetricsHistory/{metric}/{bucket}": {
+    "/easyxray/api/v1/server/xrayMetricsHistory/{metric}/{bucket}": {
       "get": {
         "tags": [
           "Server"
         ],
         "summary": "Time-series history for one Xray runtime metric over the last ~6 hours. Same {t, v} shape as /history/:metric/:bucket.",
-        "operationId": "get_panel_api_server_xrayMetricsHistory_metric_bucket",
+        "operationId": "get_easyxray_api_v1_server_xrayMetricsHistory_metric_bucket",
         "parameters": [
           {
             "name": "metric",
@@ -6480,13 +6480,13 @@
         }
       }
     },
-    "/panel/api/server/xrayObservatory": {
+    "/easyxray/api/v1/server/xrayObservatory": {
       "get": {
         "tags": [
           "Server"
         ],
         "summary": "Latest snapshot from the Xray observatory — per-outbound latency, health status, and last-probe time. Only populated when the Xray config has an observatory configured.",
-        "operationId": "get_panel_api_server_xrayObservatory",
+        "operationId": "get_easyxray_api_v1_server_xrayObservatory",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6510,13 +6510,13 @@
         }
       }
     },
-    "/panel/api/server/xrayObservatoryHistory/{tag}/{bucket}": {
+    "/easyxray/api/v1/server/xrayObservatoryHistory/{tag}/{bucket}": {
       "get": {
         "tags": [
           "Server"
         ],
         "summary": "Time-series of observatory probe results for one outbound tag. Same {t, v} shape as the other history endpoints.",
-        "operationId": "get_panel_api_server_xrayObservatoryHistory_tag_bucket",
+        "operationId": "get_easyxray_api_v1_server_xrayObservatoryHistory_tag_bucket",
         "parameters": [
           {
             "name": "tag",
@@ -6560,13 +6560,13 @@
         }
       }
     },
-    "/panel/api/server/getXrayVersion": {
+    "/easyxray/api/v1/server/getXrayVersion": {
       "get": {
         "tags": [
           "Server"
         ],
         "summary": "List Xray binary versions available for install on this host.",
-        "operationId": "get_panel_api_server_getXrayVersion",
+        "operationId": "get_easyxray_api_v1_server_getXrayVersion",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6598,13 +6598,13 @@
         }
       }
     },
-    "/panel/api/server/getPanelUpdateInfo": {
+    "/easyxray/api/v1/server/getPanelUpdateInfo": {
       "get": {
         "tags": [
           "Server"
         ],
-        "summary": "Check whether a newer 3x-ui release is available on GitHub.",
-        "operationId": "get_panel_api_server_getPanelUpdateInfo",
+        "summary": "Check whether a newer EasyXray release is available on GitHub.",
+        "operationId": "get_easyxray_api_v1_server_getPanelUpdateInfo",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6628,13 +6628,13 @@
         }
       }
     },
-    "/panel/api/server/getUpdateStatus": {
+    "/easyxray/api/v1/server/getUpdateStatus": {
       "get": {
         "tags": [
           "Server"
         ],
         "summary": "Report the outcome of the most recently launched panel self-update (see POST updatePanel). Compare the returned runId against the one updatePanel returned to tell this run apart from a stale result.",
-        "operationId": "get_panel_api_server_getUpdateStatus",
+        "operationId": "get_easyxray_api_v1_server_getUpdateStatus",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6669,13 +6669,13 @@
         }
       }
     },
-    "/panel/api/server/getConfigJson": {
+    "/easyxray/api/v1/server/getConfigJson": {
       "get": {
         "tags": [
           "Server"
         ],
         "summary": "Return the assembled Xray config that’s currently running on this host.",
-        "operationId": "get_panel_api_server_getConfigJson",
+        "operationId": "get_easyxray_api_v1_server_getConfigJson",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6699,13 +6699,13 @@
         }
       }
     },
-    "/panel/api/server/getDb": {
+    "/easyxray/api/v1/server/getDb": {
       "get": {
         "tags": [
           "Server"
         ],
         "summary": "Stream a full database backup as an attachment: the SQLite .db file on SQLite panels, or a pg_dump custom-format archive (.dump) on PostgreSQL panels. Use as a manual backup.",
-        "operationId": "get_panel_api_server_getDb",
+        "operationId": "get_easyxray_api_v1_server_getDb",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6729,13 +6729,13 @@
         }
       }
     },
-    "/panel/api/server/getMigration": {
+    "/easyxray/api/v1/server/getMigration": {
       "get": {
         "tags": [
           "Server"
         ],
         "summary": "Stream a cross-engine migration file as an attachment: a .dump (SQL text) on SQLite, or a .db SQLite database built from the live data on PostgreSQL.",
-        "operationId": "get_panel_api_server_getMigration",
+        "operationId": "get_easyxray_api_v1_server_getMigration",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6759,13 +6759,13 @@
         }
       }
     },
-    "/panel/api/server/getNewUUID": {
+    "/easyxray/api/v1/server/getNewUUID": {
       "get": {
         "tags": [
           "Server"
         ],
         "summary": "Generate a fresh UUID v4. Convenience helper for client IDs.",
-        "operationId": "get_panel_api_server_getNewUUID",
+        "operationId": "get_easyxray_api_v1_server_getNewUUID",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6797,13 +6797,13 @@
         }
       }
     },
-    "/panel/api/server/getWebCertFiles": {
+    "/easyxray/api/v1/server/getWebCertFiles": {
       "get": {
         "tags": [
           "Server"
         ],
         "summary": "Return this panel's own web TLS certificate and key file paths. The central panel calls it on a node (via the node API token) so \"Set Cert from Panel\" fills a node-assigned inbound with paths that exist on the node.",
-        "operationId": "get_panel_api_server_getWebCertFiles",
+        "operationId": "get_easyxray_api_v1_server_getWebCertFiles",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6834,13 +6834,13 @@
         }
       }
     },
-    "/panel/api/server/descendants": {
+    "/easyxray/api/v1/server/descendants": {
       "get": {
         "tags": [
           "Server"
         ],
         "summary": "Read-only summaries (guid, parentGuid, name, address, status, versions) of the nodes this panel manages. A parent panel calls it on a node (via the node API token) to surface transitive sub-nodes in a chained topology. Counts are computed by the parent, not returned here.",
-        "operationId": "get_panel_api_server_descendants",
+        "operationId": "get_easyxray_api_v1_server_descendants",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6876,13 +6876,13 @@
         }
       }
     },
-    "/panel/api/server/getNewX25519Cert": {
+    "/easyxray/api/v1/server/getNewX25519Cert": {
       "get": {
         "tags": [
           "Server"
         ],
         "summary": "Generate a new X25519 keypair for Reality.",
-        "operationId": "get_panel_api_server_getNewX25519Cert",
+        "operationId": "get_easyxray_api_v1_server_getNewX25519Cert",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6913,13 +6913,13 @@
         }
       }
     },
-    "/panel/api/server/getNewmldsa65": {
+    "/easyxray/api/v1/server/getNewmldsa65": {
       "get": {
         "tags": [
           "Server"
         ],
         "summary": "Generate a new ML-DSA-65 keypair. Returns {seed, verify}.",
-        "operationId": "get_panel_api_server_getNewmldsa65",
+        "operationId": "get_easyxray_api_v1_server_getNewmldsa65",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6952,13 +6952,13 @@
         }
       }
     },
-    "/panel/api/server/getNewmlkem768": {
+    "/easyxray/api/v1/server/getNewmlkem768": {
       "get": {
         "tags": [
           "Server"
         ],
         "summary": "Generate a new ML-KEM-768 keypair. Returns {seed, client}.",
-        "operationId": "get_panel_api_server_getNewmlkem768",
+        "operationId": "get_easyxray_api_v1_server_getNewmlkem768",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6991,13 +6991,13 @@
         }
       }
     },
-    "/panel/api/server/getNewVlessEnc": {
+    "/easyxray/api/v1/server/getNewVlessEnc": {
       "get": {
         "tags": [
           "Server"
         ],
         "summary": "Generate VLESS encryption auth options. Returns an auths array each with id, label, encryption, and decryption fields.",
-        "operationId": "get_panel_api_server_getNewVlessEnc",
+        "operationId": "get_easyxray_api_v1_server_getNewVlessEnc",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -7034,13 +7034,13 @@
         }
       }
     },
-    "/panel/api/server/stopXrayService": {
+    "/easyxray/api/v1/server/stopXrayService": {
       "post": {
         "tags": [
           "Server"
         ],
         "summary": "Stop the Xray binary. All proxies go offline immediately.",
-        "operationId": "post_panel_api_server_stopXrayService",
+        "operationId": "post_easyxray_api_v1_server_stopXrayService",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -7086,13 +7086,13 @@
         }
       }
     },
-    "/panel/api/server/restartXrayService": {
+    "/easyxray/api/v1/server/restartXrayService": {
       "post": {
         "tags": [
           "Server"
         ],
         "summary": "Reload Xray with the current config. Typically required after structural inbound or routing changes.",
-        "operationId": "post_panel_api_server_restartXrayService",
+        "operationId": "post_easyxray_api_v1_server_restartXrayService",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -7138,13 +7138,13 @@
         }
       }
     },
-    "/panel/api/server/installXray/{version}": {
+    "/easyxray/api/v1/server/installXray/{version}": {
       "post": {
         "tags": [
           "Server"
         ],
         "summary": "Download and install the specified Xray version. Pass \"latest\" for the newest release.",
-        "operationId": "post_panel_api_server_installXray_version",
+        "operationId": "post_easyxray_api_v1_server_installXray_version",
         "parameters": [
           {
             "name": "version",
@@ -7179,13 +7179,13 @@
         }
       }
     },
-    "/panel/api/server/updatePanel": {
+    "/easyxray/api/v1/server/updatePanel": {
       "post": {
         "tags": [
           "Server"
         ],
         "summary": "Self-update the panel to the latest version. The server restarts on success.",
-        "operationId": "post_panel_api_server_updatePanel",
+        "operationId": "post_easyxray_api_v1_server_updatePanel",
         "requestBody": {
           "required": false,
           "content": {
@@ -7231,13 +7231,13 @@
         }
       }
     },
-    "/panel/api/server/setUpdateChannel": {
+    "/easyxray/api/v1/server/setUpdateChannel": {
       "post": {
         "tags": [
           "Server"
         ],
         "summary": "Toggle the panel update channel between stable and the rolling per-commit dev release. Only effective on dev builds.",
-        "operationId": "post_panel_api_server_setUpdateChannel",
+        "operationId": "post_easyxray_api_v1_server_setUpdateChannel",
         "requestBody": {
           "required": true,
           "content": {
@@ -7280,13 +7280,13 @@
         }
       }
     },
-    "/panel/api/server/updateGeofile": {
+    "/easyxray/api/v1/server/updateGeofile": {
       "post": {
         "tags": [
           "Server"
         ],
         "summary": "Refresh the default GeoIP / GeoSite data files. Use the /:fileName variant to update one file.",
-        "operationId": "post_panel_api_server_updateGeofile",
+        "operationId": "post_easyxray_api_v1_server_updateGeofile",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -7310,13 +7310,13 @@
         }
       }
     },
-    "/panel/api/server/updateGeofile/{fileName}": {
+    "/easyxray/api/v1/server/updateGeofile/{fileName}": {
       "post": {
         "tags": [
           "Server"
         ],
         "summary": "Refresh a single Geo file by filename (e.g. geoip.dat, geosite.dat).",
-        "operationId": "post_panel_api_server_updateGeofile_fileName",
+        "operationId": "post_easyxray_api_v1_server_updateGeofile_fileName",
         "parameters": [
           {
             "name": "fileName",
@@ -7351,13 +7351,13 @@
         }
       }
     },
-    "/panel/api/server/logs/{count}": {
+    "/easyxray/api/v1/server/logs/{count}": {
       "post": {
         "tags": [
           "Server"
         ],
         "summary": "Return the last N lines of the panel’s own log.",
-        "operationId": "post_panel_api_server_logs_count",
+        "operationId": "post_easyxray_api_v1_server_logs_count",
         "parameters": [
           {
             "name": "count",
@@ -7425,13 +7425,13 @@
         }
       }
     },
-    "/panel/api/server/xraylogs/{count}": {
+    "/easyxray/api/v1/server/xraylogs/{count}": {
       "post": {
         "tags": [
           "Server"
         ],
         "summary": "Return the last N lines of the Xray process log.",
-        "operationId": "post_panel_api_server_xraylogs_count",
+        "operationId": "post_easyxray_api_v1_server_xraylogs_count",
         "parameters": [
           {
             "name": "count",
@@ -7514,13 +7514,13 @@
         }
       }
     },
-    "/panel/api/server/amneziawglogs/{count}": {
+    "/easyxray/api/v1/server/amneziawglogs/{count}": {
       "post": {
         "tags": [
           "Server"
         ],
         "summary": "Return live AmneziaWG peer activity (handshake, endpoint, transfer) plus the panel’s own AmneziaWG event lines.",
-        "operationId": "post_panel_api_server_amneziawglogs_count",
+        "operationId": "post_easyxray_api_v1_server_amneziawglogs_count",
         "parameters": [
           {
             "name": "count",
@@ -7596,13 +7596,13 @@
         }
       }
     },
-    "/panel/api/server/importDB": {
+    "/easyxray/api/v1/server/importDB": {
       "post": {
         "tags": [
           "Server"
         ],
         "summary": "Restore the panel DB from an uploaded backup (multipart form, field name \"db\"). SQLite panels accept a SQLite database (.db) or a SQLite migration dump (.dump); PostgreSQL panels accept a pg_dump archive (.dump), a SQLite database (.db), or a SQLite migration dump. The panel restarts after restore. Destructive.",
-        "operationId": "post_panel_api_server_importDB",
+        "operationId": "post_easyxray_api_v1_server_importDB",
         "requestBody": {
           "required": true,
           "content": {
@@ -7651,13 +7651,13 @@
         }
       }
     },
-    "/panel/api/server/getNewEchCert": {
+    "/easyxray/api/v1/server/getNewEchCert": {
       "post": {
         "tags": [
           "Server"
         ],
         "summary": "Generate a new ECH (Encrypted Client Hello) keypair and config list for the given SNI.",
-        "operationId": "post_panel_api_server_getNewEchCert",
+        "operationId": "post_easyxray_api_v1_server_getNewEchCert",
         "requestBody": {
           "required": true,
           "content": {
@@ -7700,13 +7700,13 @@
         }
       }
     },
-    "/panel/api/server/getCertHash": {
+    "/easyxray/api/v1/server/getCertHash": {
       "post": {
         "tags": [
           "Server"
         ],
         "summary": "Compute the hex SHA-256 of a certificate (DER) for pinning (pinnedPeerCertSha256). Provide either a server file path or inline PEM/DER content.",
-        "operationId": "post_panel_api_server_getCertHash",
+        "operationId": "post_easyxray_api_v1_server_getCertHash",
         "requestBody": {
           "required": true,
           "content": {
@@ -7781,13 +7781,13 @@
         }
       }
     },
-    "/panel/api/server/getRemoteCertHash": {
+    "/easyxray/api/v1/server/getRemoteCertHash": {
       "post": {
         "tags": [
           "Server"
         ],
         "summary": "Run `xray tls ping` against a remote server and return its live leaf-certificate SHA-256 hash(es) for pinning (pinnedPeerCertSha256).",
-        "operationId": "post_panel_api_server_getRemoteCertHash",
+        "operationId": "post_easyxray_api_v1_server_getRemoteCertHash",
         "requestBody": {
           "required": true,
           "content": {
@@ -7840,13 +7840,13 @@
         }
       }
     },
-    "/panel/api/server/scanRealityTarget": {
+    "/easyxray/api/v1/server/scanRealityTarget": {
       "post": {
         "tags": [
           "Server"
         ],
         "summary": "Run a live TLS 1.3 probe against a candidate REALITY target and return a feasibility verdict (TLS 1.3 + h2 + X25519 + trusted certificate) plus the certificate SAN DNS names. A target on a private/loopback address is reported with privateTarget=true and probed only when allowPrivate is set.",
-        "operationId": "post_panel_api_server_scanRealityTarget",
+        "operationId": "post_easyxray_api_v1_server_scanRealityTarget",
         "requestBody": {
           "required": true,
           "content": {
@@ -7931,13 +7931,13 @@
         }
       }
     },
-    "/panel/api/server/scanRealityTargets": {
+    "/easyxray/api/v1/server/scanRealityTargets": {
       "post": {
         "tags": [
           "Server"
         ],
         "summary": "Probe/discover REALITY targets and return each verdict ranked by feasibility then latency. Each comma-separated token may be a domain (validated with SNI), a bare IP, or a CIDR range (discovered without SNI by reading the certificate domain). When empty, the realityScanCandidates setting is probed (the built-in seed list if that setting is empty).",
-        "operationId": "post_panel_api_server_scanRealityTargets",
+        "operationId": "post_easyxray_api_v1_server_scanRealityTargets",
         "requestBody": {
           "required": false,
           "content": {
@@ -8012,13 +8012,13 @@
         }
       }
     },
-    "/panel/api/server/clientIps": {
+    "/easyxray/api/v1/server/clientIps": {
       "get": {
         "tags": [
           "Server"
         ],
         "summary": "Fetch the fully aggregated inbound_client_ips database table. Used by nodes to sync recently active IPs across the cluster.",
-        "operationId": "get_panel_api_server_clientIps",
+        "operationId": "get_easyxray_api_v1_server_clientIps",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -8061,7 +8061,7 @@
           "Server"
         ],
         "summary": "Submit a list of recently active IP timestamps. The panel merges them with the existing database to maintain a unified global IP-limit view.",
-        "operationId": "post_panel_api_server_clientIps",
+        "operationId": "post_easyxray_api_v1_server_clientIps",
         "requestBody": {
           "required": true,
           "content": {
@@ -8126,13 +8126,13 @@
         }
       }
     },
-    "/panel/api/clients/list": {
+    "/easyxray/api/v1/clients/list": {
       "get": {
         "tags": [
           "Clients"
         ],
         "summary": "List every client with its attached inbound IDs and traffic record. The reverse field, if set, is returned as a nested JSON object (legacy JSON-encoded-string form is still accepted on write).",
-        "operationId": "get_panel_api_clients_list",
+        "operationId": "get_easyxray_api_v1_clients_list",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -8180,13 +8180,13 @@
         }
       }
     },
-    "/panel/api/clients/list/paged": {
+    "/easyxray/api/v1/clients/list/paged": {
       "get": {
         "tags": [
           "Clients"
         ],
         "summary": "Filter, sort, and paginate clients on the server. Each item is a slim row (no uuid/password/auth/flow/security/reverse/tgId) so the clients page can ship 25-ish rows in a few KB instead of the full table. The response also includes a summary computed across the full DB row set so dashboard counters stay stable as the user paginates or filters: the *Count fields are exact, while the email arrays beside them stop at 200 entries so the payload does not grow with the panel. Page size capped at 200; fetch /get/:email to obtain the full per-client payload for an edit/info modal.",
-        "operationId": "get_panel_api_clients_list_paged",
+        "operationId": "get_easyxray_api_v1_clients_list_paged",
         "parameters": [
           {
             "name": "page",
@@ -8440,13 +8440,13 @@
         }
       }
     },
-    "/panel/api/clients/get/{email}": {
+    "/easyxray/api/v1/clients/get/{email}": {
       "get": {
         "tags": [
           "Clients"
         ],
         "summary": "Fetch one client by email, including the inbound IDs and external config IDs it is attached to.",
-        "operationId": "get_panel_api_clients_get_email",
+        "operationId": "get_easyxray_api_v1_clients_get_email",
         "parameters": [
           {
             "name": "email",
@@ -8481,13 +8481,13 @@
         }
       }
     },
-    "/panel/api/clients/get/tgId/{tgId}": {
+    "/easyxray/api/v1/clients/get/tgId/{tgId}": {
       "get": {
         "tags": [
           "Clients"
         ],
         "summary": "Fetch clients by Telegram user ID. Returns an array since multiple clients can share the same Telegram ID.",
-        "operationId": "get_panel_api_clients_get_tgId_tgId",
+        "operationId": "get_easyxray_api_v1_clients_get_tgId_tgId",
         "parameters": [
           {
             "name": "tgId",
@@ -8522,14 +8522,14 @@
         }
       }
     },
-    "/panel/api/clients/add": {
+    "/easyxray/api/v1/clients/add": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Create a new client and attach it to one or more inbounds in a single call. Body is JSON. Per-protocol secrets are generated server-side when omitted, so callers can send only the universal fields.",
-        "operationId": "post_panel_api_clients_add",
-        "description": "Fields the server fills in when they are omitted — a valid value sent by the caller is never overwritten. Re-adding an email that already exists, with its stored `subId`, reuses the stored `id`, `password`, `auth` and `secret` instead of minting new ones, so the identity stays in sync across its inbounds.\n\n- **VLESS / VMess** — `id`, a fresh UUID\n- **Trojan** — `password`\n- **Shadowsocks** — `password`. On a `2022-blake3-*` inbound a supplied password that does not base64-decode to the key length of the cipher (16 or 32 bytes) is replaced by a generated key and the call still succeeds, so read the client back if you did not let the server pick. Legacy ciphers keep any non-empty password\n- **Hysteria** — `auth`\n- **mtproto** — `secret`, a FakeTLS secret derived from the fronting domain of the inbound, or from `www.cloudflare.com` when it has none\n- **WireGuard** — `privateKey` and `publicKey` when both are blank, or `publicKey` alone when only a `privateKey` was sent, plus `allowedIPs`: one free `/32` taken from the /24 the existing peers of that inbound already sit in, or from `10.0.0.0/24` when it has none\n\nAccepted on the same body but never generated: `preSharedKey` and `keepAlive` (WireGuard), `adTag` (mtproto).\n\nWireGuard is the only one of these that can fail. Allocation widens the search to the containing /16 before giving up with `inbound <id>: wireguard: no free address available in <scope>`, and an `allowedIPs` supplied by the caller is validated instead of allocated: `inbound <id>: wireguard: allowedIPs entry <entry> overlaps <address> used by another client` when its range overlaps an address or prefix a different client of that same inbound holds, or `... used by a client on <inbound>` when the holder sits on another WireGuard or AmneziaWG inbound. Ranges are compared, not strings, so `10.0.0.9/24` collides with `10.0.0.5/32`; a `0.0.0.0/0` or `::/0` default route claims no address. Allocation likewise skips every address inside a prefix another client holds. The same validation runs on POST /panel/api/clients/{email}/attach, where a client that already carries an address brings it along.\n\nAn `inboundIds` entry that names no existing inbound rejects the whole call before anything is written. Past that, the inbounds are applied concurrently and independently: one that fails no longer stops the others, so a `success:false` response can still have created the client on the rest. Every error names the inbound it came from (`inbound 7: <message>`), and several failures are reported together, one per line. `limitHwid` is applied only when every inbound succeeded, so re-run the call after fixing the failure.",
+        "operationId": "post_easyxray_api_v1_clients_add",
+        "description": "Fields the server fills in when they are omitted — a valid value sent by the caller is never overwritten. Re-adding an email that already exists, with its stored `subId`, reuses the stored `id`, `password`, `auth` and `secret` instead of minting new ones, so the identity stays in sync across its inbounds.\n\n- **VLESS / VMess** — `id`, a fresh UUID\n- **Trojan** — `password`\n- **Shadowsocks** — `password`. On a `2022-blake3-*` inbound a supplied password that does not base64-decode to the key length of the cipher (16 or 32 bytes) is replaced by a generated key and the call still succeeds, so read the client back if you did not let the server pick. Legacy ciphers keep any non-empty password\n- **Hysteria** — `auth`\n- **mtproto** — `secret`, a FakeTLS secret derived from the fronting domain of the inbound, or from `www.cloudflare.com` when it has none\n- **WireGuard** — `privateKey` and `publicKey` when both are blank, or `publicKey` alone when only a `privateKey` was sent, plus `allowedIPs`: one free `/32` taken from the /24 the existing peers of that inbound already sit in, or from `10.0.0.0/24` when it has none\n\nAccepted on the same body but never generated: `preSharedKey` and `keepAlive` (WireGuard), `adTag` (mtproto).\n\nWireGuard is the only one of these that can fail. Allocation widens the search to the containing /16 before giving up with `inbound <id>: wireguard: no free address available in <scope>`, and an `allowedIPs` supplied by the caller is validated instead of allocated: `inbound <id>: wireguard: allowedIPs entry <entry> overlaps <address> used by another client` when its range overlaps an address or prefix a different client of that same inbound holds, or `... used by a client on <inbound>` when the holder sits on another WireGuard or AmneziaWG inbound. Ranges are compared, not strings, so `10.0.0.9/24` collides with `10.0.0.5/32`; a `0.0.0.0/0` or `::/0` default route claims no address. Allocation likewise skips every address inside a prefix another client holds. The same validation runs on POST /easyxray/api/v1/clients/{email}/attach, where a client that already carries an address brings it along.\n\nAn `inboundIds` entry that names no existing inbound rejects the whole call before anything is written. Past that, the inbounds are applied concurrently and independently: one that fails no longer stops the others, so a `success:false` response can still have created the client on the rest. Every error names the inbound it came from (`inbound 7: <message>`), and several failures are reported together, one per line. `limitHwid` is applied only when every inbound succeeded, so re-run the call after fixing the failure.",
         "requestBody": {
           "required": true,
           "content": {
@@ -8599,13 +8599,13 @@
         }
       }
     },
-    "/panel/api/clients/renewalPreview": {
+    "/easyxray/api/v1/clients/renewalPreview": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Preview client auto-renewal dates without saving or resetting anything.",
-        "operationId": "post_panel_api_clients_renewalPreview",
+        "operationId": "post_easyxray_api_v1_clients_renewalPreview",
         "description": "Uses the same calendar and catch-up calculation as auto-renew in the panel timezone. resetWeekday is 1 (Monday) to 7 (Sunday), 0 disables weekly mode; it cannot be combined with positive reset or resetDay. Existing resetDay takes precedence over reset. With expiryTime=0, calendar modes suggest a first cutoff but do not activate renewal. Negative expiryTime waits for first-use activation. resetMax and resetCount simulate the existing per-period allowance limit; the preview is informational and does not reserve an allowance or guarantee node availability.",
         "requestBody": {
           "required": true,
@@ -8690,13 +8690,13 @@
         }
       }
     },
-    "/panel/api/clients/update/{email}": {
+    "/easyxray/api/v1/clients/update/{email}": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Update an existing client by email. Changes propagate to every attached inbound. Body is the JSON client payload — supply the full set of fields you want to keep (the server replaces the row, it does not patch).",
-        "operationId": "post_panel_api_clients_update_email",
+        "operationId": "post_easyxray_api_v1_clients_update_email",
         "description": "The inbounds are applied concurrently and independently: one that fails no longer stops the others. Every inbound error names the inbound it came from (`inbound 7: <message>`), and several failures are reported together, one per line. So a `success:false` response can still have applied the edit to the remaining inbounds. The client record is written after the inbounds, so a failure there is reported without an `inbound <id>:` prefix and leaves the inbound edits in place.",
         "parameters": [
           {
@@ -8754,13 +8754,13 @@
         }
       }
     },
-    "/panel/api/clients/del/{email}": {
+    "/easyxray/api/v1/clients/del/{email}": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Delete a client by email. Removes it from every attached inbound and drops its traffic record unless keepTraffic=1 is passed.",
-        "operationId": "post_panel_api_clients_del_email",
+        "operationId": "post_easyxray_api_v1_clients_del_email",
         "description": "The inbounds are applied concurrently and independently: one that fails no longer stops the others. Every inbound error names the inbound it came from (`inbound 7: <message>`), and several failures are reported together, one per line. So a `success:false` response can still have removed the client from the remaining inbounds; the client record is kept in that case, so re-running the call retries exactly the leftovers. The record and traffic rows are dropped after the inbounds, so a failure there is reported without an `inbound <id>:` prefix and leaves the client already removed from every inbound.",
         "parameters": [
           {
@@ -8809,14 +8809,14 @@
         }
       }
     },
-    "/panel/api/clients/{email}/attach": {
+    "/easyxray/api/v1/clients/{email}/attach": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Attach an existing client to one or more additional inbounds. Body is JSON.",
-        "operationId": "post_panel_api_clients_email_attach",
-        "description": "A WireGuard client brings its stored `allowedIPs` into the new inbound instead of being given a fresh address, so the call fails with `inbound <id>: wireguard: allowedIPs entry <entry> overlaps <address> used by another client` when its range overlaps an address or prefix a different client of the target inbound holds. Free the address on that inbound first — see POST /panel/api/clients/add for the full rule. Inbounds are applied independently, so the remaining ones are still attached and a `success:false` response can be partial.",
+        "operationId": "post_easyxray_api_v1_clients_email_attach",
+        "description": "A WireGuard client brings its stored `allowedIPs` into the new inbound instead of being given a fresh address, so the call fails with `inbound <id>: wireguard: allowedIPs entry <entry> overlaps <address> used by another client` when its range overlaps an address or prefix a different client of the target inbound holds. Free the address on that inbound first — see POST /easyxray/api/v1/clients/add for the full rule. Inbounds are applied independently, so the remaining ones are still attached and a `success:false` response can be partial.",
         "parameters": [
           {
             "name": "email",
@@ -8882,13 +8882,13 @@
         }
       }
     },
-    "/panel/api/clients/{email}/detach": {
+    "/easyxray/api/v1/clients/{email}/detach": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Detach a client from one or more inbounds without deleting the client.",
-        "operationId": "post_panel_api_clients_email_detach",
+        "operationId": "post_easyxray_api_v1_clients_email_detach",
         "description": "The inbounds are applied concurrently and independently: one that fails no longer stops the others. Every inbound error names the inbound it came from (`inbound 7: <message>`), and several failures are reported together, one per line. So a `success:false` response can still have detached the remaining inbounds. Detach writes nothing beyond the inbounds, so every error carries the prefix.",
         "parameters": [
           {
@@ -8954,13 +8954,13 @@
         }
       }
     },
-    "/panel/api/clients/{email}/externalLinks": {
+    "/easyxray/api/v1/clients/{email}/externalLinks": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Replace a client's external links and external subscriptions. Sends the full set; the server replaces all rows. Disabled rows stay saved for editing but are not emitted in generated subscriptions. The owning client's disabled or expired state also stops these rows from being emitted on future subscription fetches; credentials already imported by an app remain valid until the external provider revokes them.",
-        "operationId": "post_panel_api_clients_email_externalLinks",
+        "operationId": "post_easyxray_api_v1_clients_email_externalLinks",
         "parameters": [
           {
             "name": "email",
@@ -9039,13 +9039,13 @@
         }
       }
     },
-    "/panel/api/clients/resetAllTraffics": {
+    "/easyxray/api/v1/clients/resetAllTraffics": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Reset the up/down counters for every client globally. Quotas and expiry are not affected. Triggers an Xray restart if any counter actually moved.",
-        "operationId": "post_panel_api_clients_resetAllTraffics",
+        "operationId": "post_easyxray_api_v1_clients_resetAllTraffics",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -9072,13 +9072,13 @@
         }
       }
     },
-    "/panel/api/clients/delDepleted": {
+    "/easyxray/api/v1/clients/delDepleted": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Delete every client whose traffic quota is exhausted (used >= total, when reset is disabled) or whose expiry has passed. Returns the deleted count and triggers an Xray restart when any client was on a running inbound.",
-        "operationId": "post_panel_api_clients_delDepleted",
+        "operationId": "post_easyxray_api_v1_clients_delDepleted",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -9108,13 +9108,13 @@
         }
       }
     },
-    "/panel/api/clients/delOrphans": {
+    "/easyxray/api/v1/clients/delOrphans": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Delete every client that is not attached to any inbound, along with its traffic record, IP log, HWID devices, and external links. Useful for clearing clients left unattached after their inbounds were removed. Returns the deleted count. Cannot be undone.",
-        "operationId": "post_panel_api_clients_delOrphans",
+        "operationId": "post_easyxray_api_v1_clients_delOrphans",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -9144,13 +9144,13 @@
         }
       }
     },
-    "/panel/api/clients/export": {
+    "/easyxray/api/v1/clients/export": {
       "get": {
         "tags": [
           "Clients"
         ],
         "summary": "Return every client as a {client, inboundIds, traffic} array — the shape /import accepts — so the payload round-trips straight back through /import. traffic carries the usage counters (up, down, resetCount, lastOnline, lastSubFetch) and is omitted for a client with no traffic row; the quota itself stays in client.totalGB. Clients with no inbound attachment are included with an empty inboundIds list. The UI shows this in a CodeMirror viewer (copy / download); programmatic callers get the array in obj.",
-        "operationId": "get_panel_api_clients_export",
+        "operationId": "get_easyxray_api_v1_clients_export",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -9200,13 +9200,13 @@
         }
       }
     },
-    "/panel/api/clients/import": {
+    "/easyxray/api/v1/clients/import": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Import clients from a JSON body { \"data\": \"<json>\" }, where data is a string-encoded array produced by /export ([{client, inboundIds, traffic}]). Items with inboundIds are created and attached to those inbounds; items with an empty inboundIds list are restored as unattached client records. An optional traffic object restores the usage counters, only for clients this import creates. Existing emails are never overwritten — they are returned in skipped, and their live counters are left untouched. Triggers a single Xray restart at the end if any target inbound was running; a failure while restoring counters still reports success=false after the clients were created.",
-        "operationId": "post_panel_api_clients_import",
+        "operationId": "post_easyxray_api_v1_clients_import",
         "requestBody": {
           "required": true,
           "content": {
@@ -9255,13 +9255,13 @@
         }
       }
     },
-    "/panel/api/clients/bulkAdjust": {
+    "/easyxray/api/v1/clients/bulkAdjust": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Shift expiry and/or traffic quota for many clients in one call. addDays/addBytes may be negative. Clients with unlimited expiry (expiryTime=0) or unlimited traffic (totalGB=0) are skipped for the corresponding field — bulk extend never converts unlimited to limited. A client that was auto-disabled solely because it was depleted (expired or over quota) is automatically re-enabled — locally and on its node — when the adjustment lifts it out of depletion; a manually-disabled or still-depleted client is left disabled. The optional flow directive sets the XTLS flow on every client: \"none\" clears it, \"xtls-rprx-vision\"/\"xtls-rprx-vision-udp443\" set it where the inbound supports it (omit or \"\" to leave it unchanged). The optional limitHwid sets maximum registered devices (0 = unlimited). The optional adTag sets MTProto Telegram sponsor channel (\"none\" clears). Returns the adjusted count and per-email skip reasons.",
-        "operationId": "post_panel_api_clients_bulkAdjust",
+        "operationId": "post_easyxray_api_v1_clients_bulkAdjust",
         "requestBody": {
           "required": true,
           "content": {
@@ -9318,13 +9318,13 @@
         }
       }
     },
-    "/panel/api/clients/bulkEnable": {
+    "/easyxray/api/v1/clients/bulkEnable": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Enable many clients in one call. Emails are grouped by inbound and applied with a single read-modify-write per inbound; the running Xray (local or remote node) is updated to add each user. Note that enabling a client whose quota is exhausted or whose expiry has passed only flips the flag — the traffic loop will disable it again on the next tick. Returns the changed count and per-email skip reasons.",
-        "operationId": "post_panel_api_clients_bulkEnable",
+        "operationId": "post_easyxray_api_v1_clients_bulkEnable",
         "requestBody": {
           "required": true,
           "content": {
@@ -9376,13 +9376,13 @@
         }
       }
     },
-    "/panel/api/clients/bulkDisable": {
+    "/easyxray/api/v1/clients/bulkDisable": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Disable many clients in one call. Emails are grouped by inbound and applied with a single read-modify-write per inbound; the running Xray (local or remote node) is updated to remove each user. Returns the changed count and per-email skip reasons.",
-        "operationId": "post_panel_api_clients_bulkDisable",
+        "operationId": "post_easyxray_api_v1_clients_bulkDisable",
         "requestBody": {
           "required": true,
           "content": {
@@ -9434,13 +9434,13 @@
         }
       }
     },
-    "/panel/api/clients/bulkDel": {
+    "/easyxray/api/v1/clients/bulkDel": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Delete many clients in one call. The server processes the list sequentially so each delete sees the committed state of the previous one — avoids the race the per-email fan-out had on the panel side. Pass keepTraffic=true to retain the xray_client_traffic rows after deletion.",
-        "operationId": "post_panel_api_clients_bulkDel",
+        "operationId": "post_easyxray_api_v1_clients_bulkDel",
         "requestBody": {
           "required": true,
           "content": {
@@ -9493,13 +9493,13 @@
         }
       }
     },
-    "/panel/api/clients/bulkCreate": {
+    "/easyxray/api/v1/clients/bulkCreate": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Create many clients in one call. Body is a JSON array of {client, inboundIds} payloads — the same shape /add accepts. Items are processed sequentially; per-email skip reasons are returned for items that fail (e.g., duplicate email). Triggers a single Xray restart at the end if any inbound was running.",
-        "operationId": "post_panel_api_clients_bulkCreate",
+        "operationId": "post_easyxray_api_v1_clients_bulkCreate",
         "requestBody": {
           "required": true,
           "content": {
@@ -9572,13 +9572,13 @@
         }
       }
     },
-    "/panel/api/clients/groups/bulkAdd": {
+    "/easyxray/api/v1/clients/groups/bulkAdd": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Add many clients to a group in one call. Updates clients.group_name and patches the matching client entry inside every owning inbound's settings JSON in a single transaction. If the group name does not yet exist (in client_groups or as a derived label), it is auto-created as a persistent group. To clear the group label, use /groups/bulkRemove instead.",
-        "operationId": "post_panel_api_clients_groups_bulkAdd",
+        "operationId": "post_easyxray_api_v1_clients_groups_bulkAdd",
         "requestBody": {
           "required": true,
           "content": {
@@ -9625,13 +9625,13 @@
         }
       }
     },
-    "/panel/api/clients/groups/bulkRemove": {
+    "/easyxray/api/v1/clients/groups/bulkRemove": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Clear the group label on many clients in one call. Inverse of /groups/bulkAdd. Clients themselves are kept — only the group label is cleared from clients.group_name and from each owning inbound's settings JSON. Groups become empty if all their members are removed.",
-        "operationId": "post_panel_api_clients_groups_bulkRemove",
+        "operationId": "post_easyxray_api_v1_clients_groups_bulkRemove",
         "requestBody": {
           "required": true,
           "content": {
@@ -9677,13 +9677,13 @@
         }
       }
     },
-    "/panel/api/clients/bulkAttach": {
+    "/easyxray/api/v1/clients/bulkAttach": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Attach many existing clients to many inbounds in one call. Each client keeps its identity (email/UUID/password/subId) and a shared traffic row; all clients are added to a target inbound in a single AddInboundClient call. Clients already present on a target are reported under skipped. Returns per-email attached/skipped/errors lists and triggers a single Xray restart if any target inbound was running.",
-        "operationId": "post_panel_api_clients_bulkAttach",
+        "operationId": "post_easyxray_api_v1_clients_bulkAttach",
         "requestBody": {
           "required": true,
           "content": {
@@ -9760,13 +9760,13 @@
         }
       }
     },
-    "/panel/api/clients/bulkDetach": {
+    "/easyxray/api/v1/clients/bulkDetach": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Mirror of bulkAttach: detach many existing clients from many inbounds in one call. For each email, intersects the client's current inbounds with the requested set and detaches from those only; (email, inbound) pairs where the client is not currently attached are silently no-ops. Emails not attached to any of the requested inbounds are reported under skipped. Client records are kept even if they become orphaned — use bulkDel for full removal. Returns per-email detached/skipped/errors lists and triggers a single Xray restart if any target inbound was running.",
-        "operationId": "post_panel_api_clients_bulkDetach",
+        "operationId": "post_easyxray_api_v1_clients_bulkDetach",
         "requestBody": {
           "required": true,
           "content": {
@@ -9841,13 +9841,13 @@
         }
       }
     },
-    "/panel/api/clients/bulkResetTraffic": {
+    "/easyxray/api/v1/clients/bulkResetTraffic": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Zero up/down counters for many clients in one call. Loops the single-reset path so each client is re-enabled across its attached inbounds and pushed to Xray/remote nodes. Returns the count of successfully reset clients.",
-        "operationId": "post_panel_api_clients_bulkResetTraffic",
+        "operationId": "post_easyxray_api_v1_clients_bulkResetTraffic",
         "requestBody": {
           "required": true,
           "content": {
@@ -9893,13 +9893,13 @@
         }
       }
     },
-    "/panel/api/clients/groups": {
+    "/easyxray/api/v1/clients/groups": {
       "get": {
         "tags": [
           "Clients"
         ],
         "summary": "List all client groups with their member counts. Merges persisted groups (rows in client_groups, including empty placeholders) with the distinct group_name values currently set on clients. Sorted alphabetically (case-insensitive).",
-        "operationId": "get_panel_api_clients_groups",
+        "operationId": "get_easyxray_api_v1_clients_groups",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -9936,13 +9936,13 @@
         }
       }
     },
-    "/panel/api/clients/groups/{name}/emails": {
+    "/easyxray/api/v1/clients/groups/{name}/emails": {
       "get": {
         "tags": [
           "Clients"
         ],
         "summary": "Return just the email list of clients that currently belong to the given group. Useful for fanning a single bulk action over an entire group without round-tripping the full client list.",
-        "operationId": "get_panel_api_clients_groups_name_emails",
+        "operationId": "get_easyxray_api_v1_clients_groups_name_emails",
         "parameters": [
           {
             "name": "name",
@@ -9985,13 +9985,13 @@
         }
       }
     },
-    "/panel/api/clients/groups/create": {
+    "/easyxray/api/v1/clients/groups/create": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Create a new empty (placeholder) group. The group becomes selectable in client forms and the filter drawer even before any client is added to it. Errors if a group with the same name already exists.",
-        "operationId": "post_panel_api_clients_groups_create",
+        "operationId": "post_easyxray_api_v1_clients_groups_create",
         "requestBody": {
           "required": true,
           "content": {
@@ -10034,13 +10034,13 @@
         }
       }
     },
-    "/panel/api/clients/groups/rename": {
+    "/easyxray/api/v1/clients/groups/rename": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Rename a group. The new name is applied to the client_groups row AND propagated to every matching client (both clients.group_name and the client entry inside every owning inbound's settings JSON) in a single transaction. Returns the number of clients whose label was updated.",
-        "operationId": "post_panel_api_clients_groups_rename",
+        "operationId": "post_easyxray_api_v1_clients_groups_rename",
         "requestBody": {
           "required": true,
           "content": {
@@ -10084,13 +10084,13 @@
         }
       }
     },
-    "/panel/api/clients/groups/delete": {
+    "/easyxray/api/v1/clients/groups/delete": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Remove a group. Deletes the client_groups row and clears the group label from every matching client (both clients.group_name and the inbound settings JSON). The clients themselves are NOT deleted — use /bulkDel after filtering by group for that. Returns the count of clients whose label was cleared.",
-        "operationId": "post_panel_api_clients_groups_delete",
+        "operationId": "post_easyxray_api_v1_clients_groups_delete",
         "requestBody": {
           "required": true,
           "content": {
@@ -10133,13 +10133,13 @@
         }
       }
     },
-    "/panel/api/clients/groups/resetTraffic": {
+    "/easyxray/api/v1/clients/groups/resetTraffic": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Reset only the group-level traffic counter shown on the groups page. Snapshots the current up/down sum of the group's members as a baseline so the group total reads zero, while leaving each client's own counters (and their quotas) untouched. No Xray restart is triggered. Creates the client_groups row if the group exists only as a derived label.",
-        "operationId": "post_panel_api_clients_groups_resetTraffic",
+        "operationId": "post_easyxray_api_v1_clients_groups_resetTraffic",
         "requestBody": {
           "required": true,
           "content": {
@@ -10182,13 +10182,13 @@
         }
       }
     },
-    "/panel/api/clients/resetTraffic/{email}": {
+    "/easyxray/api/v1/clients/resetTraffic/{email}": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Zero out a single client’s up/down counters. Re-enables the client across every attached inbound and pushes the change to Xray (or the remote node) so depleted users can connect again immediately.",
-        "operationId": "post_panel_api_clients_resetTraffic_email",
+        "operationId": "post_easyxray_api_v1_clients_resetTraffic_email",
         "parameters": [
           {
             "name": "email",
@@ -10223,13 +10223,13 @@
         }
       }
     },
-    "/panel/api/clients/updateTraffic/{email}": {
+    "/easyxray/api/v1/clients/updateTraffic/{email}": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Manually adjust a client’s upload + download counters. Useful for migrations from external accounting systems.",
-        "operationId": "post_panel_api_clients_updateTraffic_email",
+        "operationId": "post_easyxray_api_v1_clients_updateTraffic_email",
         "parameters": [
           {
             "name": "email",
@@ -10278,13 +10278,13 @@
         }
       }
     },
-    "/panel/api/clients/ips/{email}": {
+    "/easyxray/api/v1/clients/ips/{email}": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "List source IPs that have connected with the given client’s credentials. Returns an array of \"ip (timestamp)\" strings.",
-        "operationId": "post_panel_api_clients_ips_email",
+        "operationId": "post_easyxray_api_v1_clients_ips_email",
         "parameters": [
           {
             "name": "email",
@@ -10319,13 +10319,13 @@
         }
       }
     },
-    "/panel/api/clients/clearIps/{email}": {
+    "/easyxray/api/v1/clients/clearIps/{email}": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Reset the recorded IP list for a client.",
-        "operationId": "post_panel_api_clients_clearIps_email",
+        "operationId": "post_easyxray_api_v1_clients_clearIps_email",
         "parameters": [
           {
             "name": "email",
@@ -10360,13 +10360,13 @@
         }
       }
     },
-    "/panel/api/clients/hwids/{email}": {
+    "/easyxray/api/v1/clients/hwids/{email}": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "List registered HWID devices for a client with a short fingerprint. Full hashes are not exposed.",
-        "operationId": "post_panel_api_clients_hwids_email",
+        "operationId": "post_easyxray_api_v1_clients_hwids_email",
         "parameters": [
           {
             "name": "email",
@@ -10420,7 +10420,7 @@
           "Clients"
         ],
         "summary": "Clear all registered HWID devices for a client so new devices can register again.",
-        "operationId": "delete_panel_api_clients_hwids_email",
+        "operationId": "delete_easyxray_api_v1_clients_hwids_email",
         "parameters": [
           {
             "name": "email",
@@ -10455,13 +10455,13 @@
         }
       }
     },
-    "/panel/api/clients/hwids/{email}/{id}": {
+    "/easyxray/api/v1/clients/hwids/{email}/{id}": {
       "delete": {
         "tags": [
           "Clients"
         ],
         "summary": "Remove a single registered HWID device by its id, freeing one slot under the HWID limit.",
-        "operationId": "delete_panel_api_clients_hwids_email_id",
+        "operationId": "delete_easyxray_api_v1_clients_hwids_email_id",
         "parameters": [
           {
             "name": "email",
@@ -10505,13 +10505,13 @@
         }
       }
     },
-    "/panel/api/clients/onlines": {
+    "/easyxray/api/v1/clients/onlines": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "List the emails of currently connected clients (last seen within the heartbeat window), deduped across every node.",
-        "operationId": "post_panel_api_clients_onlines",
+        "operationId": "post_easyxray_api_v1_clients_onlines",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -10542,13 +10542,13 @@
         }
       }
     },
-    "/panel/api/clients/onlinesByGuid": {
+    "/easyxray/api/v1/clients/onlinesByGuid": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Online client emails grouped by the panelGuid of the node that physically hosts each client. The local panel uses its own GUID; each node (at any depth in a chain) uses its GUID. Lets the inbounds page attribute online status to the real node instead of the intermediate one it syncs through.",
-        "operationId": "post_panel_api_clients_onlinesByGuid",
+        "operationId": "post_easyxray_api_v1_clients_onlinesByGuid",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -10584,13 +10584,13 @@
         }
       }
     },
-    "/panel/api/clients/clientIpsByGuid": {
+    "/easyxray/api/v1/clients/clientIpsByGuid": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Per-client source IPs grouped by the panelGuid of the node that observed them. Lets the central panel attribute and enforce per-client IP limits using the real visitor IPs each node sees, instead of the address of the intermediate panel it syncs through.",
-        "operationId": "post_panel_api_clients_clientIpsByGuid",
+        "operationId": "post_easyxray_api_v1_clients_clientIpsByGuid",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -10627,13 +10627,13 @@
         }
       }
     },
-    "/panel/api/clients/activeInbounds": {
+    "/easyxray/api/v1/clients/activeInbounds": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Inbound tags that carried traffic within the heartbeat window, grouped by the hosting node's panelGuid. Pairs with onlinesByGuid so the inbounds page only marks a multi-inbound client online on the inbounds it actually used. Nodes that do not report per-inbound activity are absent.",
-        "operationId": "post_panel_api_clients_activeInbounds",
+        "operationId": "post_easyxray_api_v1_clients_activeInbounds",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -10666,13 +10666,13 @@
         }
       }
     },
-    "/panel/api/clients/lastOnline": {
+    "/easyxray/api/v1/clients/lastOnline": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Map of client email → last-seen unix timestamp.",
-        "operationId": "post_panel_api_clients_lastOnline",
+        "operationId": "post_easyxray_api_v1_clients_lastOnline",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -10703,13 +10703,13 @@
         }
       }
     },
-    "/panel/api/clients/traffic/{email}": {
+    "/easyxray/api/v1/clients/traffic/{email}": {
       "get": {
         "tags": [
           "Clients"
         ],
         "summary": "Traffic counters for a client identified by email.",
-        "operationId": "get_panel_api_clients_traffic_email",
+        "operationId": "get_easyxray_api_v1_clients_traffic_email",
         "parameters": [
           {
             "name": "email",
@@ -10768,13 +10768,13 @@
         }
       }
     },
-    "/panel/api/clients/subLinks/{subId}": {
+    "/easyxray/api/v1/clients/subLinks/{subId}": {
       "get": {
         "tags": [
           "Clients"
         ],
         "summary": "Return every protocol URL (vless://, vmess://, trojan://, ss://, hysteria://, hy2://) for clients matching the subscription ID. Same result set as the configured subPath endpoint, but as a JSON array — no base64. When an inbound has streamSettings.externalProxy set, one URL is emitted per external proxy. Empty array when the subId has no enabled clients.",
-        "operationId": "get_panel_api_clients_subLinks_subId",
+        "operationId": "get_easyxray_api_v1_clients_subLinks_subId",
         "parameters": [
           {
             "name": "subId",
@@ -10816,13 +10816,13 @@
         }
       }
     },
-    "/panel/api/clients/happLink/{id}": {
+    "/easyxray/api/v1/clients/happLink/{id}": {
       "post": {
         "tags": [
           "Clients"
         ],
         "summary": "Generate a fresh Happ crypt5 link locally from the current client subscription URL when Happ link generation is enabled. The panel applies a resource limit of 8192 UTF-8 bytes to the source URL; this is not a Happ client maximum. Longer sources return success: false with msg: happ_source_too_long and obj: null. The source URL is not sent to a generation provider, and the result is not stored or reused.",
-        "operationId": "post_panel_api_clients_happLink_id",
+        "operationId": "post_easyxray_api_v1_clients_happLink_id",
         "parameters": [
           {
             "name": "id",
@@ -10865,13 +10865,13 @@
         }
       }
     },
-    "/panel/api/clients/links/{email}": {
+    "/easyxray/api/v1/clients/links/{email}": {
       "get": {
         "tags": [
           "Clients"
         ],
         "summary": "Return every URL for one client across all attached inbounds, one per advertised endpoint: the managed hosts of the inbound, else its streamSettings.externalProxy entries, else its own address. Supported protocols: vmess, vless, trojan, shadowsocks, hysteria, mtproto. Protocols without a URL form (socks, http, mixed, wireguard, dokodemo, tunnel) contribute nothing.",
-        "operationId": "get_panel_api_clients_links_email",
+        "operationId": "get_easyxray_api_v1_clients_links_email",
         "parameters": [
           {
             "name": "email",
@@ -10912,13 +10912,13 @@
         }
       }
     },
-    "/panel/api/nodes/list": {
+    "/easyxray/api/v1/nodes/list": {
       "get": {
         "tags": [
           "Nodes"
         ],
         "summary": "List every configured node with its connection details, health, and last heartbeat patch.",
-        "operationId": "get_panel_api_nodes_list",
+        "operationId": "get_easyxray_api_v1_nodes_list",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -10997,13 +10997,13 @@
         }
       }
     },
-    "/panel/api/nodes/mtls/ca": {
+    "/easyxray/api/v1/nodes/mtls/ca": {
       "post": {
         "tags": [
           "Nodes"
         ],
         "summary": "This panel's node-auth CA certificate (public, PEM) to paste into a node's mTLS trust setting. Lazily mints the CA and the master client cert on first call. Pair with setting tlsVerifyMode=mtls on the node.",
-        "operationId": "post_panel_api_nodes_mtls_ca",
+        "operationId": "post_easyxray_api_v1_nodes_mtls_ca",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -11033,13 +11033,13 @@
         }
       }
     },
-    "/panel/api/nodes/mtls/trustCA": {
+    "/easyxray/api/v1/nodes/mtls/trustCA": {
       "post": {
         "tags": [
           "Nodes"
         ],
         "summary": "Set the CA certificate this panel trusts for incoming node-API client certificates (this panel acting as a node). Paste the managing panel's CA (from nodes/mtls/ca). An empty caCert disables it. A non-empty value must be a PEM certificate. Applied on the next panel restart.",
-        "operationId": "post_panel_api_nodes_mtls_trustCA",
+        "operationId": "post_easyxray_api_v1_nodes_mtls_trustCA",
         "requestBody": {
           "required": true,
           "content": {
@@ -11076,13 +11076,13 @@
         }
       }
     },
-    "/panel/api/nodes/mtls/reloadClient": {
+    "/easyxray/api/v1/nodes/mtls/reloadClient": {
       "post": {
         "tags": [
           "Nodes"
         ],
         "summary": "Validate the stored master mTLS client credential and invalidate cached transports. Each transport closes its old idle pool and rebuilds with the rotated certificate before its next request.",
-        "operationId": "post_panel_api_nodes_mtls_reloadClient",
+        "operationId": "post_easyxray_api_v1_nodes_mtls_reloadClient",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -11106,13 +11106,13 @@
         }
       }
     },
-    "/panel/api/nodes/get/{id}": {
+    "/easyxray/api/v1/nodes/get/{id}": {
       "get": {
         "tags": [
           "Nodes"
         ],
         "summary": "Fetch a single node by ID.",
-        "operationId": "get_panel_api_nodes_get_id",
+        "operationId": "get_easyxray_api_v1_nodes_get_id",
         "parameters": [
           {
             "name": "id",
@@ -11197,13 +11197,13 @@
         }
       }
     },
-    "/panel/api/nodes/webCert/{id}": {
+    "/easyxray/api/v1/nodes/webCert/{id}": {
       "get": {
         "tags": [
           "Nodes"
         ],
         "summary": "Fetch a node's own web TLS certificate/key file paths (proxied to the node). Used by the inbound form's \"Set Cert from Panel\" so a node-assigned inbound gets paths that exist on the node, not the central panel.",
-        "operationId": "get_panel_api_nodes_webCert_id",
+        "operationId": "get_easyxray_api_v1_nodes_webCert_id",
         "parameters": [
           {
             "name": "id",
@@ -11245,13 +11245,13 @@
         }
       }
     },
-    "/panel/api/nodes/add": {
+    "/easyxray/api/v1/nodes/add": {
       "post": {
         "tags": [
           "Nodes"
         ],
         "summary": "Register a new remote node. Provide its URL, write-only apiToken, and optional remark / allowPrivateAddress flag. Responses expose hasApiToken only.",
-        "operationId": "post_panel_api_nodes_add",
+        "operationId": "post_easyxray_api_v1_nodes_add",
         "requestBody": {
           "required": true,
           "content": {
@@ -11347,13 +11347,13 @@
         }
       }
     },
-    "/panel/api/nodes/update/{id}": {
+    "/easyxray/api/v1/nodes/update/{id}": {
       "post": {
         "tags": [
           "Nodes"
         ],
         "summary": "Replace a node’s connection details. apiToken is write-only: omit it or send an empty string to keep the stored token; set clearApiToken=true to clear it.",
-        "operationId": "post_panel_api_nodes_update_id",
+        "operationId": "post_easyxray_api_v1_nodes_update_id",
         "parameters": [
           {
             "name": "id",
@@ -11410,13 +11410,13 @@
         }
       }
     },
-    "/panel/api/nodes/del/{id}": {
+    "/easyxray/api/v1/nodes/del/{id}": {
       "post": {
         "tags": [
           "Nodes"
         ],
         "summary": "Delete a node. Inbounds bound to it are not auto-migrated.",
-        "operationId": "post_panel_api_nodes_del_id",
+        "operationId": "post_easyxray_api_v1_nodes_del_id",
         "parameters": [
           {
             "name": "id",
@@ -11451,13 +11451,13 @@
         }
       }
     },
-    "/panel/api/nodes/setEnable/{id}": {
+    "/easyxray/api/v1/nodes/setEnable/{id}": {
       "post": {
         "tags": [
           "Nodes"
         ],
         "summary": "Pause or resume traffic sync with this node.",
-        "operationId": "post_panel_api_nodes_setEnable_id",
+        "operationId": "post_easyxray_api_v1_nodes_setEnable_id",
         "parameters": [
           {
             "name": "id",
@@ -11505,13 +11505,13 @@
         }
       }
     },
-    "/panel/api/nodes/test": {
+    "/easyxray/api/v1/nodes/test": {
       "post": {
         "tags": [
           "Nodes"
         ],
         "summary": "Probe a node without saving it. Uses the body as connection details and returns the same heartbeat snapshot a registered node would have.",
-        "operationId": "post_panel_api_nodes_test",
+        "operationId": "post_easyxray_api_v1_nodes_test",
         "requestBody": {
           "required": true,
           "content": {
@@ -11569,13 +11569,13 @@
         }
       }
     },
-    "/panel/api/nodes/certFingerprint": {
+    "/easyxray/api/v1/nodes/certFingerprint": {
       "post": {
         "tags": [
           "Nodes"
         ],
         "summary": "Connect to the node over HTTPS without verifying its certificate and return the leaf certificate's SHA-256 (base64). Used by the Add/Edit Node dialog to fetch and pin a self-signed certificate. Uses the same body as /test.",
-        "operationId": "post_panel_api_nodes_certFingerprint",
+        "operationId": "post_easyxray_api_v1_nodes_certFingerprint",
         "requestBody": {
           "required": true,
           "content": {
@@ -11619,13 +11619,13 @@
         }
       }
     },
-    "/panel/api/nodes/inbounds": {
+    "/easyxray/api/v1/nodes/inbounds": {
       "post": {
         "tags": [
           "Nodes"
         ],
         "summary": "Use unsaved node connection details to list the remote inbounds available for selective import.",
-        "operationId": "post_panel_api_nodes_inbounds",
+        "operationId": "post_easyxray_api_v1_nodes_inbounds",
         "requestBody": {
           "required": true,
           "content": {
@@ -11678,13 +11678,13 @@
         }
       }
     },
-    "/panel/api/nodes/probe/{id}": {
+    "/easyxray/api/v1/nodes/probe/{id}": {
       "post": {
         "tags": [
           "Nodes"
         ],
         "summary": "Probe an existing node, updating its cached health state.",
-        "operationId": "post_panel_api_nodes_probe_id",
+        "operationId": "post_easyxray_api_v1_nodes_probe_id",
         "parameters": [
           {
             "name": "id",
@@ -11719,13 +11719,13 @@
         }
       }
     },
-    "/panel/api/nodes/updatePanel": {
+    "/easyxray/api/v1/nodes/updatePanel": {
       "post": {
         "tags": [
           "Nodes"
         ],
         "summary": "Trigger the official panel self-updater on each given node (downloads the latest release and restarts). Only enabled, online nodes are updated; offline/disabled ones are reported as skipped. Set \"dev\": true to move the nodes to the rolling per-commit dev channel instead of the latest stable release. Returns a per-node result list.",
-        "operationId": "post_panel_api_nodes_updatePanel",
+        "operationId": "post_easyxray_api_v1_nodes_updatePanel",
         "requestBody": {
           "required": true,
           "content": {
@@ -11783,13 +11783,13 @@
         }
       }
     },
-    "/panel/api/nodes/history/{id}/{metric}/{bucket}": {
+    "/easyxray/api/v1/nodes/history/{id}/{metric}/{bucket}": {
       "get": {
         "tags": [
           "Nodes"
         ],
         "summary": "Aggregated metric history for a node — same shape as /server/history, scoped to one node.",
-        "operationId": "get_panel_api_nodes_history_id_metric_bucket",
+        "operationId": "get_easyxray_api_v1_nodes_history_id_metric_bucket",
         "parameters": [
           {
             "name": "id",
@@ -11842,13 +11842,13 @@
         }
       }
     },
-    "/panel/api/hosts/list": {
+    "/easyxray/api/v1/hosts/list": {
       "get": {
         "tags": [
           "Hosts"
         ],
         "summary": "List every host across all inbounds, grouped by inbound then ordered by sort order.",
-        "operationId": "get_panel_api_hosts_list",
+        "operationId": "get_easyxray_api_v1_hosts_list",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -11930,13 +11930,13 @@
         }
       }
     },
-    "/panel/api/hosts/get/{groupId}": {
+    "/easyxray/api/v1/hosts/get/{groupId}": {
       "get": {
         "tags": [
           "Hosts"
         ],
         "summary": "Fetch a single host group by Group ID.",
-        "operationId": "get_panel_api_hosts_get_groupId",
+        "operationId": "get_easyxray_api_v1_hosts_get_groupId",
         "parameters": [
           {
             "name": "groupId",
@@ -12024,13 +12024,13 @@
         }
       }
     },
-    "/panel/api/hosts/byInbound/{inboundId}": {
+    "/easyxray/api/v1/hosts/byInbound/{inboundId}": {
       "get": {
         "tags": [
           "Hosts"
         ],
         "summary": "Fetch one inbound's hosts, grouped by host group.",
-        "operationId": "get_panel_api_hosts_byInbound_inboundId",
+        "operationId": "get_easyxray_api_v1_hosts_byInbound_inboundId",
         "parameters": [
           {
             "name": "inboundId",
@@ -12123,13 +12123,13 @@
         }
       }
     },
-    "/panel/api/hosts/tags": {
+    "/easyxray/api/v1/hosts/tags": {
       "get": {
         "tags": [
           "Hosts"
         ],
         "summary": "Distinct, sorted set of tags used across all hosts.",
-        "operationId": "get_panel_api_hosts_tags",
+        "operationId": "get_easyxray_api_v1_hosts_tags",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -12161,13 +12161,13 @@
         }
       }
     },
-    "/panel/api/hosts/add": {
+    "/easyxray/api/v1/hosts/add": {
       "post": {
         "tags": [
           "Hosts"
         ],
         "summary": "Create a host group on inbounds.",
-        "operationId": "post_panel_api_hosts_add",
+        "operationId": "post_easyxray_api_v1_hosts_add",
         "requestBody": {
           "required": true,
           "content": {
@@ -12272,13 +12272,13 @@
         }
       }
     },
-    "/panel/api/hosts/update/{groupId}": {
+    "/easyxray/api/v1/hosts/update/{groupId}": {
       "post": {
         "tags": [
           "Hosts"
         ],
         "summary": "Replace a host group’s content.",
-        "operationId": "post_panel_api_hosts_update_groupId",
+        "operationId": "post_easyxray_api_v1_hosts_update_groupId",
         "parameters": [
           {
             "name": "groupId",
@@ -12394,13 +12394,13 @@
         }
       }
     },
-    "/panel/api/hosts/del/{groupId}": {
+    "/easyxray/api/v1/hosts/del/{groupId}": {
       "post": {
         "tags": [
           "Hosts"
         ],
         "summary": "Delete a host group.",
-        "operationId": "post_panel_api_hosts_del_groupId",
+        "operationId": "post_easyxray_api_v1_hosts_del_groupId",
         "parameters": [
           {
             "name": "groupId",
@@ -12435,13 +12435,13 @@
         }
       }
     },
-    "/panel/api/hosts/setEnable/{groupId}": {
+    "/easyxray/api/v1/hosts/setEnable/{groupId}": {
       "post": {
         "tags": [
           "Hosts"
         ],
         "summary": "Enable or disable a host group.",
-        "operationId": "post_panel_api_hosts_setEnable_groupId",
+        "operationId": "post_easyxray_api_v1_hosts_setEnable_groupId",
         "parameters": [
           {
             "name": "groupId",
@@ -12489,13 +12489,13 @@
         }
       }
     },
-    "/panel/api/hosts/reorder": {
+    "/easyxray/api/v1/hosts/reorder": {
       "post": {
         "tags": [
           "Hosts"
         ],
         "summary": "Set host group sort order by the position of each groupId in the array.",
-        "operationId": "post_panel_api_hosts_reorder",
+        "operationId": "post_easyxray_api_v1_hosts_reorder",
         "requestBody": {
           "required": true,
           "content": {
@@ -12535,13 +12535,13 @@
         }
       }
     },
-    "/panel/api/hosts/bulk/add": {
+    "/easyxray/api/v1/hosts/bulk/add": {
       "post": {
         "tags": [
           "Hosts"
         ],
         "summary": "Add a host group to inbounds (same as /add).",
-        "operationId": "post_panel_api_hosts_bulk_add",
+        "operationId": "post_easyxray_api_v1_hosts_bulk_add",
         "requestBody": {
           "required": true,
           "content": {
@@ -12646,13 +12646,13 @@
         }
       }
     },
-    "/panel/api/hosts/bulk/setEnable": {
+    "/easyxray/api/v1/hosts/bulk/setEnable": {
       "post": {
         "tags": [
           "Hosts"
         ],
         "summary": "Enable or disable many host groups in one call.",
-        "operationId": "post_panel_api_hosts_bulk_setEnable",
+        "operationId": "post_easyxray_api_v1_hosts_bulk_setEnable",
         "requestBody": {
           "required": true,
           "content": {
@@ -12693,13 +12693,13 @@
         }
       }
     },
-    "/panel/api/hosts/bulk/del": {
+    "/easyxray/api/v1/hosts/bulk/del": {
       "post": {
         "tags": [
           "Hosts"
         ],
         "summary": "Delete many host groups in one call.",
-        "operationId": "post_panel_api_hosts_bulk_del",
+        "operationId": "post_easyxray_api_v1_hosts_bulk_del",
         "requestBody": {
           "required": true,
           "content": {
@@ -12739,13 +12739,13 @@
         }
       }
     },
-    "/panel/api/backuptotgbot": {
+    "/easyxray/api/v1/backuptotgbot": {
       "post": {
         "tags": [
           "Backup"
         ],
         "summary": "Send a fresh DB backup to every Telegram chat configured as an admin recipient. No body, no params.",
-        "operationId": "post_panel_api_backuptotgbot",
+        "operationId": "post_easyxray_api_v1_backuptotgbot",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -12769,13 +12769,13 @@
         }
       }
     },
-    "/panel/api/setting/all": {
+    "/easyxray/api/v1/setting/all": {
       "post": {
         "tags": [
           "Settings"
         ],
         "summary": "Return every panel setting: web server, Telegram bot, subscription, security, LDAP. The full JSON blob that the Settings page edits.",
-        "operationId": "post_panel_api_setting_all",
+        "operationId": "post_easyxray_api_v1_setting_all",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -12799,13 +12799,13 @@
         }
       }
     },
-    "/panel/api/setting/defaultSettings": {
+    "/easyxray/api/v1/setting/defaultSettings": {
       "post": {
         "tags": [
           "Settings"
         ],
         "summary": "Return the computed default settings based on the request host. Useful to preview what a fresh install would use.",
-        "operationId": "post_panel_api_setting_defaultSettings",
+        "operationId": "post_easyxray_api_v1_setting_defaultSettings",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -12829,13 +12829,13 @@
         }
       }
     },
-    "/panel/api/setting/factoryDefaults": {
+    "/easyxray/api/v1/setting/factoryDefaults": {
       "post": {
         "tags": [
           "Settings"
         ],
         "summary": "Return the shipped (factory) default value per browser-safe setting key, so clients can tell a stored value apart from the default it would fall back to. Per-install material (secret, panelGuid, mTLS keys) and credential fields are never included.",
-        "operationId": "post_panel_api_setting_factoryDefaults",
+        "operationId": "post_easyxray_api_v1_setting_factoryDefaults",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -12859,13 +12859,13 @@
         }
       }
     },
-    "/panel/api/setting/update": {
+    "/easyxray/api/v1/setting/update": {
       "post": {
         "tags": [
           "Settings"
         ],
         "summary": "Persist every setting at once. The body mirrors the shape returned by /all. Invalid values (bad ports, missing cert pairs, etc.) are rejected before write.",
-        "operationId": "post_panel_api_setting_update",
+        "operationId": "post_easyxray_api_v1_setting_update",
         "requestBody": {
           "required": true,
           "content": {
@@ -12899,13 +12899,13 @@
         }
       }
     },
-    "/panel/api/setting/validateRegex": {
+    "/easyxray/api/v1/setting/validateRegex": {
       "post": {
         "tags": [
           "Settings"
         ],
         "summary": "Validate any regular expression with the backend Go RE2 compiler without saving it.",
-        "operationId": "post_panel_api_setting_validateRegex",
+        "operationId": "post_easyxray_api_v1_setting_validateRegex",
         "requestBody": {
           "required": true,
           "content": {
@@ -12946,13 +12946,13 @@
         }
       }
     },
-    "/panel/api/setting/updateUser": {
+    "/easyxray/api/v1/setting/updateUser": {
       "post": {
         "tags": [
           "Settings"
         ],
         "summary": "Change the panel admin username and password. Requires the current credentials for verification. The session is refreshed with the new values on success.",
-        "operationId": "post_panel_api_setting_updateUser",
+        "operationId": "post_easyxray_api_v1_setting_updateUser",
         "requestBody": {
           "required": true,
           "content": {
@@ -13016,13 +13016,13 @@
         }
       }
     },
-    "/panel/api/setting/restartPanel": {
+    "/easyxray/api/v1/setting/restartPanel": {
       "post": {
         "tags": [
           "Settings"
         ],
-        "summary": "Restart the entire 3x-ui process after a 3-second grace period. The connection drops immediately; the panel comes back online ~5-10 seconds later.",
-        "operationId": "post_panel_api_setting_restartPanel",
+        "summary": "Restart the entire EasyXray process after a 3-second grace period. The connection drops immediately; the panel comes back online ~5-10 seconds later.",
+        "operationId": "post_easyxray_api_v1_setting_restartPanel",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -13046,13 +13046,13 @@
         }
       }
     },
-    "/panel/api/setting/testSmtp": {
+    "/easyxray/api/v1/setting/testSmtp": {
       "post": {
         "tags": [
           "Settings"
         ],
         "summary": "Test SMTP connection with stage-by-stage reporting (connect, auth, send). Returns structured result with stage and message.",
-        "operationId": "post_panel_api_setting_testSmtp",
+        "operationId": "post_easyxray_api_v1_setting_testSmtp",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -13081,13 +13081,13 @@
         }
       }
     },
-    "/panel/api/setting/testTgBot": {
+    "/easyxray/api/v1/setting/testTgBot": {
       "post": {
         "tags": [
           "Settings"
         ],
         "summary": "Test Telegram bot connection by sending a test message to the configured chat.",
-        "operationId": "post_panel_api_setting_testTgBot",
+        "operationId": "post_easyxray_api_v1_setting_testTgBot",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -13115,13 +13115,13 @@
         }
       }
     },
-    "/panel/api/setting/testDiscord": {
+    "/easyxray/api/v1/setting/testDiscord": {
       "post": {
         "tags": [
           "Settings"
         ],
         "summary": "Test Discord bot connection by sending a test embed to the configured channel.",
-        "operationId": "post_panel_api_setting_testDiscord",
+        "operationId": "post_easyxray_api_v1_setting_testDiscord",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -13149,13 +13149,13 @@
         }
       }
     },
-    "/panel/api/setting/getDefaultJsonConfig": {
+    "/easyxray/api/v1/setting/getDefaultJsonConfig": {
       "get": {
         "tags": [
           "Settings"
         ],
         "summary": "Return the built-in default Xray JSON config template that ships with this panel version.",
-        "operationId": "get_panel_api_setting_getDefaultJsonConfig",
+        "operationId": "get_easyxray_api_v1_setting_getDefaultJsonConfig",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -13179,13 +13179,13 @@
         }
       }
     },
-    "/panel/api/setting/apiTokens": {
+    "/easyxray/api/v1/setting/apiTokens": {
       "get": {
         "tags": [
           "API Tokens"
         ],
         "summary": "List every API token, enabled or not. The token value is never returned — only metadata.",
-        "operationId": "get_panel_api_setting_apiTokens",
+        "operationId": "get_easyxray_api_v1_setting_apiTokens",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -13220,13 +13220,13 @@
         }
       }
     },
-    "/panel/api/setting/apiTokens/create": {
+    "/easyxray/api/v1/setting/apiTokens/create": {
       "post": {
         "tags": [
           "API Tokens"
         ],
         "summary": "Mint a scoped API token. The server-generated plaintext is returned only once and stored as a hash.",
-        "operationId": "post_panel_api_setting_apiTokens_create",
+        "operationId": "post_easyxray_api_v1_setting_apiTokens_create",
         "requestBody": {
           "required": true,
           "content": {
@@ -13318,13 +13318,13 @@
         }
       }
     },
-    "/panel/api/setting/apiTokens/delete/{id}": {
+    "/easyxray/api/v1/setting/apiTokens/delete/{id}": {
       "post": {
         "tags": [
           "API Tokens"
         ],
         "summary": "Permanently delete a token. Any caller using it stops authenticating immediately.",
-        "operationId": "post_panel_api_setting_apiTokens_delete_id",
+        "operationId": "post_easyxray_api_v1_setting_apiTokens_delete_id",
         "parameters": [
           {
             "name": "id",
@@ -13384,13 +13384,13 @@
         }
       }
     },
-    "/panel/api/setting/apiTokens/setEnabled/{id}": {
+    "/easyxray/api/v1/setting/apiTokens/setEnabled/{id}": {
       "post": {
         "tags": [
           "API Tokens"
         ],
         "summary": "Toggle a token enabled/disabled without deleting it. Disabled tokens are rejected by checkAPIAuth on the next request.",
-        "operationId": "post_panel_api_setting_apiTokens_setEnabled_id",
+        "operationId": "post_easyxray_api_v1_setting_apiTokens_setEnabled_id",
         "parameters": [
           {
             "name": "id",
@@ -13456,13 +13456,13 @@
         }
       }
     },
-    "/panel/api/xray/": {
+    "/easyxray/api/v1/xray/": {
       "post": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "Return the Xray config template (JSON string), available inbound tags, client reverse tags, and the configured outbound test URL in one response.",
-        "operationId": "post_panel_api_xray",
+        "operationId": "post_easyxray_api_v1_xray",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -13495,13 +13495,13 @@
         }
       }
     },
-    "/panel/api/xray/getDefaultJsonConfig": {
+    "/easyxray/api/v1/xray/getDefaultJsonConfig": {
       "get": {
         "tags": [
           "Xray Settings"
         ],
-        "summary": "Return the built-in default Xray config shipped with the panel (identical to /panel/api/setting/getDefaultJsonConfig).",
-        "operationId": "get_panel_api_xray_getDefaultJsonConfig",
+        "summary": "Return the built-in default Xray config shipped with the panel (identical to /easyxray/api/v1/setting/getDefaultJsonConfig).",
+        "operationId": "get_easyxray_api_v1_xray_getDefaultJsonConfig",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -13525,13 +13525,13 @@
         }
       }
     },
-    "/panel/api/xray/getOutboundsTraffic": {
+    "/easyxray/api/v1/xray/getOutboundsTraffic": {
       "get": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "Return traffic statistics for every outbound. Each outbound shows up/down/total counters.",
-        "operationId": "get_panel_api_xray_getOutboundsTraffic",
+        "operationId": "get_easyxray_api_v1_xray_getOutboundsTraffic",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -13555,13 +13555,13 @@
         }
       }
     },
-    "/panel/api/xray/getXrayResult": {
+    "/easyxray/api/v1/xray/getXrayResult": {
       "get": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "Return the most recent Xray process stdout/stderr output. Useful to check for startup errors or runtime warnings.",
-        "operationId": "get_panel_api_xray_getXrayResult",
+        "operationId": "get_easyxray_api_v1_xray_getXrayResult",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -13585,13 +13585,13 @@
         }
       }
     },
-    "/panel/api/xray/update": {
+    "/easyxray/api/v1/xray/update": {
       "post": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "Save the Xray JSON config template and optionally the outbound test URL. Both are sent as form fields.",
-        "operationId": "post_panel_api_xray_update",
+        "operationId": "post_easyxray_api_v1_xray_update",
         "requestBody": {
           "required": true,
           "content": {
@@ -13638,13 +13638,13 @@
         }
       }
     },
-    "/panel/api/xray/warp/{action}": {
+    "/easyxray/api/v1/xray/warp/{action}": {
       "post": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "Manage Cloudflare Warp integration. The action parameter selects the operation.",
-        "operationId": "post_panel_api_xray_warp_action",
+        "operationId": "post_easyxray_api_v1_xray_warp_action",
         "parameters": [
           {
             "name": "action",
@@ -13707,13 +13707,13 @@
         }
       }
     },
-    "/panel/api/xray/nord/{action}": {
+    "/easyxray/api/v1/xray/nord/{action}": {
       "post": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "Manage NordVPN integration. The action parameter selects the operation.",
-        "operationId": "post_panel_api_xray_nord_action",
+        "operationId": "post_easyxray_api_v1_xray_nord_action",
         "parameters": [
           {
             "name": "action",
@@ -13772,13 +13772,13 @@
         }
       }
     },
-    "/panel/api/xray/pia/{action}": {
+    "/easyxray/api/v1/xray/pia/{action}": {
       "post": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "Manage PIA WireGuard integration. The action parameter selects the operation.",
-        "operationId": "post_panel_api_xray_pia_action",
+        "operationId": "post_easyxray_api_v1_xray_pia_action",
         "parameters": [
           {
             "name": "action",
@@ -13841,13 +13841,13 @@
         }
       }
     },
-    "/panel/api/xray/resetOutboundsTraffic": {
+    "/easyxray/api/v1/xray/resetOutboundsTraffic": {
       "post": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "Reset traffic counters for a specific outbound by tag.",
-        "operationId": "post_panel_api_xray_resetOutboundsTraffic",
+        "operationId": "post_easyxray_api_v1_xray_resetOutboundsTraffic",
         "requestBody": {
           "required": true,
           "content": {
@@ -13890,13 +13890,13 @@
         }
       }
     },
-    "/panel/api/xray/testOutbound": {
+    "/easyxray/api/v1/xray/testOutbound": {
       "post": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "Test an outbound configuration. Sends the outbound JSON (required), optionally all outbounds (to resolve sockopt.dialerProxy dependencies), and a mode flag.",
-        "operationId": "post_panel_api_xray_testOutbound",
+        "operationId": "post_easyxray_api_v1_xray_testOutbound",
         "requestBody": {
           "required": true,
           "content": {
@@ -13947,13 +13947,13 @@
         }
       }
     },
-    "/panel/api/xray/testOutbounds": {
+    "/easyxray/api/v1/xray/testOutbounds": {
       "post": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "Test a batch of outbounds (max 50) through one shared temp xray instance. Returns an array of results in input order, each with the outbound tag, delay, HTTP status and a connect/TLS/TTFB timing breakdown.",
-        "operationId": "post_panel_api_xray_testOutbounds",
+        "operationId": "post_easyxray_api_v1_xray_testOutbounds",
         "requestBody": {
           "required": true,
           "content": {
@@ -14004,13 +14004,13 @@
         }
       }
     },
-    "/panel/api/xray/balancerStatus": {
+    "/easyxray/api/v1/xray/balancerStatus": {
       "post": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "Live state of routing balancers in the running core (RoutingService.GetBalancerInfo): current override and the targets the strategy prefers. Returns a map keyed by balancer tag.",
-        "operationId": "post_panel_api_xray_balancerStatus",
+        "operationId": "post_easyxray_api_v1_xray_balancerStatus",
         "requestBody": {
           "required": true,
           "content": {
@@ -14053,13 +14053,13 @@
         }
       }
     },
-    "/panel/api/xray/balancerOverride": {
+    "/easyxray/api/v1/xray/balancerOverride": {
       "post": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "Force a balancer in the running core to always pick one outbound (RoutingService.OverrideBalancerTarget). Applied live without a restart and kept across config saves; cleared when Xray restarts or the target outbound is removed.",
-        "operationId": "post_panel_api_xray_balancerOverride",
+        "operationId": "post_easyxray_api_v1_xray_balancerOverride",
         "requestBody": {
           "required": true,
           "content": {
@@ -14106,13 +14106,13 @@
         }
       }
     },
-    "/panel/api/xray/routeTest": {
+    "/easyxray/api/v1/xray/routeTest": {
       "post": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "Ask the running core which outbound its router would pick for a synthetic connection (RoutingService.TestRoute). No traffic is sent.",
-        "operationId": "post_panel_api_xray_routeTest",
+        "operationId": "post_easyxray_api_v1_xray_routeTest",
         "requestBody": {
           "required": true,
           "content": {
@@ -14221,13 +14221,13 @@
         }
       }
     },
-    "/panel/api/xray/geodata/files": {
+    "/easyxray/api/v1/xray/geodata/files": {
       "get": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "List the geo databases (.dat files) in the Xray asset folder, with the layout detected from their contents, size, modification time and category count. A database that fails to parse is still listed, with the reason in \"error\".",
-        "operationId": "get_panel_api_xray_geodata_files",
+        "operationId": "get_easyxray_api_v1_xray_geodata_files",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -14251,13 +14251,13 @@
         }
       }
     },
-    "/panel/api/xray/geodata/categories": {
+    "/easyxray/api/v1/xray/geodata/categories": {
       "get": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "One page of a database's categories, each with its entry count and the attributes its domains carry (e.g. \"ads\", \"cn\").",
-        "operationId": "get_panel_api_xray_geodata_categories",
+        "operationId": "get_easyxray_api_v1_xray_geodata_categories",
         "parameters": [
           {
             "name": "file",
@@ -14319,13 +14319,13 @@
         }
       }
     },
-    "/panel/api/xray/geodata/entries": {
+    "/easyxray/api/v1/xray/geodata/entries": {
       "get": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "One page of the rules inside a category — domain rules typed as domain/full/keyword/regexp for geosite databases, CIDRs for geoip ones.",
-        "operationId": "get_panel_api_xray_geodata_entries",
+        "operationId": "get_easyxray_api_v1_xray_geodata_entries",
         "parameters": [
           {
             "name": "file",
@@ -14396,13 +14396,13 @@
         }
       }
     },
-    "/panel/api/xray/geodata/validate": {
+    "/easyxray/api/v1/xray/geodata/validate": {
       "post": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "Check routing tokens against the databases on disk and return only the ones that do not resolve. Plain domains and CIDRs are ignored. Each issue carries a reason: syntax, fileMissing or categoryMissing.",
-        "operationId": "post_panel_api_xray_geodata_validate",
+        "operationId": "post_easyxray_api_v1_xray_geodata_validate",
         "requestBody": {
           "required": true,
           "content": {
@@ -14449,13 +14449,13 @@
         }
       }
     },
-    "/panel/api/xray/outbound-subs": {
+    "/easyxray/api/v1/xray/outbound-subs": {
       "get": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "List all outbound subscriptions (remote URLs that supply additional outbounds), newest first.",
-        "operationId": "get_panel_api_xray_outbound_subs",
+        "operationId": "get_easyxray_api_v1_xray_outbound_subs",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -14483,7 +14483,7 @@
           "Xray Settings"
         ],
         "summary": "Create an outbound subscription. The URL is fetched, parsed into outbounds with stable tags, and merged additively into the running Xray config.",
-        "operationId": "post_panel_api_xray_outbound_subs",
+        "operationId": "post_easyxray_api_v1_xray_outbound_subs",
         "requestBody": {
           "required": true,
           "content": {
@@ -14505,8 +14505,8 @@
                   },
                   "userAgent": {
                     "type": "string",
-                    "default": "3x-ui-outbound-sub/1.0",
-                    "description": "Custom User-Agent sent when fetching this subscription. Defaults to \"3x-ui-outbound-sub/1.0\"."
+                    "default": "easyxray-outbound-sub/1.0",
+                    "description": "Custom User-Agent sent when fetching this subscription. Defaults to \"easyxray-outbound-sub/1.0\"."
                   },
                   "updateInterval": {
                     "type": "integer",
@@ -14564,13 +14564,13 @@
         }
       }
     },
-    "/panel/api/xray/outbound-subs/{id}": {
+    "/easyxray/api/v1/xray/outbound-subs/{id}": {
       "post": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "Update an existing outbound subscription by id. Accepts the same form fields as create.",
-        "operationId": "post_panel_api_xray_outbound_subs_id",
+        "operationId": "post_easyxray_api_v1_xray_outbound_subs_id",
         "parameters": [
           {
             "name": "id",
@@ -14603,8 +14603,8 @@
                   },
                   "userAgent": {
                     "type": "string",
-                    "default": "3x-ui-outbound-sub/1.0",
-                    "description": "Custom User-Agent sent when fetching this subscription. Defaults to \"3x-ui-outbound-sub/1.0\"."
+                    "default": "easyxray-outbound-sub/1.0",
+                    "description": "Custom User-Agent sent when fetching this subscription. Defaults to \"easyxray-outbound-sub/1.0\"."
                   },
                   "updateInterval": {
                     "type": "integer",
@@ -14666,7 +14666,7 @@
           "Xray Settings"
         ],
         "summary": "Delete an outbound subscription by id.",
-        "operationId": "delete_panel_api_xray_outbound_subs_id",
+        "operationId": "delete_easyxray_api_v1_xray_outbound_subs_id",
         "parameters": [
           {
             "name": "id",
@@ -14701,13 +14701,13 @@
         }
       }
     },
-    "/panel/api/xray/outbound-subs/{id}/del": {
+    "/easyxray/api/v1/xray/outbound-subs/{id}/del": {
       "post": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "Delete an outbound subscription by id (POST alias of DELETE for clients that cannot send DELETE).",
-        "operationId": "post_panel_api_xray_outbound_subs_id_del",
+        "operationId": "post_easyxray_api_v1_xray_outbound_subs_id_del",
         "parameters": [
           {
             "name": "id",
@@ -14742,13 +14742,13 @@
         }
       }
     },
-    "/panel/api/xray/outbound-subs/{id}/refresh": {
+    "/easyxray/api/v1/xray/outbound-subs/{id}/refresh": {
       "post": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "Force an immediate re-fetch of the subscription and return the parsed outbounds. Signals Xray to reload.",
-        "operationId": "post_panel_api_xray_outbound_subs_id_refresh",
+        "operationId": "post_easyxray_api_v1_xray_outbound_subs_id_refresh",
         "parameters": [
           {
             "name": "id",
@@ -14783,13 +14783,13 @@
         }
       }
     },
-    "/panel/api/xray/outbound-subs/{id}/move": {
+    "/easyxray/api/v1/xray/outbound-subs/{id}/move": {
       "post": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "Reorder a subscription one step up or down in priority (controls its position in the merged outbounds).",
-        "operationId": "post_panel_api_xray_outbound_subs_id_move",
+        "operationId": "post_easyxray_api_v1_xray_outbound_subs_id_move",
         "parameters": [
           {
             "name": "id",
@@ -14840,13 +14840,13 @@
         }
       }
     },
-    "/panel/api/xray/outbound-subs/parse": {
+    "/easyxray/api/v1/xray/outbound-subs/parse": {
       "post": {
         "tags": [
           "Xray Settings"
         ],
         "summary": "Preview a subscription URL: fetch and parse it into outbounds without persisting anything.",
-        "operationId": "post_panel_api_xray_outbound_subs_parse",
+        "operationId": "post_easyxray_api_v1_xray_outbound_subs_parse",
         "requestBody": {
           "required": true,
           "content": {
@@ -14901,13 +14901,13 @@
         }
       }
     },
-    "/panel/api/sub-balancers": {
+    "/easyxray/api/v1/sub-balancers": {
       "get": {
         "tags": [
           "Subscription Balancers"
         ],
         "summary": "List all subscription balancers in sort order (sort_order asc, id asc).",
-        "operationId": "get_panel_api_sub_balancers",
+        "operationId": "get_easyxray_api_v1_sub_balancers",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -14959,7 +14959,7 @@
           "Subscription Balancers"
         ],
         "summary": "Create a subscription balancer. It appears in the JSON subscription of every client that sits on at least one selected inbound.",
-        "operationId": "post_panel_api_sub_balancers",
+        "operationId": "post_easyxray_api_v1_sub_balancers",
         "requestBody": {
           "required": true,
           "content": {
@@ -15056,13 +15056,13 @@
         }
       }
     },
-    "/panel/api/sub-balancers/{id}": {
+    "/easyxray/api/v1/sub-balancers/{id}": {
       "post": {
         "tags": [
           "Subscription Balancers"
         ],
         "summary": "Update a balancer by id. Accepts the same form fields as create (full-row update); omitting memberWeights clears stored weights, while omitting enabled keeps its current value.",
-        "operationId": "post_panel_api_sub_balancers_id",
+        "operationId": "post_easyxray_api_v1_sub_balancers_id",
         "parameters": [
           {
             "name": "id",
@@ -15174,7 +15174,7 @@
           "Subscription Balancers"
         ],
         "summary": "Delete a balancer by id.",
-        "operationId": "delete_panel_api_sub_balancers_id",
+        "operationId": "delete_easyxray_api_v1_sub_balancers_id",
         "parameters": [
           {
             "name": "id",
@@ -15228,13 +15228,13 @@
         }
       }
     },
-    "/panel/api/sub-balancers/{id}/del": {
+    "/easyxray/api/v1/sub-balancers/{id}/del": {
       "post": {
         "tags": [
           "Subscription Balancers"
         ],
         "summary": "Delete a balancer by id (POST alias of DELETE for clients that cannot send DELETE).",
-        "operationId": "post_panel_api_sub_balancers_id_del",
+        "operationId": "post_easyxray_api_v1_sub_balancers_id_del",
         "parameters": [
           {
             "name": "id",
@@ -15654,13 +15654,13 @@
         }
       }
     },
-    "/ws": {
+    "/easyxray/ws": {
       "get": {
         "tags": [
           "WebSocket"
         ],
         "summary": "Upgrade an HTTP connection to a WebSocket. Requires an authenticated session cookie (Bearer token auth is not supported here). Returns 101 Switching Protocols on success. The server then pushes JSON messages described below.",
-        "operationId": "get_ws",
+        "operationId": "get_easyxray_ws",
         "responses": {
           "101": {
             "description": "Switching Protocols. WebSocket messages use WebSocketEnvelope."

@@ -21,7 +21,7 @@ export interface NodeTotals {
 }
 
 async function fetchNodes(): Promise<NodeRecord[]> {
-  const msg = await HttpUtil.get('/panel/api/nodes/list', undefined, { silent: true });
+  const msg = await HttpUtil.get('/easyxray/api/v1/nodes/list', undefined, { silent: true });
   if (!msg?.success) throw new Error(msg?.msg || 'Failed to fetch nodes');
   const validated = parseMsg(msg, NodeListSchema, 'nodes/list');
   return Array.isArray(validated.obj) ? validated.obj : [];

@@ -3,7 +3,7 @@ title: هاست‌ها
 description: >-
   نقاط پایانی بازنویسی به ازای هر inbound. هر host فعال یک لینک اشتراک/پراکسی
   اضافی با آدرس/پورت/TLS مخصوص خودش ارائه می‌دهد و جایگزین آرایه‌ی قدیمی
-  externalProxy می‌شود. همه‌ی نقاط پایانی زیر /panel/api/hosts قرار دارند.
+  externalProxy می‌شود. همه‌ی نقاط پایانی زیر /easyxray/api/v1/hosts قرار دارند.
 full: true
 _openapi:
   preload:
@@ -102,7 +102,7 @@ export default function Layout(props) {
   return (
     <>
       {props.children}
-      <Comp document="./public/openapi.json" webhooks={[]} operations={[{"path":"/panel/api/hosts/list","method":"get"},{"path":"/panel/api/hosts/get/{groupId}","method":"get"},{"path":"/panel/api/hosts/byInbound/{inboundId}","method":"get"},{"path":"/panel/api/hosts/tags","method":"get"},{"path":"/panel/api/hosts/add","method":"post"},{"path":"/panel/api/hosts/update/{groupId}","method":"post"},{"path":"/panel/api/hosts/del/{groupId}","method":"post"},{"path":"/panel/api/hosts/setEnable/{groupId}","method":"post"},{"path":"/panel/api/hosts/reorder","method":"post"},{"path":"/panel/api/hosts/bulk/setEnable","method":"post"},{"path":"/panel/api/hosts/bulk/del","method":"post"}]} showTitle />
+      <Comp document="./public/openapi.json" webhooks={[]} operations={[{"path":"/easyxray/api/v1/hosts/list","method":"get"},{"path":"/easyxray/api/v1/hosts/get/{groupId}","method":"get"},{"path":"/easyxray/api/v1/hosts/byInbound/{inboundId}","method":"get"},{"path":"/easyxray/api/v1/hosts/tags","method":"get"},{"path":"/easyxray/api/v1/hosts/add","method":"post"},{"path":"/easyxray/api/v1/hosts/update/{groupId}","method":"post"},{"path":"/easyxray/api/v1/hosts/del/{groupId}","method":"post"},{"path":"/easyxray/api/v1/hosts/setEnable/{groupId}","method":"post"},{"path":"/easyxray/api/v1/hosts/reorder","method":"post"},{"path":"/easyxray/api/v1/hosts/bulk/setEnable","method":"post"},{"path":"/easyxray/api/v1/hosts/bulk/del","method":"post"}]} showTitle />
     </>
   );
 }

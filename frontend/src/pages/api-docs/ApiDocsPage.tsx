@@ -10,8 +10,8 @@ import { EXAMPLES } from '@/generated/examples';
 import { buildWebSocketEvents } from './websocket-events';
 import './ApiDocsPage.css';
 
-const basePath = window.X_UI_BASE_PATH || '';
-const openApiUrl = `${basePath}panel/api/openapi.json`;
+const basePath = window.EASYXRAY_BASE_PATH || '';
+const openApiUrl = `${basePath}easyxray/api/v1/openapi.json`;
 const websocketEvents = buildWebSocketEvents(EXAMPLES);
 
 interface TaggedOperations {
@@ -91,7 +91,7 @@ export default function ApiDocsPage() {
               items={[
                 {
                   key: 'panel-api',
-                  label: '3X-UI Panel API',
+                  label: 'EasyXray Panel API',
                   children: (
                     <div className="docs-wrapper" role="region" aria-label={t('menu.apiDocs')}>
                       <SwaggerUI

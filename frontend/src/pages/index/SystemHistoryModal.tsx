@@ -218,7 +218,7 @@ const EMPTY_CHART: HistoryChart = {
 
 async function loadBucket(metric: (typeof METRICS)[number], bucket: number): Promise<HistoryChart> {
   try {
-    const msg = await HttpUtil.get(`/panel/api/server/history/${metric.key}/${bucket}`);
+    const msg = await HttpUtil.get(`/easyxray/api/v1/server/history/${metric.key}/${bucket}`);
     if (!msg?.success || !Array.isArray(msg.obj)) return EMPTY_CHART;
     const points: number[] = [];
     const labels: string[] = [];
@@ -242,7 +242,7 @@ async function loadBucket(metric: (typeof METRICS)[number], bucket: number): Pro
     }
     const fetchAligned = async (key?: string): Promise<number[]> => {
       if (!key) return [];
-      const m = await HttpUtil.get(`/panel/api/server/history/${key}/${bucket}`);
+      const m = await HttpUtil.get(`/easyxray/api/v1/server/history/${key}/${bucket}`);
       if (!m?.success || !Array.isArray(m.obj)) return [];
       const byTs = new Map<number, number>();
       for (const p of m.obj) byTs.set(Number(p.t) || 0, Number(p.v) || 0);

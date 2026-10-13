@@ -81,7 +81,7 @@ describe('generated OpenAPI runtime contracts', () => {
   });
 
   it('documents the WebSocket handshake and every emitted event', () => {
-    const ws = operation('/ws', 'get');
+    const ws = operation('/easyxray/ws', 'get');
     expect(Object.keys(ws.responses)).toEqual(['101', '401']);
     expect(ws.security).toEqual([{ cookieAuth: [] }]);
 
@@ -129,7 +129,7 @@ describe('generated OpenAPI runtime contracts', () => {
   });
 
   it('documents all inbound links as a nullable string array', () => {
-    expect(responseObjectSchema('/panel/api/inbounds/allLinks')).toEqual({
+    expect(responseObjectSchema('/easyxray/api/v1/inbounds/allLinks')).toEqual({
       type: 'array',
       nullable: true,
       items: { type: 'string' },
@@ -137,28 +137,28 @@ describe('generated OpenAPI runtime contracts', () => {
   });
 
   it('uses the runtime REST response schemas', () => {
-    expect(responseObjectSchema('/panel/api/server/logs/{count}', 'post')).toEqual({
+    expect(responseObjectSchema('/easyxray/api/v1/server/logs/{count}', 'post')).toEqual({
       type: 'array',
       nullable: true,
       items: { type: 'string' },
     });
-    expect(responseObjectSchema('/panel/api/server/xraylogs/{count}', 'post')).toEqual({
+    expect(responseObjectSchema('/easyxray/api/v1/server/xraylogs/{count}', 'post')).toEqual({
       type: 'array',
       nullable: true,
       items: { $ref: '#/components/schemas/LogEntry' },
     });
     expect(
-      operation('/panel/api/server/xraylogs/{count}', 'post').responses['200'].content?.[
+      operation('/easyxray/api/v1/server/xraylogs/{count}', 'post').responses['200'].content?.[
         'application/json'
       ].example,
     ).toEqual({ success: true, obj: [EXAMPLES.LogEntry] });
-    expect(responseObjectSchema('/panel/api/server/getNewUUID')).toEqual({
+    expect(responseObjectSchema('/easyxray/api/v1/server/getNewUUID')).toEqual({
       $ref: '#/components/schemas/NewUUIDResponse',
     });
-    expect(responseObjectSchema('/panel/api/server/getNewmldsa65')).toEqual({
+    expect(responseObjectSchema('/easyxray/api/v1/server/getNewmldsa65')).toEqual({
       $ref: '#/components/schemas/MLDSA65Response',
     });
-    expect(responseObjectSchema('/panel/api/server/getNewmlkem768')).toEqual({
+    expect(responseObjectSchema('/easyxray/api/v1/server/getNewmlkem768')).toEqual({
       $ref: '#/components/schemas/MLKEM768Response',
     });
 
@@ -190,7 +190,7 @@ describe('generated OpenAPI runtime contracts', () => {
   });
 
   it('documents every paged-client query and the groups response', () => {
-    const paged = operation('/panel/api/clients/list/paged', 'get');
+    const paged = operation('/easyxray/api/v1/clients/list/paged', 'get');
     expect(paged.parameters?.map((param) => param.name)).toEqual([
       'page',
       'pageSize',
@@ -227,7 +227,7 @@ describe('generated OpenAPI runtime contracts', () => {
       'lastOnline',
     ]);
 
-    expect(responseObjectSchema('/panel/api/clients/list/paged')).toEqual({
+    expect(responseObjectSchema('/easyxray/api/v1/clients/list/paged')).toEqual({
       $ref: '#/components/schemas/ClientPageResponse',
     });
     expect(spec.components.schemas.ClientPageResponse.properties?.groups).toMatchObject({

@@ -50,9 +50,11 @@ describe('client enable toggle', () => {
         );
       });
 
-      expect(HttpUtil.get).toHaveBeenCalledWith('/panel/api/clients/get/scheduled%40example.com');
+      expect(HttpUtil.get).toHaveBeenCalledWith(
+        '/easyxray/api/v1/clients/get/scheduled%40example.com',
+      );
       expect(post).toHaveBeenCalledWith(
-        '/panel/api/clients/update/scheduled%40example.com',
+        '/easyxray/api/v1/clients/update/scheduled%40example.com',
         expect.objectContaining({
           email,
           enable,

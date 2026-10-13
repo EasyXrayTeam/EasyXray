@@ -14,10 +14,10 @@ describe('normalizeBase', () => {
 describe('joinUrl', () => {
   it('joins with exactly one slash regardless of input slashes', () => {
     expect(joinUrl('https://x.com/', 'panel/api/inbounds/list')).toBe(
-      'https://x.com/panel/api/inbounds/list',
+      'https://x.com/easyxray/api/v1/inbounds/list',
     );
-    expect(joinUrl('https://x.com', '/panel/api/inbounds/list')).toBe(
-      'https://x.com/panel/api/inbounds/list',
+    expect(joinUrl('https://x.com', '/easyxray/api/v1/inbounds/list')).toBe(
+      'https://x.com/easyxray/api/v1/inbounds/list',
     );
   });
 });
@@ -25,7 +25,7 @@ describe('joinUrl', () => {
 const base = {
   baseUrl: 'https://panel.example.com:2053',
   token: 'TKN',
-  path: '/panel/api/inbounds/list',
+  path: '/easyxray/api/v1/inbounds/list',
 };
 
 describe('buildCurl', () => {
@@ -33,7 +33,7 @@ describe('buildCurl', () => {
     const cmd = buildCurl({ ...base, method: 'GET' });
     expect(cmd).toContain('-X GET');
     expect(cmd).toContain("-H 'Authorization: Bearer TKN'");
-    expect(cmd).toContain("'https://panel.example.com:2053/panel/api/inbounds/list'");
+    expect(cmd).toContain("'https://panel.example.com:2053/easyxray/api/v1/inbounds/list'");
     expect(cmd).not.toContain('--data');
     expect(cmd).not.toContain('-d ');
   });
@@ -42,7 +42,7 @@ describe('buildCurl', () => {
     const cmd = buildCurl({
       ...base,
       method: 'POST',
-      path: '/panel/api/inbounds/add',
+      path: '/easyxray/api/v1/inbounds/add',
       body: '{"up":0}',
     });
     expect(cmd).toContain('-X POST');
@@ -54,7 +54,7 @@ describe('buildCurl', () => {
     const cmd = buildCurl({
       ...base,
       method: 'POST',
-      path: '/panel/api/inbounds/resetAllTraffics',
+      path: '/easyxray/api/v1/inbounds/resetAllTraffics',
     });
     expect(cmd).not.toContain('--data');
   });
@@ -72,7 +72,7 @@ describe('buildFetchSnippet', () => {
     const snip = buildFetchSnippet({
       ...base,
       method: 'POST',
-      path: '/panel/api/inbounds/add',
+      path: '/easyxray/api/v1/inbounds/add',
       body: '{"up":0}',
     });
     expect(snip).toContain("method: 'POST'");

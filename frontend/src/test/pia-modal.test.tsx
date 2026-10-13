@@ -27,9 +27,9 @@ const SERVERS = {
 };
 
 function piaApiPost(url: string, data?: unknown) {
-  if (url === '/panel/api/xray/pia/data') return new Msg(true, '', ACCOUNT);
-  if (url === '/panel/api/xray/pia/countries') return new Msg(true, '', COUNTRIES);
-  if (url === '/panel/api/xray/pia/servers') {
+  if (url === '/easyxray/api/v1/xray/pia/data') return new Msg(true, '', ACCOUNT);
+  if (url === '/easyxray/api/v1/xray/pia/countries') return new Msg(true, '', COUNTRIES);
+  if (url === '/easyxray/api/v1/xray/pia/servers') {
     const code = (data as { countryCode?: string } | undefined)?.countryCode?.toUpperCase();
     if (code === 'AL') {
       return new Msg(true, '', {
@@ -45,7 +45,7 @@ function piaApiPost(url: string, data?: unknown) {
     }
     return new Msg(true, '', { regions: [], servers: [] });
   }
-  if (url === '/panel/api/xray/pia/addKey') {
+  if (url === '/easyxray/api/v1/xray/pia/addKey') {
     const hostname = (data as { hostname?: string } | undefined)?.hostname;
     if (hostname === 'uswest1') {
       return new Msg(true, '', {
@@ -175,7 +175,7 @@ function PiaHarness({ onAdded }: { onAdded?: (outbound: Record<string, unknown>)
 describe('PIA modal', () => {
   it('shows username and password when not signed in', async () => {
     vi.mocked(HttpUtil.post).mockImplementation(async (url: string) => {
-      if (url === '/panel/api/xray/pia/data') return new Msg(true, '', null);
+      if (url === '/easyxray/api/v1/xray/pia/data') return new Msg(true, '', null);
       return new Msg(false, `Unexpected POST ${url}`, null);
     });
 
@@ -355,7 +355,7 @@ describe('PIA modal', () => {
     const posts: unknown[] = [];
     mockPiaApi();
     vi.mocked(HttpUtil.post).mockImplementation(async (url: string, data?: unknown) => {
-      if (url === '/panel/api/xray/pia/addKey') posts.push(data);
+      if (url === '/easyxray/api/v1/xray/pia/addKey') posts.push(data);
       return piaApiPost(url, data);
     });
     renderWithProviders(
@@ -386,10 +386,10 @@ describe('PIA modal', () => {
   it('does not add an outbound when addKey omits WireGuard fields', async () => {
     const onAddOutbound = vi.fn();
     vi.mocked(HttpUtil.post).mockImplementation(async (url: string) => {
-      if (url === '/panel/api/xray/pia/data') return new Msg(true, '', ACCOUNT);
-      if (url === '/panel/api/xray/pia/countries') return new Msg(true, '', COUNTRIES);
-      if (url === '/panel/api/xray/pia/servers') return new Msg(true, '', SERVERS);
-      if (url === '/panel/api/xray/pia/addKey') {
+      if (url === '/easyxray/api/v1/xray/pia/data') return new Msg(true, '', ACCOUNT);
+      if (url === '/easyxray/api/v1/xray/pia/countries') return new Msg(true, '', COUNTRIES);
+      if (url === '/easyxray/api/v1/xray/pia/servers') return new Msg(true, '', SERVERS);
+      if (url === '/easyxray/api/v1/xray/pia/addKey') {
         return new Msg(true, '', { tag: 'pia-us-east-useast1', hostname: 'useast1' });
       }
       return new Msg(false, `Unexpected POST ${url}`, null);

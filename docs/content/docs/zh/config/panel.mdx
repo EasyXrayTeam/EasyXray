@@ -1,6 +1,6 @@
 ---
 title: 面板设置
-description: 全部 3x-ui 面板设置——Web 服务器、TLS、显示、安全与通知——并附上源码中的默认值。
+description: 全部 EasyXray 面板设置——Web 服务器、TLS、显示、安全与通知——并附上源码中的默认值。
 icon: SlidersHorizontal
 ---
 
@@ -10,7 +10,7 @@ icon: SlidersHorizontal
 
 | 设置                | 默认值                  | 含义                                                                    |
 | ------------------- | ----------------------- | ----------------------------------------------------------------------- |
-| `webPort`           | `2053`                  | 面板端口（1–65535）。`XUI_PORT` 环境变量会在运行时覆盖它。              |
+| `webPort`           | `2053`                  | 面板端口（1–65535）。`EASYXRAY_PORT` 环境变量会在运行时覆盖它。              |
 | `webListen`         | _（所有网络接口）_      | 将面板绑定到指定的 IP。                                                  |
 | `webBasePath`       | `/`                     | 面板对外提供服务所使用的 URL 路径（始终规范化为 `/…/`）。               |
 | `webCertFile` / `webKeyFile` | _（无）_       | TLS 证书 + 密钥。两者都设置后，面板将以 **HTTPS** 提供服务。           |
@@ -20,12 +20,12 @@ icon: SlidersHorizontal
 
 更改端口或基础路径后，面板 URL 将变为
 `http(s)://<server>:<port><web-base-path>`。你可以在首次启动时通过
-[`XUI_INIT_WEB_BASE_PATH`](/docs/reference/env-vars) 预设基础路径。
+[`EASYXRAY_INIT_WEB_BASE_PATH`](/docs/reference/env-vars) 预设基础路径。
 
 ### TLS
 
 通过 HTTPS 提供面板服务可保护你的凭据在传输过程中的安全。要么设置
-`webCertFile` + `webKeyFile`——[`x-ui` SSL 菜单](/docs/config/ssl-certificates)
+`webCertFile` + `webKeyFile`——[`easyxray` SSL 菜单](/docs/config/ssl-certificates)
 可以为你申请 Let's Encrypt 证书——要么在
 [反向代理](/docs/operations/reverse-proxy)处终止 TLS。
 

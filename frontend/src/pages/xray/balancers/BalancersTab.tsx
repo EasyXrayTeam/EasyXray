@@ -177,7 +177,7 @@ export default function BalancersTab({
     setLiveLoading(true);
     try {
       const msg = await HttpUtil.post(
-        '/panel/api/xray/balancerStatus',
+        '/easyxray/api/v1/xray/balancerStatus',
         { tags: liveTags },
         { silent: true },
       );
@@ -201,7 +201,7 @@ export default function BalancersTab({
   }, [refreshLive]);
 
   async function setOverride(tag: string, target: string) {
-    const msg = await HttpUtil.post('/panel/api/xray/balancerOverride', { tag, target });
+    const msg = await HttpUtil.post('/easyxray/api/v1/xray/balancerOverride', { tag, target });
     if (msg?.success) await refreshLive();
   }
 

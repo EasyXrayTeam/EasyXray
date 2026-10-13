@@ -8,13 +8,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/amneziawg"
-	"github.com/mhsanaei/3x-ui/v3/internal/amneziawgnet"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	xuilogger "github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/testpg"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/json_util"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/amneziawg"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/amneziawgnet"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	easyxraylogger "github.com/EasyXrayTeam/EasyXray/v3/internal/logger"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/testpg"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/util/json_util"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/xray"
 
 	"github.com/op/go-logging"
 )
@@ -27,7 +27,7 @@ func TestMain(m *testing.M) {
 	}
 	// injectPanelEgress logs when it skips injection; the package logger must
 	// exist before any test exercises a skipped path.
-	xuilogger.InitLogger(logging.ERROR)
+	easyxraylogger.InitLogger(logging.ERROR)
 	// Against PostgreSQL every package shares one database; give this one its
 	// own schema so a parallel package and a previous run cannot reach it.
 	cleanup, err := testpg.IsolatePackage("internal_web_service")

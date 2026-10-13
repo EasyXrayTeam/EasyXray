@@ -17,13 +17,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/crypto/nodetoken"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/netsafe"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/wirecodec"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/entity"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/crypto/nodetoken"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/logger"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/util/netsafe"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/util/wirecodec"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/entity"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/xray"
 )
 
 const remoteHTTPTimeout = 10 * time.Second
@@ -383,7 +383,7 @@ func (r *Remote) ListRemoteTags(ctx context.Context) ([]string, error) {
 }
 
 func (r *Remote) ListInboundOptions(ctx context.Context) ([]RemoteInboundOption, error) {
-	env, err := r.do(ctx, http.MethodGet, "panel/api/inbounds/list", nil)
+	env, err := r.do(ctx, http.MethodGet, "easyxray/api/v1/inbounds/list", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -395,7 +395,7 @@ func (r *Remote) ListInboundOptions(ctx context.Context) ([]RemoteInboundOption,
 }
 
 func (r *Remote) refreshRemoteIDs(ctx context.Context) error {
-	env, err := r.do(ctx, http.MethodGet, "panel/api/inbounds/list", nil)
+	env, err := r.do(ctx, http.MethodGet, "easyxray/api/v1/inbounds/list", nil)
 	if err != nil {
 		return err
 	}
@@ -433,7 +433,7 @@ func (r *Remote) refreshRemoteIDs(ctx context.Context) error {
 
 func (r *Remote) AddInbound(ctx context.Context, ib *model.Inbound) error {
 	payload := wireInbound(ib, r.node.Id)
-	env, err := r.do(ctx, http.MethodPost, "panel/api/inbounds/add", payload)
+	env, err := r.do(ctx, http.MethodPost, "easyxray/api/v1/inbounds/add", payload)
 	if err != nil {
 		return err
 	}
@@ -456,7 +456,7 @@ func (r *Remote) DelInbound(ctx context.Context, ib *model.Inbound) error {
 		logger.Warning("remote DelInbound: tag", ib.Tag, "not found on", r.node.Name)
 		return nil
 	}
-	if _, err := r.do(ctx, http.MethodPost, "panel/api/inbounds/del/"+strconv.Itoa(id), nil); err != nil {
+	if _, err := r.do(ctx, http.MethodPost, "easyxray/api/v1/inbounds/del/"+strconv.Itoa(id), nil); err != nil {
 		return err
 	}
 	r.cacheDel(ib.Tag)
@@ -469,7 +469,7 @@ func (r *Remote) UpdateInbound(ctx context.Context, oldIb, newIb *model.Inbound)
 		return r.AddInbound(ctx, newIb)
 	}
 	payload := wireInbound(newIb, r.node.Id)
-	if _, err := r.do(ctx, http.MethodPost, "panel/api/inbounds/update/"+strconv.Itoa(id), payload); err != nil {
+	if _, err := r.do(ctx, http.MethodPost, "easyxray/api/v1/inbounds/update/"+strconv.Itoa(id), payload); err != nil {
 		return err
 	}
 	if oldIb.Tag != newIb.Tag {
@@ -486,7 +486,7 @@ func (r *Remote) SetInboundSubSortIndex(ctx context.Context, ib *model.Inbound, 
 		return err
 	}
 	payload := url.Values{"subSortIndex": []string{strconv.Itoa(index)}}
-	_, err = r.do(ctx, http.MethodPost, "panel/api/inbounds/"+strconv.Itoa(id)+"/subSortIndex", payload)
+	_, err = r.do(ctx, http.MethodPost, "easyxray/api/v1/inbounds/"+strconv.Itoa(id)+"/subSortIndex", payload)
 	return err
 }
 
@@ -598,7 +598,7 @@ func (r *Remote) AddClient(ctx context.Context, ib *model.Inbound, client model.
 		"client":     client,
 		"inboundIds": []int{id},
 	}
-	if _, err := r.do(ctx, http.MethodPost, "panel/api/clients/add", payload); err != nil {
+	if _, err := r.do(ctx, http.MethodPost, "easyxray/api/v1/clients/add", payload); err != nil {
 		return err
 	}
 	return nil
@@ -617,7 +617,7 @@ func (r *Remote) DeleteUser(ctx context.Context, ib *model.Inbound, email string
 	}
 	body := map[string]any{"inboundIds": []int{id}}
 	_, err = r.do(ctx, http.MethodPost,
-		"panel/api/clients/"+url.PathEscape(email)+"/detach", body)
+		"easyxray/api/v1/clients/"+url.PathEscape(email)+"/detach", body)
 	if err == nil {
 		return nil
 	}
@@ -633,7 +633,7 @@ func (r *Remote) DeleteClient(ctx context.Context, email string) error {
 		return nil
 	}
 	_, err := r.do(ctx, http.MethodPost,
-		"panel/api/clients/del/"+url.PathEscape(email), nil)
+		"easyxray/api/v1/clients/del/"+url.PathEscape(email), nil)
 	if err == nil {
 		return nil
 	}
@@ -652,7 +652,7 @@ func (r *Remote) UpdateUser(ctx context.Context, ib *model.Inbound, oldEmail str
 	if err != nil {
 		return err
 	}
-	path := "panel/api/clients/update/" + url.PathEscape(oldEmail) +
+	path := "easyxray/api/v1/clients/update/" + url.PathEscape(oldEmail) +
 		"?inboundIds=" + strconv.Itoa(id)
 	if _, err := r.do(ctx, http.MethodPost, path, payload); err != nil {
 		return err
@@ -661,7 +661,7 @@ func (r *Remote) UpdateUser(ctx context.Context, ib *model.Inbound, oldEmail str
 }
 
 func (r *Remote) RestartXray(ctx context.Context) error {
-	_, err := r.do(ctx, http.MethodPost, "panel/api/server/restartXrayService", nil)
+	_, err := r.do(ctx, http.MethodPost, "easyxray/api/v1/server/restartXrayService", nil)
 	return err
 }
 
@@ -674,7 +674,7 @@ func (r *Remote) UpdatePanel(ctx context.Context, dev bool) error {
 	if dev {
 		body = url.Values{"dev": {"true"}}
 	}
-	_, err := r.do(ctx, http.MethodPost, "panel/api/server/updatePanel", body)
+	_, err := r.do(ctx, http.MethodPost, "easyxray/api/v1/server/updatePanel", body)
 	return err
 }
 
@@ -689,7 +689,7 @@ type WebCertFiles struct {
 // node-assigned inbound — those paths exist on the node, the central panel's
 // don't. See issue #4854.
 func (r *Remote) GetWebCertFiles(ctx context.Context) (*WebCertFiles, error) {
-	env, err := r.do(ctx, http.MethodGet, "panel/api/server/getWebCertFiles", nil)
+	env, err := r.do(ctx, http.MethodGet, "easyxray/api/v1/server/getWebCertFiles", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -705,7 +705,7 @@ func (r *Remote) GetWebCertFiles(ctx context.Context) (*WebCertFiles, error) {
 // topology (#4983). Best-effort: an old-build node without the endpoint returns
 // an error the caller ignores.
 func (r *Remote) GetDescendants(ctx context.Context) ([]model.NodeSummary, error) {
-	env, err := r.do(ctx, http.MethodGet, "panel/api/server/descendants", nil)
+	env, err := r.do(ctx, http.MethodGet, "easyxray/api/v1/server/descendants", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -720,18 +720,18 @@ func (r *Remote) GetDescendants(ctx context.Context) ([]model.NodeSummary, error
 
 func (r *Remote) ResetClientTraffic(ctx context.Context, _ *model.Inbound, email string) error {
 	_, err := r.do(ctx, http.MethodPost,
-		"panel/api/clients/resetTraffic/"+url.PathEscape(email), nil)
+		"easyxray/api/v1/clients/resetTraffic/"+url.PathEscape(email), nil)
 	return err
 }
 
 // ResetClientTraffics zeroes many clients on the node in one request.
 func (r *Remote) ResetClientTraffics(ctx context.Context, emails []string) error {
-	_, err := r.do(ctx, http.MethodPost, "panel/api/clients/bulkResetTraffic", map[string]any{"emails": emails})
+	_, err := r.do(ctx, http.MethodPost, "easyxray/api/v1/clients/bulkResetTraffic", map[string]any{"emails": emails})
 	return err
 }
 
 func (r *Remote) ResetAllTraffics(ctx context.Context) error {
-	_, err := r.do(ctx, http.MethodPost, "panel/api/inbounds/resetAllTraffics", nil)
+	_, err := r.do(ctx, http.MethodPost, "easyxray/api/v1/inbounds/resetAllTraffics", nil)
 	return err
 }
 
@@ -740,7 +740,7 @@ func (r *Remote) ResetInboundTraffic(ctx context.Context, ib *model.Inbound) err
 	if err != nil {
 		return fmt.Errorf("remote ResetInboundTraffic: resolve tag %q: %w", ib.Tag, err)
 	}
-	_, err = r.do(ctx, http.MethodPost, fmt.Sprintf("panel/api/inbounds/%d/resetTraffic", id), nil)
+	_, err = r.do(ctx, http.MethodPost, fmt.Sprintf("easyxray/api/v1/inbounds/%d/resetTraffic", id), nil)
 	return err
 }
 
@@ -768,7 +768,7 @@ type TrafficSnapshot struct {
 // FetchHostGroups pulls the node's host overrides so a freshly adopted inbound
 // keeps its subscription TLS/SNI/fingerprint settings on the master.
 func (r *Remote) FetchHostGroups(ctx context.Context) ([]*entity.HostGroup, error) {
-	env, err := r.do(ctx, http.MethodGet, "panel/api/hosts/list", nil)
+	env, err := r.do(ctx, http.MethodGet, "easyxray/api/v1/hosts/list", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -784,7 +784,7 @@ func (r *Remote) FetchHostGroups(ctx context.Context) ([]*entity.HostGroup, erro
 func (r *Remote) FetchTrafficSnapshot(ctx context.Context) (*TrafficSnapshot, error) {
 	snap := &TrafficSnapshot{LastOnlineMap: map[string]int64{}}
 
-	envList, err := r.do(ctx, http.MethodGet, "panel/api/inbounds/list", nil)
+	envList, err := r.do(ctx, http.MethodGet, "easyxray/api/v1/inbounds/list", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -794,12 +794,12 @@ func (r *Remote) FetchTrafficSnapshot(ctx context.Context) (*TrafficSnapshot, er
 
 	// Prefer the GUID-keyed subtree; fall back to the flat list only when the
 	// node is an old build without the per-GUID endpoint (#4983).
-	envTree, err := r.do(ctx, http.MethodPost, "panel/api/clients/onlinesByGuid", nil)
+	envTree, err := r.do(ctx, http.MethodPost, "easyxray/api/v1/clients/onlinesByGuid", nil)
 	if err == nil && len(envTree.Obj) > 0 {
 		_ = json.Unmarshal(envTree.Obj, &snap.OnlineTree)
 	}
 	if len(snap.OnlineTree) == 0 {
-		envOnlines, err := r.do(ctx, http.MethodPost, "panel/api/clients/onlines", nil)
+		envOnlines, err := r.do(ctx, http.MethodPost, "easyxray/api/v1/clients/onlines", nil)
 		if err != nil {
 			logger.Warning("remote", r.node.Name, "onlines fetch failed:", err)
 		} else if len(envOnlines.Obj) > 0 {
@@ -807,14 +807,14 @@ func (r *Remote) FetchTrafficSnapshot(ctx context.Context) (*TrafficSnapshot, er
 		}
 	}
 
-	envLastOnline, err := r.do(ctx, http.MethodPost, "panel/api/clients/lastOnline", nil)
+	envLastOnline, err := r.do(ctx, http.MethodPost, "easyxray/api/v1/clients/lastOnline", nil)
 	if err != nil {
 		logger.Warning("remote", r.node.Name, "lastOnline fetch failed:", err)
 	} else if len(envLastOnline.Obj) > 0 {
 		_ = json.Unmarshal(envLastOnline.Obj, &snap.LastOnlineMap)
 	}
 
-	envActiveInbounds, err := r.do(ctx, http.MethodPost, "panel/api/clients/activeInbounds", nil)
+	envActiveInbounds, err := r.do(ctx, http.MethodPost, "easyxray/api/v1/clients/activeInbounds", nil)
 	if err != nil {
 		logger.Debugf("remote %s active inbounds fetch failed: %v", r.node.Name, err)
 	} else if len(envActiveInbounds.Obj) > 0 {
@@ -834,7 +834,7 @@ func (r *Remote) PushGlobalClientTraffics(ctx context.Context, masterGuid string
 		"masterGuid": masterGuid,
 		"traffics":   traffics,
 	}
-	_, err := r.do(ctx, http.MethodPost, "panel/api/inbounds/pushClientTraffics", payload)
+	_, err := r.do(ctx, http.MethodPost, "easyxray/api/v1/inbounds/pushClientTraffics", payload)
 	return err
 }
 
@@ -944,7 +944,7 @@ func isNonEmptySlice(v any) bool {
 }
 
 func (r *Remote) FetchAllClientIps(ctx context.Context) ([]model.InboundClientIps, error) {
-	env, err := r.do(ctx, http.MethodGet, "panel/api/server/clientIps", nil)
+	env, err := r.do(ctx, http.MethodGet, "easyxray/api/v1/server/clientIps", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -958,7 +958,7 @@ func (r *Remote) FetchAllClientIps(ctx context.Context) ([]model.InboundClientIp
 }
 
 func (r *Remote) PushAllClientIps(ctx context.Context, ips []model.InboundClientIps) error {
-	_, err := r.do(ctx, http.MethodPost, "panel/api/server/clientIps", ips)
+	_, err := r.do(ctx, http.MethodPost, "easyxray/api/v1/server/clientIps", ips)
 	return err
 }
 
@@ -967,7 +967,7 @@ func (r *Remote) PushAllClientIps(ctx context.Context, ips []model.InboundClient
 // master also pushes back), this preserves which physical node each IP is on.
 // Returns an empty map for older nodes that lack the endpoint.
 func (r *Remote) FetchClientIpsByGuid(ctx context.Context) (map[string]map[string][]model.ClientIpEntry, error) {
-	env, err := r.do(ctx, http.MethodPost, "panel/api/clients/clientIpsByGuid", nil)
+	env, err := r.do(ctx, http.MethodPost, "easyxray/api/v1/clients/clientIpsByGuid", nil)
 	if err != nil {
 		return nil, err
 	}

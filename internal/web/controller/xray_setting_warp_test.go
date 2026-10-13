@@ -12,17 +12,17 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/locale"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/dbtest"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/locale"
 )
 
 func TestWarpIntervalReportsClockPersistenceFailure(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("EASYXRAY_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "EasyXray.db"))
 	db := database.GetDB()
 	for _, setting := range []*model.Setting{
 		{Key: "warpUpdateInterval", Value: "0"},
@@ -54,9 +54,9 @@ func TestWarpIntervalReportsClockPersistenceFailure(t *testing.T) {
 		c.Set("I18n", func(_ locale.I18nType, key string, _ ...string) string { return key })
 		c.Next()
 	})
-	NewXraySettingController(engine.Group("/panel/api"))
+	NewXraySettingController(engine.Group("/easyxray/api/v1"))
 	form := url.Values{"interval": {"7"}}
-	req := httptest.NewRequest(http.MethodPost, "/panel/api/xray/warp/interval", strings.NewReader(form.Encode()))
+	req := httptest.NewRequest(http.MethodPost, "/easyxray/api/v1/xray/warp/interval", strings.NewReader(form.Encode()))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	w := httptest.NewRecorder()
 	engine.ServeHTTP(w, req)

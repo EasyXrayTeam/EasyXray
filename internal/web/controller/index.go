@@ -5,13 +5,13 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/entity"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/middleware"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service/panel"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service/tgbot"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/session"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/logger"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/entity"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/middleware"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/service"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/service/panel"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/service/tgbot"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/session"
 
 	"github.com/gin-gonic/gin"
 )
@@ -78,7 +78,7 @@ func (a *IndexController) sponsorLogo(c *gin.Context) {
 func (a *IndexController) index(c *gin.Context) {
 	if session.IsLogin(c) {
 		c.Header("Cache-Control", "no-store")
-		c.Redirect(http.StatusTemporaryRedirect, c.GetString("base_path")+"panel/")
+		c.Redirect(http.StatusTemporaryRedirect, c.GetString("base_path")+"easyxray/")
 		return
 	}
 	serveDistPage(c, "login.html")

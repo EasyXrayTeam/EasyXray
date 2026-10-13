@@ -11,16 +11,16 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/dbtest"
 )
 
 func setupSubBalancerRouter(t *testing.T) *gin.Engine {
 	t.Helper()
-	t.Setenv("XUI_DB_FOLDER", t.TempDir())
-	dbtest.InitDB(t, filepath.Join(t.TempDir(), "x-ui.db"))
+	t.Setenv("EASYXRAY_DB_FOLDER", t.TempDir())
+	dbtest.InitDB(t, filepath.Join(t.TempDir(), "EasyXray.db"))
 	gin.SetMode(gin.TestMode)
 	router := gin.New()
-	NewSubBalancerController(router.Group("/panel/api"))
+	NewSubBalancerController(router.Group("/easyxray/api/v1"))
 	return router
 }
 
@@ -48,7 +48,7 @@ func TestSubBalancerController_EnabledParsing(t *testing.T) {
 	router := setupSubBalancerRouter(t)
 	base := "remark=auto&strategy=random&sortOrder=1&inboundIds=1"
 
-	resp := subBalancerPost(t, router, "/panel/api/sub-balancers", base)
+	resp := subBalancerPost(t, router, "/easyxray/api/v1/sub-balancers", base)
 	if !strings.Contains(resp.Body.String(), `"success":true`) {
 		t.Fatalf("create no enabled: %s", resp.Body.String())
 	}
@@ -57,13 +57,13 @@ func TestSubBalancerController_EnabledParsing(t *testing.T) {
 		t.Fatalf("absent enabled = %v, want true", bal["enabled"])
 	}
 
-	resp = subBalancerPost(t, router, "/panel/api/sub-balancers", base+"&enabled=false")
+	resp = subBalancerPost(t, router, "/easyxray/api/v1/sub-balancers", base+"&enabled=false")
 	bal = responseObj(t, resp.Body.String())["obj"].(map[string]any)
 	if bal["enabled"] != false {
 		t.Fatalf("enabled=false -> %v, want false", bal["enabled"])
 	}
 
-	resp = subBalancerPost(t, router, "/panel/api/sub-balancers", base+"&enabled=bogus")
+	resp = subBalancerPost(t, router, "/easyxray/api/v1/sub-balancers", base+"&enabled=bogus")
 	if !strings.Contains(resp.Body.String(), `"success":false`) {
 		t.Fatalf("enabled=bogus should be rejected: %s", resp.Body.String())
 	}
@@ -75,14 +75,14 @@ func TestSubBalancerController_UpdatePreservesEnabledWhenAbsent(t *testing.T) {
 	router := setupSubBalancerRouter(t)
 	base := "remark=auto&strategy=random&sortOrder=1&inboundIds=1"
 
-	resp := subBalancerPost(t, router, "/panel/api/sub-balancers", base+"&enabled=false")
+	resp := subBalancerPost(t, router, "/easyxray/api/v1/sub-balancers", base+"&enabled=false")
 	bal := responseObj(t, resp.Body.String())["obj"].(map[string]any)
 	id := strconv.Itoa(int(bal["id"].(float64)))
 	if bal["enabled"] != false {
 		t.Fatalf("setup: enabled = %v, want false", bal["enabled"])
 	}
 
-	resp = subBalancerPost(t, router, "/panel/api/sub-balancers/"+id, "remark=renamed&strategy=random&sortOrder=1&inboundIds=1")
+	resp = subBalancerPost(t, router, "/easyxray/api/v1/sub-balancers/"+id, "remark=renamed&strategy=random&sortOrder=1&inboundIds=1")
 	if !strings.Contains(resp.Body.String(), `"success":true`) {
 		t.Fatalf("update: %s", resp.Body.String())
 	}
@@ -94,7 +94,7 @@ func TestSubBalancerController_UpdatePreservesEnabledWhenAbsent(t *testing.T) {
 		t.Fatalf("remark = %v, want renamed", bal["remark"])
 	}
 
-	resp = subBalancerPost(t, router, "/panel/api/sub-balancers/"+id, "remark=renamed&strategy=random&sortOrder=1&inboundIds=1&enabled=true")
+	resp = subBalancerPost(t, router, "/easyxray/api/v1/sub-balancers/"+id, "remark=renamed&strategy=random&sortOrder=1&inboundIds=1&enabled=true")
 	bal = responseObj(t, resp.Body.String())["obj"].(map[string]any)
 	if bal["enabled"] != true {
 		t.Fatalf("enabled=true -> %v, want true", bal["enabled"])

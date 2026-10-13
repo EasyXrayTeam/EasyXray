@@ -35,7 +35,7 @@ const HEADLINE_INTERVAL_MS = 2000;
 
 type LoginForm = LoginFormValues;
 
-const basePath = window.X_UI_BASE_PATH || '';
+const basePath = window.EASYXRAY_BASE_PATH || '';
 
 export default function LoginPage() {
   const { t } = useTranslation();
@@ -81,7 +81,7 @@ export default function LoginPage() {
     setSubmitting(true);
     try {
       const msg = await HttpUtil.post('/login', values);
-      if (msg.success) window.location.href = basePath + 'panel/';
+      if (msg.success) window.location.href = basePath + 'easyxray/';
     } finally {
       setSubmitting(false);
     }
@@ -180,7 +180,7 @@ export default function LoginPage() {
             ) : (
               <div className="login-card">
                 <div className="brand">
-                  <span className="brand-name">3X-UI</span>
+                  <span className="brand-name">EasyXray</span>
                   <span className="brand-accent" aria-hidden="true" />
                 </div>
                 <h2 className="welcome">

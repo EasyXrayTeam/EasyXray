@@ -329,7 +329,7 @@ describe('InboundFormModal', () => {
 
     await waitFor(() => {
       expect(post).toHaveBeenCalledWith(
-        '/panel/api/inbounds/update/42',
+        '/easyxray/api/v1/inbounds/update/42',
         expect.objectContaining({ enable: false, port: 41234, protocol: 'vless' }),
       );
     });
@@ -363,7 +363,7 @@ describe('InboundFormModal', () => {
     }
     fireEvent.click(primaryButton());
 
-    const isUpdate = ([url]: unknown[]) => url === '/panel/api/inbounds/update/42';
+    const isUpdate = ([url]: unknown[]) => url === '/easyxray/api/v1/inbounds/update/42';
     await waitFor(() => expect(post.mock.calls.some(isUpdate)).toBe(true));
     const payload = post.mock.calls.find(isUpdate)![1] as { streamSettings: string };
     const stream = JSON.parse(payload.streamSettings) as Record<string, unknown>;
@@ -400,7 +400,7 @@ describe('InboundFormModal', () => {
     });
     fireEvent.click(primaryButton());
 
-    const isAdd = ([url]: unknown[]) => url === '/panel/api/inbounds/add';
+    const isAdd = ([url]: unknown[]) => url === '/easyxray/api/v1/inbounds/add';
     await waitFor(() => expect(post.mock.calls.some(isAdd)).toBe(true));
     const payload = post.mock.calls.find(isAdd)![1] as {
       protocol: string;
@@ -457,7 +457,7 @@ describe('InboundFormModal', () => {
 
     fireEvent.click(primaryButton());
 
-    const isUpdate = ([url]: unknown[]) => url === '/panel/api/inbounds/update/43';
+    const isUpdate = ([url]: unknown[]) => url === '/easyxray/api/v1/inbounds/update/43';
     await waitFor(() => expect(post.mock.calls.some(isUpdate)).toBe(true));
     const payload = post.mock.calls.find(isUpdate)![1] as { streamSettings: string };
     const finalmask = JSON.parse(payload.streamSettings).finalmask as Record<string, unknown>;
@@ -500,7 +500,7 @@ describe('InboundFormModal', () => {
     chooseSelectOption('tun-wfp-block-leak', 'dns');
     fireEvent.click(primaryButton());
 
-    const isUpdate = ([url]: unknown[]) => url === '/panel/api/inbounds/update/44';
+    const isUpdate = ([url]: unknown[]) => url === '/easyxray/api/v1/inbounds/update/44';
     await waitFor(() => expect(post.mock.calls.some(isUpdate)).toBe(true));
     const payload = post.mock.calls.find(isUpdate)![1] as { settings: string };
     expect(JSON.parse(payload.settings)).toMatchObject({

@@ -7,16 +7,16 @@ import (
 	"flag"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/config"
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service/panel"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/config"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/dbtest"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/service/panel"
 )
 
 func newTokenCLIEnv(t *testing.T) {
 	t.Helper()
-	t.Setenv("XUI_DB_FOLDER", t.TempDir())
+	t.Setenv("EASYXRAY_DB_FOLDER", t.TempDir())
 	dbtest.InitDB(t, config.GetDBPath())
 }
 

@@ -56,7 +56,7 @@ export default function NodeHistoryPanel({ node, bucket = 30 }: NodeHistoryPanel
     // as KB/s, which must opt out of Sparkline's 0-100 "%" defaults.
     const fetchSeries = async (metric: string, kind: 'pct' | 'rate') => {
       try {
-        const url = `/panel/api/nodes/history/${node.id}/${metric}/${bucket}`;
+        const url = `/easyxray/api/v1/nodes/history/${node.id}/${metric}/${bucket}`;
         const msg = (await HttpUtil.get(url)) as ApiMsg<SeriesPoint[]>;
         if (msg?.success && Array.isArray(msg.obj)) {
           const vals: number[] = [];

@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
 )
 
 func TestInitDB_GeneratesPerPanelSubscriptionPaths(t *testing.T) {
@@ -40,7 +40,7 @@ func TestInitDB_GeneratesPerPanelSubscriptionPaths(t *testing.T) {
 		return paths
 	}
 
-	firstDB := filepath.Join(t.TempDir(), "x-ui.db")
+	firstDB := filepath.Join(t.TempDir(), "EasyXray.db")
 	first := loadPaths(firstDB)
 	reloaded := loadPaths(firstDB)
 	for key, firstPath := range first {
@@ -49,7 +49,7 @@ func TestInitDB_GeneratesPerPanelSubscriptionPaths(t *testing.T) {
 		}
 	}
 
-	second := loadPaths(filepath.Join(t.TempDir(), "x-ui.db"))
+	second := loadPaths(filepath.Join(t.TempDir(), "EasyXray.db"))
 	for key, firstPath := range first {
 		if firstPath == second[key] {
 			t.Fatalf("%s reused across panels: %q", key, firstPath)
@@ -59,8 +59,8 @@ func TestInitDB_GeneratesPerPanelSubscriptionPaths(t *testing.T) {
 
 func TestSeedClientsFromInboundJSON_IsIdempotentAgainstExistingClients(t *testing.T) {
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	if err := InitDB(filepath.Join(dbDir, "x-ui.db")); err != nil {
+	t.Setenv("EASYXRAY_DB_FOLDER", dbDir)
+	if err := InitDB(filepath.Join(dbDir, "EasyXray.db")); err != nil {
 		t.Fatalf("InitDB failed: %v", err)
 	}
 	t.Cleanup(func() { _ = CloseDB() })
@@ -121,8 +121,8 @@ func TestSeedClientsFromInboundJSON_IsIdempotentAgainstExistingClients(t *testin
 
 func TestNormalizeInboundClientSubId_FillsMissingAndPreservesExisting(t *testing.T) {
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	if err := InitDB(filepath.Join(dbDir, "x-ui.db")); err != nil {
+	t.Setenv("EASYXRAY_DB_FOLDER", dbDir)
+	if err := InitDB(filepath.Join(dbDir, "EasyXray.db")); err != nil {
 		t.Fatalf("InitDB failed: %v", err)
 	}
 	t.Cleanup(func() { _ = CloseDB() })
@@ -204,8 +204,8 @@ func TestNormalizeInboundClientSubId_FillsMissingAndPreservesExisting(t *testing
 
 func TestNormalizeSettingPaths_RepairsLegacyValues(t *testing.T) {
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	if err := InitDB(filepath.Join(dbDir, "x-ui.db")); err != nil {
+	t.Setenv("EASYXRAY_DB_FOLDER", dbDir)
+	if err := InitDB(filepath.Join(dbDir, "EasyXray.db")); err != nil {
 		t.Fatalf("InitDB failed: %v", err)
 	}
 	t.Cleanup(func() { _ = CloseDB() })

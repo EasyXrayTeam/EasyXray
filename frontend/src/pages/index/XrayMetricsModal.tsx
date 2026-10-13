@@ -184,7 +184,7 @@ async function loadHistory(url: string | null, bucket: number): Promise<MetricsC
 
 async function loadState(): Promise<XrayState | null> {
   try {
-    const msg = await HttpUtil.get<XrayState>('/panel/api/server/xrayMetricsState');
+    const msg = await HttpUtil.get<XrayState>('/easyxray/api/v1/server/xrayMetricsState');
     return msg?.success && msg.obj ? msg.obj : null;
   } catch (e) {
     console.error('Failed to fetch xray metrics state', e);
@@ -194,7 +194,7 @@ async function loadState(): Promise<XrayState | null> {
 
 async function loadObservatory(): Promise<ObservatoryTag[]> {
   try {
-    const msg = await HttpUtil.get<ObservatoryTag[]>('/panel/api/server/xrayObservatory');
+    const msg = await HttpUtil.get<ObservatoryTag[]>('/easyxray/api/v1/server/xrayObservatory');
     return msg?.success && Array.isArray(msg.obj) ? msg.obj : [];
   } catch (e) {
     console.error('Failed to fetch observatory snapshot', e);
@@ -276,10 +276,10 @@ export default function XrayMetricsModal({ open, onClose }: XrayMetricsModalProp
 
   const historyUrl = isObservatory
     ? obsActiveTag
-      ? `/panel/api/server/xrayObservatoryHistory/${encodeURIComponent(obsActiveTag)}/${bucket}`
+      ? `/easyxray/api/v1/server/xrayObservatoryHistory/${encodeURIComponent(obsActiveTag)}/${bucket}`
       : null
     : activeMetric
-      ? `/panel/api/server/xrayMetricsHistory/${activeMetric.key}/${bucket}`
+      ? `/easyxray/api/v1/server/xrayMetricsHistory/${activeMetric.key}/${bucket}`
       : null;
 
   useEffect(() => {

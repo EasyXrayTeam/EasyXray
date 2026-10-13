@@ -2,7 +2,7 @@
 title: WebSocket
 description: >-
   دریافت به‌روزرسانی‌های وضعیت در لحظه از طریق WebSocket. تنها یک‌بار به
-  <code>ws://<panel>/ws</code> متصل شوید تا بدون نیاز به polling، جریانی از
+  <code>ws://<panel>/easyxray/ws</code> متصل شوید تا بدون نیاز به polling، جریانی از
   پیام‌های JSON دریافت کنید. به یک کوکی نشست احرازهویت‌شده نیاز دارد (احرازهویت با
   توکن Bearer پشتیبانی نمی‌شود). هر پیام دارای یک فیلد <code>type</code> است که
   شکل داده‌ی آن را مشخص می‌کند.
@@ -40,7 +40,7 @@ export default function Layout(props) {
   return (
     <>
       {props.children}
-      <Comp document="./public/openapi.json" webhooks={[]} operations={[{"path":"/ws","method":"get"}]} showTitle />
+      <Comp document="./public/openapi.json" webhooks={[]} operations={[{"path":"/easyxray/ws","method":"get"}]} showTitle />
     </>
   );
 }

@@ -4,10 +4,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/logger"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/xray"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -189,7 +189,7 @@ func (s *InboundService) GetNodeClientTraffics(nodeID int) ([]*xray.ClientTraffi
 
 // overlayInboundsClientStats applies the global overlay to every preloaded
 // ClientStats row across the given inbounds. UI read paths only — never the
-// full /panel/api/inbounds/list payload, which doubles as the traffic
+// full /easyxray/api/v1/inbounds/list payload, which doubles as the traffic
 // snapshot masters poll: overlaying that would leak pushed globals back into
 // the masters' delta accounting.
 func (s *InboundService) overlayInboundsClientStats(db *gorm.DB, inbounds []*model.Inbound) {

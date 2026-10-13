@@ -1,4 +1,4 @@
-// Package sub provides subscription server functionality for the 3x-ui panel,
+// Package sub provides subscription server functionality for the EasyXray panel,
 // including HTTP/HTTPS servers for serving subscription links and JSON configurations.
 package sub
 
@@ -14,12 +14,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/common"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/locale"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/middleware"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/network"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/logger"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/util/common"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/locale"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/middleware"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/network"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/service"
 
 	"github.com/gin-gonic/gin"
 )

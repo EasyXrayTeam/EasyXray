@@ -4,16 +4,16 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/middleware"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service/panel"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service/tgbot"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/session"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/database/model"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/middleware"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/service/panel"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/service/tgbot"
+	"github.com/EasyXrayTeam/EasyXray/v3/internal/web/session"
 
 	"github.com/gin-gonic/gin"
 )
 
-// APIController handles the main API routes for the 3x-ui panel, including inbounds and server management.
+// APIController handles the main API routes for the EasyXray panel, including inbounds and server management.
 type APIController struct {
 	BaseController
 	inboundController     *InboundController
@@ -76,7 +76,7 @@ func (a *APIController) checkAPIAuth(c *gin.Context) {
 }
 
 // monitorScopeAllow exposes only status/metrics routes without sensitive data.
-// Keys are route patterns relative to /panel/api.
+// Keys are route patterns relative to /easyxray/api/v1.
 var monitorScopeAllow = map[string]struct{}{
 	"/server/status":                              {},
 	"/server/cpuHistory/:bucket":                  {},
@@ -91,7 +91,7 @@ var monitorScopeAllow = map[string]struct{}{
 }
 
 // nodeSyncScopeAllow is the node-sync route/method allowlist relative to
-// /panel/api; Gin patterns prevent concrete parameters broadening authority.
+// /easyxray/api/v1; Gin patterns prevent concrete parameters broadening authority.
 var nodeSyncScopeAllow = map[string]map[string]struct{}{
 	"/server/status":               {http.MethodGet: {}},
 	"/inbounds/list":               {http.MethodGet: {}},
@@ -161,7 +161,7 @@ func (a *APIController) enforceTokenScope(c *gin.Context) {
 }
 
 func relAPIPath(fullPath string) string {
-	const marker = "/panel/api"
+	const marker = "/easyxray/api/v1"
 	_, after, ok := strings.Cut(fullPath, marker)
 	if !ok {
 		return ""
@@ -172,7 +172,7 @@ func relAPIPath(fullPath string) string {
 // initRouter sets up the API routes for inbounds, server, and other endpoints.
 func (a *APIController) initRouter(g *gin.RouterGroup) {
 	// Main API group
-	api := g.Group("/panel/api")
+	api := g.Group("/easyxray/api/v1")
 	api.Use(a.checkAPIAuth)
 	api.Use(a.enforceTokenScope)
 	// Decode + verify the node config envelope (zstd + X-Config-Sha256) and
@@ -203,8 +203,8 @@ func (a *APIController) initRouter(g *gin.RouterGroup) {
 	a.hostController = NewHostController(hosts)
 
 	// Settings + Xray config management live under the API surface too, so the
-	// same API token drives them. Paths are /panel/api/setting/* and
-	// /panel/api/xray/*.
+	// same API token drives them. Paths are /easyxray/api/v1/setting/* and
+	// /easyxray/api/v1/xray/*.
 	a.settingController = NewSettingController(api)
 	a.xraySettingController = NewXraySettingController(api)
 

@@ -1,17 +1,23 @@
 ---
 title: نصب
-description: نصب 3x-ui با اسکریپت رسمی (نسخهٔ پایدار، نسخهٔ مشخص یا dev-latest)، نصب خودکار/cloud-init یا Docker — و انتخاب میان SQLite و PostgreSQL.
+description: نصب EasyXray با اسکریپت رسمی (نسخهٔ پایدار، نسخهٔ مشخص یا dev-latest)، نصب خودکار/cloud-init یا Docker — و انتخاب میان SQLite و PostgreSQL.
 icon: Download
 ---
 
-‏3x-ui روی طیف گسترده‌ای از توزیع‌های Linux اجرا می‌شود — Ubuntu، Debian، Armbian،
+‏EasyXray روی طیف گسترده‌ای از توزیع‌های Linux اجرا می‌شود — Ubuntu، Debian، Armbian،
 Fedora، CentOS، RHEL، AlmaLinux، Rocky Linux، Oracle Linux، Amazon Linux،
 Virtuozzo، Arch، Manjaro، openSUSE (Tumbleweed/Leap)، Alpine — و همچنین Windows،
 روی معماری‌های `amd64`، `386`، `arm64`، `armv7`، `armv6`، `armv5` و `s390x`.
 
+<Callout type="info">
+  EasyXray به‌صورت **تازه** نصب می‌شود. یک نصب موجود X-UI / 3x-ui را تشخیص
+  نمی‌دهد و ارتقا هم نمی‌دهد — نام سرویس، مسیرهای نصب، پیشوند متغیرهای محیطی و فایل
+  پایگاه‌داده همه متفاوت‌اند. به [مهاجرت](/docs/help/migration) مراجعه کنید.
+</Callout>
+
 <Callout type="warn">
   نصب‌کنندهٔ اسکریپتی را به‌صورت **root** (یا با `sudo`) اجرا کنید. این اسکریپت یک
-  سرویس نصب می‌کند، دستور مدیریتی `x-ui` را راه‌اندازی می‌کند و پنل را در زمان
+  سرویس نصب می‌کند، دستور مدیریتی `easyxray` را راه‌اندازی می‌کند و پنل را در زمان
   بوت فعال می‌سازد.
 </Callout>
 
@@ -21,27 +27,27 @@ Virtuozzo، Arch، Manjaro، openSUSE (Tumbleweed/Leap)، Alpine — و همچن
 
 اسکریپت رسمی مسیر توصیه‌شده است. این اسکریپت در طول نصب یک نام کاربری، رمز عبور و
 مسیر دسترسی (مسیر پایهٔ وب) **تصادفی** تولید می‌کند، سرویس را راه‌اندازی می‌کند و
-دستور مدیریتی `x-ui` را نصب می‌کند.
+دستور مدیریتی `easyxray` را نصب می‌کند.
 
 ```bash title="latest stable"
-bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
+bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh)
 ```
 
 برای نصب یک **نسخهٔ مشخص**، تگ آن را در انتها اضافه کنید:
 
 ```bash title="pinned version"
-bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh) v3.4.0
+bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh) v1.0.0
 ```
 
 برای نصب نسخهٔ **dev** غلتان (آخرین پیش‌انتشار به‌ازای هر کامیت از شاخهٔ `main`
 — نه یک نسخهٔ پایدار) عبارت `dev-latest` را پاس دهید:
 
 ```bash title="rolling dev build"
-bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh) dev-latest
+bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh) dev-latest
 ```
 
-پس از پایان نصب، مشخصات ورود چاپ‌شده را یادداشت کنید و دستور `x-ui` را اجرا کنید تا
-[منوی مدیریت](/docs/guide/update-uninstall#the-x-ui-management-menu) باز شود، سپس
+پس از پایان نصب، مشخصات ورود چاپ‌شده را یادداشت کنید و دستور `easyxray` را اجرا کنید تا
+[منوی مدیریت](/docs/guide/update-uninstall#the-easyxray-management-menu) باز شود، سپس
 به [نخستین ورود](/docs/guide/first-login) ادامه دهید.
 
 </Tab>
@@ -55,7 +61,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.
 docker compose up -d
 ```
 
-برای اجرا با سرویس **PostgreSQL** همراه، دو خط `XUI_DB_*` را در
+برای اجرا با سرویس **PostgreSQL** همراه، دو خط `EASYXRAY_DB_*` را در
 `docker-compose.yml` از حالت کامنت خارج کنید و با پروفایل مربوطه اجرا کنید:
 
 ```bash
@@ -71,16 +77,16 @@ docker compose --profile postgres up -d
 docker run -d \
   --cap-add=NET_ADMIN \
   --cap-add=NET_RAW \
-  -e XUI_ENABLE_FAIL2BAN=true \
-  -v $PWD/db/:/etc/x-ui/ \
+  -e EASYXRAY_ENABLE_FAIL2BAN=true \
+  -v $PWD/db/:/etc/easyxray/ \
   -v $PWD/cert/:/root/cert/ \
   --network=host \
   --restart=unless-stopped \
-  --name 3x-ui \
-  ghcr.io/mhsanaei/3x-ui:latest
+  --name EasyXray \
+  ghcr.io/easyxrayteam/easyxray:latest
 ```
 
-والیوم `db/` پایگاه‌دادهٔ SQLite (`/etc/x-ui/x-ui.db`) را نگه می‌دارد و `cert/`
+والیوم `db/` پایگاه‌دادهٔ SQLite (`/etc/easyxray/EasyXray.db`) را نگه می‌دارد و `cert/`
 گواهی‌های TLS را، بنابراین داده‌های شما در ارتقاها حفظ می‌شوند.
 
 </Tab>
@@ -88,7 +94,7 @@ docker run -d \
 <Tab value="Manual">
 
 برای کاربران پیشرفته، یک آرشیو انتشار متناسب با معماری خود را از
-[صفحهٔ releases](https://github.com/MHSanaei/3x-ui/releases) دانلود کنید، آن را
+[صفحهٔ releases](https://github.com/EasyXrayTeam/EasyXray/releases) دانلود کنید، آن را
 استخراج کنید و باینری را به‌عنوان یک سرویس systemd اجرا کنید. اسکریپت نصب دقیقاً
 همین مراحل را خودکار می‌کند، بنابراین مگر اینکه دلیل خاصی برای نصب دستی داشته
 باشید، روش اسکریپتی ترجیح داده می‌شود.
@@ -107,7 +113,7 @@ docker run -d \
 
 شما بک‌اند ذخیره‌سازی را در زمان نصب انتخاب می‌کنید:
 
-- **SQLite** (پیش‌فرض) — یک فایل واحد در مسیر `/etc/x-ui/x-ui.db`. بدون نیاز به هیچ تنظیماتی.
+- **SQLite** (پیش‌فرض) — یک فایل واحد در مسیر `/etc/easyxray/EasyXray.db`. بدون نیاز به هیچ تنظیماتی.
 - **PostgreSQL** — برای تعداد کلاینت بالا یا پیکربندی‌های چندنودی. نصب‌کننده
   می‌تواند آن را به‌صورت محلی نصب کند یا از یک DSN که شما ارائه می‌دهید استفاده کند.
 
@@ -117,15 +123,15 @@ docker run -d \
 ## نصب خودکار / cloud-init
 
 نصب‌کننده برای خودکارسازی به‌صورت **غیرتعاملی** نیز اجرا می‌شود.
-`XUI_NONINTERACTIVE=1` را تنظیم کنید (یا بدون TTY اجرا کنید) تا نصب به‌صورت
+`EASYXRAY_NONINTERACTIVE=1` را تنظیم کنید (یا بدون TTY اجرا کنید) تا نصب به‌صورت
 سرتاسری و بدون هیچ پرسشی انجام شود، مشخصات تصادفی تولید کند و آن‌ها را در
-`/etc/x-ui/install-result.env` بنویسد:
+`/etc/easyxray/install-result.env` بنویسد:
 
 ```bash
-XUI_NONINTERACTIVE=1 bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
+EASYXRAY_NONINTERACTIVE=1 bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh)
 ```
 
-دایرکتوری [`deploy/`](https://github.com/MHSanaei/3x-ui/tree/main/deploy) در مخزن
+دایرکتوری [`deploy/`](https://github.com/EasyXrayTeam/EasyXray/tree/main/deploy) در مخزن
 یک user-data آمادهٔ **cloud-init** برای نصب‌های خودکار روی هر ابری (Hetzner، AWS،
 DigitalOcean، Vultr، GCP، Azure، Oracle) دارد.
 
@@ -140,7 +146,7 @@ DigitalOcean، Vultr، GCP، Azure، Oracle) دارد.
   <Card
     title="به‌روزرسانی و حذف نصب"
     href="/docs/guide/update-uninstall"
-    description="منوی x-ui، به‌روزرسانی‌ها و حذف."
+    description="منوی easyxray، به‌روزرسانی‌ها و حذف."
   />
   <Card
     title="REALITY"

@@ -31,7 +31,9 @@ export default function DiscordTab({ allSetting, updateSetting }: DiscordTabProp
     setTestLoading(true);
     setTestResult(null);
     try {
-      const res = (await HttpUtil.post('/panel/api/setting/testDiscord')) as DiscordTestResult;
+      const res = (await HttpUtil.post(
+        '/easyxray/api/v1/setting/testDiscord',
+      )) as DiscordTestResult;
       setTestResult(res);
     } catch (e: unknown) {
       setTestResult({

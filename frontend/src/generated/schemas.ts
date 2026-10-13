@@ -3481,7 +3481,7 @@ export const SCHEMAS: Record<string, unknown> = {
     "type": "object"
   },
   "Node": {
-    "description": "Node represents a remote 3x-ui panel registered with the central panel.\nThe central panel polls each node's existing /panel/api/server/status\nendpoint over HTTP using the per-node ApiToken to populate the runtime\nstatus fields below.",
+    "description": "Node represents a remote EasyXray panel registered with the central panel.\nThe central panel polls each node's existing /easyxray/api/v1/server/status\nendpoint over HTTP using the per-node ApiToken to populate the runtime\nstatus fields below.",
     "properties": {
       "activeCount": {
         "example": 23,
@@ -3652,7 +3652,7 @@ export const SCHEMAS: Record<string, unknown> = {
         "type": "string"
       },
       "xrayState": {
-        "description": "XrayState and XrayError are captured from the remote node's /panel/api/server/status\nduring heartbeats. They let the central panel distinguish \"panel API reachable\"\n(status=online) from \"Xray core itself has failed on the node\" for monitoring.",
+        "description": "XrayState and XrayError are captured from the remote node's /easyxray/api/v1/server/status\nduring heartbeats. They let the central panel distinguish \"panel API reachable\"\n(status=online) from \"Xray core itself has failed on the node\" for monitoring.",
         "type": "string"
       },
       "xrayVersion": {
@@ -4450,7 +4450,7 @@ export const SCHEMAS: Record<string, unknown> = {
     "type": "object"
   },
   "Setting": {
-    "description": "Setting stores key-value configuration settings for the 3x-ui panel.",
+    "description": "Setting stores key-value configuration settings for the EasyXray panel.",
     "properties": {
       "id": {
         "type": "integer"
@@ -4488,7 +4488,7 @@ export const SCHEMAS: Record<string, unknown> = {
         "type": "string"
       },
       "link": {
-        "example": "https://acme.example/?utm_source=3x-ui",
+        "example": "https://acme.example/?utm_source=EasyXray",
         "type": "string"
       },
       "logo": {
@@ -4733,7 +4733,7 @@ export const SCHEMAS: Record<string, unknown> = {
     "type": "object"
   },
   "User": {
-    "description": "User represents a user account in the 3x-ui panel.",
+    "description": "User represents a user account in the EasyXray panel.",
     "properties": {
       "id": {
         "type": "integer"
