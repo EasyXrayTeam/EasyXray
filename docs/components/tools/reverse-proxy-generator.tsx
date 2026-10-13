@@ -16,7 +16,7 @@ export function ReverseProxyGenerator() {
   const [server, setServer] = useState<ProxyServer>('nginx');
   const [domain, setDomain] = useState('panel.example.com');
   const [panelPort, setPanelPort] = useState('2053');
-  const [panelPath, setPanelPath] = useState('/panel');
+  const [panelPath, setPanelPath] = useState('/mypanel');
   const [certTool, setCertTool] = useState<CertTool>('certbot');
 
   const options: ReverseProxyOptions = { server, domain, panelPort, panelPath, certTool };

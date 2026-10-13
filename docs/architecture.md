@@ -173,7 +173,7 @@ EasyXray/
 │   │   │   ├── xray_setting.go #   /easyxray/api/v1/xray    (raw Xray config editor, WARP/Nord/PIA, geodata)
 │   │   │   ├── api.go          #   /easyxray/api/v1 gateway (token auth, envelope + CSRF wiring)
 │   │   │   ├── index.go        #   login/logout/csrf/2FA
-│   │   │   ├── spa.go          #   SPA fallback for /panel UI routes
+│   │   │   ├── spa.go          #   SPA fallback for /easyxray UI routes
 │   │   │   └── websocket.go    #   WS upgrade endpoint
 │   │   ├── service/            # ⭐⭐ Business logic. This is where most real work happens.
 │   │   │   ├── inbound.go              # Inbound CRUD core (~1.4k lines)

@@ -136,7 +136,7 @@ With the web base path configured to `/` (its default), the panel is served from
 All of these sit *under* whatever web base path you configure, so a panel with a base path of `/mypanel` serves its UI at `/mypanel/easyxray/…` and its API at `/mypanel/easyxray/api/v1/…`.
 
 > [!WARNING]
-> This release renames the whole API namespace. The old `/easyxray/api/v1/…` paths are **not** kept as backward-compatible aliases — requests to them will not be answered. Any external integration written against the 3x-ui-era API has to be updated to the `/easyxray/api/v1/…` paths before it will work again.
+> This release renames the whole API namespace. The old `/panel/api/…` paths are **not** kept as backward-compatible aliases — requests to them will not be answered. Any external integration written against the 3x-ui-era API has to be updated to the `/easyxray/api/v1/…` paths before it will work again.
 
 ## Upgrading from 3x-ui
 

@@ -21,6 +21,7 @@ import { setMessageInstance } from '@/utils/messageBus';
 import { useTheme } from '@/hooks/useTheme';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useAllSettings } from '@/api/queries/useAllSettings';
+import { panelSettingsPath } from '@/lib/panel-url';
 import { AllSettingSchema } from '@/schemas/setting';
 import AppSidebar from '@/layouts/AppSidebar';
 import GeneralTab from './GeneralTab';
@@ -102,13 +103,11 @@ export default function SettingsPage() {
   function rebuildUrlAfterRestart(): string {
     const { webDomain, webPort, webBasePath, webCertFile, webKeyFile } = allSetting;
     const newProtocol = webCertFile || webKeyFile ? 'https:' : 'http:';
-
-    let base = webBasePath ? webBasePath.replace(/^\//, '') : '';
-    if (base && !base.endsWith('/')) base += '/';
+    const settingsPath = panelSettingsPath(webBasePath);
 
     if (!entryIsIP) {
       const url = new URL(window.location.href);
-      url.pathname = `/${base}panel/settings`;
+      url.pathname = settingsPath;
       url.protocol = newProtocol;
       return url.toString();
     }
@@ -120,7 +119,7 @@ export default function SettingsPage() {
 
     const url = new URL(`${newProtocol}//${finalHost}`);
     if (finalPort) url.port = finalPort;
-    url.pathname = `/${base}panel/settings`;
+    url.pathname = settingsPath;
     return url.toString();
   }
 
