@@ -22,8 +22,9 @@ other repository-level notes).
 | Relationship     | **Modified derivative work.** Not endorsed by, sponsored by, or affiliated with the upstream author. See [`NOTICE`](../NOTICE).                             |
 
 Git history was **not** rewritten. The full upstream commit history is intact;
-the rebrand is a short linear series of commits on top of it, on the branch
-`branding/easyxray`.
+the rebrand is a short linear series of commits on top of it, merged into `main`
+on 2026-10-13 with rebase-and-merge (so the commits on `main` carry new hashes;
+the branch `branding/easyxray` was left behind, diverged).
 
 ---
 
@@ -206,6 +207,29 @@ were found and fixed on this branch; none of them was cosmetic.
   READMEs already use. Test fixtures that merely need _a_ base path were left
   alone.
 
+### 3.8 Correction found after the merge
+
+The five above were caught by reading; this one needed a gate that only fires on
+`main`.
+
+- **The MTProto sidecar's dependency URL was renamed along with the project.**
+  The rename included a catch-all `s#[Mm][Hh][Ss]anaei#MinimaxFlora#g`, which
+  also rewrote `github.com/mhsanaei/mtg-multi` — a third-party project that is
+  _not_ part of this rebrand — to `github.com/MinimaxFlora/mtg-multi`, a path
+  that does not exist. `release.yml` (4 sites) and `DockerInit.sh` (2) resolve
+  the sidecar's latest tag from that URL and abort on an empty result, so every
+  Linux and Windows release build died with `could not resolve the latest
+  mtg-multi release tag`; `internal/mtproto/process.go`, `docs/architecture.md`
+  and `.github/claude/issue-analyst-context.md` documented the dead path. All
+  nine now read `mhsanaei/mtg-multi` (latest `v1.15.0`, whose asset names match
+  the matrix labels: `mtg-multi-1.15.0-linux-amd64.tar.gz`, …). The branding
+  brief's rename list names `MHSanaei/3x-ui`, `mhsanaei/3x-ui` and
+  `docs.sanaei.dev` and never the sidecar, so the substitution over-reached
+  rather than missed a site. What let it through: the §8 residue scan was
+  written as "0 old-brand hits", and a catch-all is the surest way to satisfy
+  that — nothing checked that a renamed URL still _resolves_. `release.yml`
+  triggers only on `main` pushes and tags, so no branch CI ever ran the step.
+
 ---
 
 ## 4. Deliberate non-renames
@@ -290,24 +314,26 @@ so the call is a no-op. It was **kept** rather than deleted because:
 
 ## 8. Verification
 
-Run against the working tree on branch `branding/easyxray`.
+Run against the working tree on branch `branding/easyxray`; the sidecar row below
+was re-checked on `main` after the merge (§3.8).
 
-| Check                                             | Result                                                                                                                                                                                                                                                                                                                |
-| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `gofmt -l` over every changed `.go` file          | **PASS** — clean (four files needed realignment after the renames and were formatted)                                                                                                                                                                                                                                 |
-| `go vet ./...`                                    | **PASS** — exit 0                                                                                                                                                                                                                                                                                                     |
-| `go test ./...`                                   | **5 failures, all pre-existing** — see below                                                                                                                                                                                                                                                                          |
-| `npm run typecheck` (frontend)                    | **PASS**                                                                                                                                                                                                                                                                                                              |
-| `npm run lint` (frontend)                         | **PASS**                                                                                                                                                                                                                                                                                                              |
-| `npm run test` (frontend)                         | **PASS** — 190 files, 1843 tests (162 unit/components + 28 Storybook browser stories)                                                                                                                                                                                                                                 |
-| `npm run build` (frontend)                        | **PASS** — dist repopulated with the new icons, `favicon.ico`, `apple-touch-icon.png`, regenerated `openapi.json`; re-run after §3.7 with no generated-file drift                                                                                                                                                     |
-| `pnpm run typecheck` (docs site)                  | **PASS**                                                                                                                                                                                                                                                                                                              |
-| `pnpm test` (docs site)                           | **PASS** — 12 files, 107 tests. Added after §3.7: this suite was missing from the first pass and is what the `joinUrl` defect escaped through                                                                                                                                                                         |
-| `pnpm run format:check` (docs site)               | **PASS** — `oxfmt --check .`, 117 files                                                                                                                                                                                                                                                                               |
-| `pnpm run gen:api` (docs site)                    | **PASS** — 13 tag pages regenerated from the new spec                                                                                                                                                                                                                                                                 |
-| `DEPLOY_TARGET=static pnpm run build` (docs site) | **PASS** — static export prerenders every page in all four locales; spot-checking the built HTML confirms the API pages carry the `/easyxray/api/v1/…` namespace and that `/panel/api/…` survives only on the migration and "no aliases" pages, where it belongs                                                      |
-| Old-brand residue scan                            | After §3.7, `panel/api` survives only where it names the retired prefix: all 7 READMEs, the four `help/migration.mdx`, the four `reference/api/index.mdx`, this ledger. No `/panel/…` UI route remains in `frontend/src`, in any locale file, or on any docs page; **0** old-brand hits in `.github/` or `install.sh` |
-| `npm run generate` (branding tools)               | **PASS** — 14 files regenerated from the four SVGs; the 512px icon, the 180px apple-touch-icon, the four-entry ICO and the two lockups were each rendered and inspected against the source artwork                                                                                                                    |
+| Check                                              | Result                                                                                                                                                                                                                                                                                                                                                                                         |
+| -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `gofmt -l` over every changed `.go` file           | **PASS** — clean (four files needed realignment after the renames and were formatted)                                                                                                                                                                                                                                                                                                          |
+| `go vet ./...`                                     | **PASS** — exit 0                                                                                                                                                                                                                                                                                                                                                                              |
+| `go test ./...`                                    | **5 failures, all pre-existing** — see below                                                                                                                                                                                                                                                                                                                                                   |
+| `npm run typecheck` (frontend)                     | **PASS**                                                                                                                                                                                                                                                                                                                                                                                       |
+| `npm run lint` (frontend)                          | **PASS**                                                                                                                                                                                                                                                                                                                                                                                       |
+| `npm run test` (frontend)                          | **PASS** — 190 files, 1843 tests (162 unit/components + 28 Storybook browser stories)                                                                                                                                                                                                                                                                                                          |
+| `npm run build` (frontend)                         | **PASS** — dist repopulated with the new icons, `favicon.ico`, `apple-touch-icon.png`, regenerated `openapi.json`; re-run after §3.7 with no generated-file drift                                                                                                                                                                                                                              |
+| `pnpm run typecheck` (docs site)                   | **PASS**                                                                                                                                                                                                                                                                                                                                                                                       |
+| `pnpm test` (docs site)                            | **PASS** — 12 files, 107 tests. Added after §3.7: this suite was missing from the first pass and is what the `joinUrl` defect escaped through                                                                                                                                                                                                                                                  |
+| `pnpm run format:check` (docs site)                | **PASS** — `oxfmt --check .`, 117 files                                                                                                                                                                                                                                                                                                                                                        |
+| `pnpm run gen:api` (docs site)                     | **PASS** — 13 tag pages regenerated from the new spec                                                                                                                                                                                                                                                                                                                                          |
+| `DEPLOY_TARGET=static pnpm run build` (docs site)  | **PASS** — static export prerenders every page in all four locales; spot-checking the built HTML confirms the API pages carry the `/easyxray/api/v1/…` namespace and that `/panel/api/…` survives only on the migration and "no aliases" pages, where it belongs                                                                                                                               |
+| Old-brand residue scan                             | After §3.7, `panel/api` survives only where it names the retired prefix: all 7 READMEs, the four `help/migration.mdx`, the four `reference/api/index.mdx`, this ledger. No `/panel/…` UI route remains in `frontend/src`, in any locale file, or on any docs page; **0** old-brand hits in `.github/` or `install.sh`                                                                          |
+| `release.yml` + `DockerInit.sh` sidecar tag lookup | **FAILED on `main` after the merge (see §3.8); PASS after the fix** — the tag-lookup line, copied out of each file and run as-is, resolved to an empty tag (hence `could not resolve the latest mtg-multi release tag`) and now prints `v1.15.0`, with the matching asset URL answering 200. No test can reach a workflow's shell step, so running the file's own command is the demonstration |
+| `npm run generate` (branding tools)                | **PASS** — 14 files regenerated from the four SVGs; the 512px icon, the 180px apple-touch-icon, the four-entry ICO and the two lockups were each rendered and inspected against the source artwork                                                                                                                                                                                             |
 
 ### The 5 Go test failures
 
@@ -329,16 +355,21 @@ development machine.
 
 ## 9. Outstanding items
 
-1. **The rebrand lives on the branch `branding/easyxray`, not on `main`.**
-   The branch sits directly on top of upstream `74c3cc38` and is open as a pull
-   request; `main` is untouched and nothing was force-pushed or released — see
-   §1. Commit hashes are deliberately not written down here: naming one would
-   need a re-amend to correct, which changes it.
-2. **GitHub Pages must be enabled manually** in the repository settings for the
-   docs workflow to publish.
-3. **Non-English API reference TOC anchors** drift on two operations — see
+1. **The rebrand is on `main`.** Merged 2026-10-13 (rebase-and-merge, PR #1);
+   `main` is `d7fd1918`, nothing was force-pushed, and the repository still has
+   no tags and no releases. Note that a push to `main` triggers
+   `.github/workflows/release.yml`, whose `publish-dev` job force-pushes a
+   rolling `dev-latest` tag and creates a Release; that first run was cancelled
+   at the `Publish rolling dev release` step, before it published anything.
+2. **GitHub Pages is enabled** (`build_type: workflow`), publishing from
+   `.github/workflows/docs-deploy.yml` to
+   <https://easyxrayteam.github.io/EasyXray/>.
+3. **The release build was red on `main`** from the merge until §3.8's fix: the
+   matrix legs for `amd64` and `armv7` failed at the sidecar download step. No
+   release was published from that run.
+4. **Non-English API reference TOC anchors** drift on two operations — see
    §3.5.
-4. **Dev-only:** `readPanelVersion()` in `frontend/vite.config.js` reads
+5. **Dev-only:** `readPanelVersion()` in `frontend/vite.config.js` reads
    `../config/version`, a path that does not exist (the real file is
    `internal/config/version`). Pre-existing upstream behaviour, unrelated to the
    rebrand; noted because it was found while auditing. It only affects the
