@@ -20,11 +20,22 @@ other repository-level notes).
 | This repository  | [EasyXrayTeam/EasyXray](https://github.com/EasyXrayTeam/EasyXray)                                                                                           |
 | License          | GNU GPL-3.0 — unchanged, see [`LICENSE`](../LICENSE)                                                                                                        |
 | Relationship     | **Modified derivative work.** Not endorsed by, sponsored by, or affiliated with the upstream author. See [`NOTICE`](../NOTICE).                             |
+| Upstream syncs   | `61885c91` — _"fix(sub): isolate Incy subscription routing from Happ headers (#6810)"_ (2026-10-14) — the first sync after the fork                         |
 
 Git history was **not** rewritten. The full upstream commit history is intact;
 the rebrand is a short linear series of commits on top of it, merged into `main`
 on 2026-10-13 with rebase-and-merge (so the commits on `main` carry new hashes;
 the branch `branding/easyxray` was left behind, diverged).
+
+Upstream is tracked as the `upstream` remote
+(`git remote add upstream https://github.com/MHSanaei/3x-ui.git`), so a sync is
+`git merge upstream/main`. Expect the merge to be close to automatic: the rebrand
+renamed identifiers rather than restructuring, so upstream hunks rarely overlap
+the renamed lines. So far they never have — the first sync (2026-10-14, one
+commit, `internal/sub/controller.go` and its test) merged with no conflict. The
+risk is the other kind: an upstream hunk can carry an old-brand _string_ into a
+surface the rename pass had already cleaned, so re-run the residue scan after a
+sync, not just the test suite.
 
 ---
 
