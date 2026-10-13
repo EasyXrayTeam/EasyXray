@@ -12,18 +12,41 @@ permissions:
   contents: read
 
 jobs:
+  # `secrets` is not an available context in a job-level `if:`, so whether the
+  # credential exists is resolved in a step and published as an output.
+  guard:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 5
+    outputs:
+      configured: ${{ steps.check.outputs.configured }}
+    steps:
+      - name: Check whether a Claude credential is configured
+        id: check
+        env:
+          TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -n "$TOKEN" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No review ran on #${{ github.event.pull_request.number || github.event.issue.number }}: the CLAUDE_CODE_OAUTH_TOKEN secret is not configured for this repository."
+          fi
+
   # Everything that writes to the pull request lives outside the job that runs
   # the model: `prepare` before it, `post` after it.
   prepare:
+    needs: guard
     if: >-
-      (github.event_name == 'pull_request_target'
-       && github.event.pull_request.user.type != 'Bot'
-       && !github.event.pull_request.draft)
-      || (github.event_name == 'issue_comment'
-          && github.event.issue.pull_request
-          && github.event.issue.state == 'open'
-          && startsWith(github.event.comment.body, '@claude review')
-          && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association))
+      needs.guard.outputs.configured == 'true'
+      && ((github.event_name == 'pull_request_target'
+           && github.event.pull_request.user.type != 'Bot'
+           && !github.event.pull_request.draft)
+          || (github.event_name == 'issue_comment'
+              && github.event.issue.pull_request
+              && github.event.issue.state == 'open'
+              && startsWith(github.event.comment.body, '@claude review')
+              && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)))
     runs-on: ubuntu-26.04
     timeout-minutes: 10
     permissions:
@@ -90,8 +113,8 @@ jobs:
   # Its token can read the pull request and nothing more: the model writes
   # /tmp/review.md and the `post` job, which runs no model, publishes it.
   review:
-    needs: prepare
-    if: needs.prepare.outputs.done != 'true'
+    needs: [guard, prepare]
+    if: needs.guard.outputs.configured == 'true' && needs.prepare.outputs.done != 'true'
     runs-on: ubuntu-26.04
     timeout-minutes: 45
     concurrency:
@@ -335,8 +358,8 @@ jobs:
   # Runs no model and checks out nothing: it only reads the two artifacts the
   # review job left, so its write token never sits beside pull-request code.
   post:
-    needs: [prepare, review]
-    if: ${{ !cancelled() && needs.prepare.result == 'success' && needs.prepare.outputs.done != 'true' && needs.review.result != 'cancelled' }}
+    needs: [guard, prepare, review]
+    if: ${{ needs.guard.outputs.configured == 'true' && !cancelled() && needs.prepare.result == 'success' && needs.prepare.outputs.done != 'true' && needs.review.result != 'cancelled' }}
     runs-on: ubuntu-26.04
     timeout-minutes: 10
     permissions:
