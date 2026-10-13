@@ -23,8 +23,10 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
+          # The Docker Hub name belongs to an account, not the GitHub org, so it
+          # deliberately does not match the GHCR path below.
           images: |
-            easyxrayteam/easyxray
+            dockorae/easyxray
             ghcr.io/easyxrayteam/easyxray
           tags: |
             type=ref,event=branch
