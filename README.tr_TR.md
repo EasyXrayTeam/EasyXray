@@ -76,10 +76,10 @@ Aşağıdaki ekran görüntüleri güncel EasyXray arayüzünü gösterir. Panel
 bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh)
 ```
 
-Belirli bir sürümü kurmak için etiketini ekleyin (örneğin `v1.0.0`):
+Belirli bir sürümü kurmak için etiketini ekleyin (örneğin `v1.0.3`):
 
 ```bash
-bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh) v1.0.0
+bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh) v1.0.3
 ```
 
 Sürekli güncellenen **dev** derlemesini (kararlı bir sürüm değil, `main` dalındaki her commit için üretilen en son ön sürüm) kurmak için `dev-latest` parametresini verin:

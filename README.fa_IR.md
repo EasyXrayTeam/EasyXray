@@ -76,10 +76,10 @@
 bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh)
 ```
 
-برای نصب نسخه‌ی مشخص، برچسب آن را اضافه کنید (مثلاً `v1.0.0`):
+برای نصب نسخه‌ی مشخص، برچسب آن را اضافه کنید (مثلاً `v1.0.3`):
 
 ```bash
-bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh) v1.0.0
+bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh) v1.0.3
 ```
 
 برای نصب ساخت **dev** جاری (آخرین پیش‌انتشار تولیدشده از هر commit روی شاخه‌ی `main`، نه یک نسخه‌ی پایدار) مقدار `dev-latest` را بدهید:

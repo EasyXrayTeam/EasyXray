@@ -76,10 +76,10 @@
 bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh)
 ```
 
-Чтобы поставить конкретную версию, допишите её тег (например, `v1.0.0`):
+Чтобы поставить конкретную версию, допишите её тег (например, `v1.0.3`):
 
 ```bash
-bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh) v1.0.0
+bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh) v1.0.3
 ```
 
 Чтобы поставить «плавающую» сборку **dev** (последний предварительный выпуск из ветки `main`, а не стабильный релиз), передайте `dev-latest`:
