@@ -13,14 +13,14 @@ other repository-level notes).
 
 ## 1. Provenance
 
-|                  |                                                                                                                                                             |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Upstream project | [MHSanaei/3x-ui](https://github.com/MHSanaei/3x-ui)                                                                                                         |
-| Base commit      | `74c3cc38821cabd66ad316ea562851422d0b0063` — _"fix(database): blank boolean-era verifyPeerCertByName values on hosts"_ (2026-10-12, upstream `3.10.0` line) |
-| This repository  | [EasyXrayTeam/EasyXray](https://github.com/EasyXrayTeam/EasyXray)                                                                                           |
-| License          | GNU GPL-3.0 — unchanged, see [`LICENSE`](../LICENSE)                                                                                                        |
-| Relationship     | **Modified derivative work.** Not endorsed by, sponsored by, or affiliated with the upstream author. See [`NOTICE`](../NOTICE).                             |
-| Upstream syncs   | `61885c91` — _"fix(sub): isolate Incy subscription routing from Happ headers (#6810)"_ (2026-10-14) — the first sync after the fork                         |
+|                  |                                                                                                                                                                                                                                                        |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Upstream project | [MHSanaei/3x-ui](https://github.com/MHSanaei/3x-ui)                                                                                                                                                                                                    |
+| Base commit      | `74c3cc38821cabd66ad316ea562851422d0b0063` — _"fix(database): blank boolean-era verifyPeerCertByName values on hosts"_ (2026-10-12, upstream `3.10.0` line)                                                                                            |
+| This repository  | [EasyXrayTeam/EasyXray](https://github.com/EasyXrayTeam/EasyXray)                                                                                                                                                                                      |
+| License          | GNU GPL-3.0 — unchanged, see [`LICENSE`](../LICENSE)                                                                                                                                                                                                   |
+| Relationship     | **Modified derivative work.** Not endorsed by, sponsored by, or affiliated with the upstream author. See [`NOTICE`](../NOTICE).                                                                                                                        |
+| Upstream syncs   | `61885c91` — _"fix(sub): isolate Incy subscription routing from Happ headers (#6810)"_ (2026-10-14), the first sync after the fork; `f8b72de9` — _"fix(node-sync): write only changed client rows in the node traffic merge"_ (2026-10-14), the second |
 
 Git history was **not** rewritten. The full upstream commit history is intact;
 the rebrand is a short linear series of commits on top of it, merged into `main`
@@ -31,11 +31,19 @@ Upstream is tracked as the `upstream` remote
 (`git remote add upstream https://github.com/MHSanaei/3x-ui.git`), so a sync is
 `git merge upstream/main`. Expect the merge to be close to automatic: the rebrand
 renamed identifiers rather than restructuring, so upstream hunks rarely overlap
-the renamed lines. So far they never have — the first sync (2026-10-14, one
-commit, `internal/sub/controller.go` and its test) merged with no conflict. The
-risk is the other kind: an upstream hunk can carry an old-brand _string_ into a
-surface the rename pass had already cleaned, so re-run the residue scan after a
-sync, not just the test suite.
+the renamed lines. The first sync (2026-10-14, one commit,
+`internal/sub/controller.go` and its test) merged with no conflict. The second
+(2026-10-14, three commits, tip `f8b72de9`) conflicted in 15 files — and every one
+was a surface the rebrand had rewritten: the sponsor service, its frontend test
+and all 13 locale files. Upstream's own side of each hunk carried the old brand
+(`3X-UI` in `yourBrandText`, `../sponsors/3X`, `xui.sponsor.dismissed`), so the
+merge is not the safe place to leave brand decisions to "theirs".
+
+The other risk is the one the first sync did not exercise: two files upstream
+touched merged **without** a conflict and still arrived carrying the old mark —
+a Storybook story's copy and a new test's `XUI_DB_FOLDER`/`x-ui.db`, which this
+repo reads as `EASYXRAY_DB_FOLDER`/`EasyXray.db`. Re-run the residue scan after a
+sync, not just the test suite: the suite passes on either brand.
 
 ---
 
