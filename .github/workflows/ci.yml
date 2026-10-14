@@ -10,6 +10,8 @@ on:
       - ".nvmrc"
       - "Makefile"
       - ".github/workflows/ci.yml"
+      - "install.sh"
+      - "deploy/**"
   push:
     branches:
       - main
@@ -21,6 +23,8 @@ on:
       - ".nvmrc"
       - "Makefile"
       - ".github/workflows/ci.yml"
+      - "install.sh"
+      - "deploy/**"
 
 permissions:
   contents: read
