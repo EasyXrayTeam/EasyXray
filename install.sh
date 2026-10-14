@@ -28,7 +28,7 @@ msg() {
         ar-EG:msg_arch) printf "المعمارية: %s\n" "$@" ;;
         ar-EG:msg_os_check_failed) echo "فشل التحقق من نظام التشغيل، يرجى التواصل مع المؤلف!" ;;
         ar-EG:msg_os_release) printf "إصدار نظام التشغيل هو: %s\n" "$@" ;;
-        ar-EG:msg_cert_not_pem) echo "الشهادة أو المفتاح الخاص ليس ملف RSA PEM قابلًا للقراءة" ;;
+        ar-EG:msg_cert_not_pem) echo "الشهادة أو المفتاح الخاص ليس ملف PEM قابلًا للقراءة" ;;
         ar-EG:msg_cert_key_mismatch) echo "المفتاح الخاص لا يطابق الشهادة" ;;
         ar-EG:msg_cert_file_unreadable) printf "ملف الشهادة مفقود أو فارغ أو غير قابل للقراءة: %s\n" "$@" ;;
         ar-EG:msg_cert_key_unreadable) printf "ملف المفتاح الخاص مفقود أو فارغ أو غير قابل للقراءة: %s\n" "$@" ;;
@@ -297,7 +297,7 @@ msg() {
         fa-IR:msg_arch) printf "معماری: %s\n" "$@" ;;
         fa-IR:msg_os_check_failed) echo "بررسی سیستم‌عامل ناموفق بود، لطفاً با نویسنده تماس بگیرید!" ;;
         fa-IR:msg_os_release) printf "نسخه سیستم‌عامل این است: %s\n" "$@" ;;
-        fa-IR:msg_cert_not_pem) echo "گواهی یا کلید خصوصی یک فایل RSA PEM قابل خواندن نیست" ;;
+        fa-IR:msg_cert_not_pem) echo "گواهی یا کلید خصوصی یک فایل PEM قابل خواندن نیست" ;;
         fa-IR:msg_cert_key_mismatch) echo "کلید خصوصی با گواهی مطابقت ندارد" ;;
         fa-IR:msg_cert_file_unreadable) printf "فایل گواهی موجود نیست، خالی است یا قابل خواندن نیست: %s\n" "$@" ;;
         fa-IR:msg_cert_key_unreadable) printf "فایل کلید خصوصی موجود نیست، خالی است یا قابل خواندن نیست: %s\n" "$@" ;;
@@ -566,7 +566,7 @@ msg() {
         zh-CN:msg_arch) printf "架构：%s\n" "$@" ;;
         zh-CN:msg_os_check_failed) echo "无法检查系统操作系统，请联系作者！" ;;
         zh-CN:msg_os_release) printf "系统发行版本：%s\n" "$@" ;;
-        zh-CN:msg_cert_not_pem) echo "证书或私钥不是可读的 RSA PEM 文件" ;;
+        zh-CN:msg_cert_not_pem) echo "证书或私钥不是可读的 PEM 文件" ;;
         zh-CN:msg_cert_key_mismatch) echo "私钥与证书不匹配" ;;
         zh-CN:msg_cert_file_unreadable) printf "证书文件缺失、为空或无法读取：%s\n" "$@" ;;
         zh-CN:msg_cert_key_unreadable) printf "私钥文件缺失、为空或无法读取：%s\n" "$@" ;;
@@ -835,7 +835,7 @@ msg() {
         zh-TW:msg_arch) printf "架構：%s\n" "$@" ;;
         zh-TW:msg_os_check_failed) echo "無法檢查系統作業系統，請聯絡作者！" ;;
         zh-TW:msg_os_release) printf "系統發行版本：%s\n" "$@" ;;
-        zh-TW:msg_cert_not_pem) echo "憑證或私鑰不是可讀取的 RSA PEM 檔案" ;;
+        zh-TW:msg_cert_not_pem) echo "憑證或私鑰不是可讀取的 PEM 檔案" ;;
         zh-TW:msg_cert_key_mismatch) echo "私鑰與憑證不相符" ;;
         zh-TW:msg_cert_file_unreadable) printf "憑證檔案缺失、為空或無法讀取：%s\n" "$@" ;;
         zh-TW:msg_cert_key_unreadable) printf "私鑰檔案缺失、為空或無法讀取：%s\n" "$@" ;;
@@ -1104,7 +1104,7 @@ msg() {
         ja-JP:msg_arch) printf "アーキテクチャ: %s\n" "$@" ;;
         ja-JP:msg_os_check_failed) echo "システム OS を確認できませんでした。作者に連絡してください！" ;;
         ja-JP:msg_os_release) printf "システムのリリース: %s\n" "$@" ;;
-        ja-JP:msg_cert_not_pem) echo "証明書または秘密鍵が読み取り可能な RSA PEM ファイルではありません" ;;
+        ja-JP:msg_cert_not_pem) echo "証明書または秘密鍵が読み取り可能な PEM ファイルではありません" ;;
         ja-JP:msg_cert_key_mismatch) echo "秘密鍵が証明書と一致しません" ;;
         ja-JP:msg_cert_file_unreadable) printf "証明書ファイルが見つからないか、空か、読み取れません: %s\n" "$@" ;;
         ja-JP:msg_cert_key_unreadable) printf "秘密鍵ファイルが見つからないか、空か、読み取れません: %s\n" "$@" ;;
@@ -1373,7 +1373,7 @@ msg() {
         ru-RU:msg_arch) printf "Архитектура: %s\n" "$@" ;;
         ru-RU:msg_os_check_failed) echo "Не удалось определить операционную систему, свяжитесь с автором!" ;;
         ru-RU:msg_os_release) printf "Версия операционной системы: %s\n" "$@" ;;
-        ru-RU:msg_cert_not_pem) echo "сертификат или закрытый ключ не является читаемым RSA PEM-файлом" ;;
+        ru-RU:msg_cert_not_pem) echo "сертификат или закрытый ключ не является читаемым PEM-файлом" ;;
         ru-RU:msg_cert_key_mismatch) echo "закрытый ключ не соответствует сертификату" ;;
         ru-RU:msg_cert_file_unreadable) printf "Файл сертификата отсутствует, пуст или недоступен для чтения: %s\n" "$@" ;;
         ru-RU:msg_cert_key_unreadable) printf "Файл закрытого ключа отсутствует, пуст или недоступен для чтения: %s\n" "$@" ;;
@@ -1642,7 +1642,7 @@ msg() {
         vi-VN:msg_arch) printf "Kiến trúc: %s\n" "$@" ;;
         vi-VN:msg_os_check_failed) echo "Không kiểm tra được hệ điều hành của hệ thống, vui lòng liên hệ tác giả!" ;;
         vi-VN:msg_os_release) printf "Bản phát hành hệ điều hành: %s\n" "$@" ;;
-        vi-VN:msg_cert_not_pem) echo "Chứng chỉ hoặc khóa riêng không phải là tệp PEM RSA đọc được" ;;
+        vi-VN:msg_cert_not_pem) echo "Chứng chỉ hoặc khóa riêng không phải là tệp PEM đọc được" ;;
         vi-VN:msg_cert_key_mismatch) echo "Khóa riêng không khớp với chứng chỉ" ;;
         vi-VN:msg_cert_file_unreadable) printf "Tệp chứng chỉ bị thiếu, rỗng hoặc không đọc được: %s\n" "$@" ;;
         vi-VN:msg_cert_key_unreadable) printf "Tệp khóa riêng bị thiếu, rỗng hoặc không đọc được: %s\n" "$@" ;;
@@ -1911,7 +1911,7 @@ msg() {
         es-ES:msg_arch) printf "Arquitectura: %s\n" "$@" ;;
         es-ES:msg_os_check_failed) echo "¡No se pudo comprobar el sistema operativo, ponte en contacto con el autor!" ;;
         es-ES:msg_os_release) printf "La versión del sistema operativo es: %s\n" "$@" ;;
-        es-ES:msg_cert_not_pem) echo "el certificado o la clave privada no es un archivo RSA PEM legible" ;;
+        es-ES:msg_cert_not_pem) echo "el certificado o la clave privada no es un archivo PEM legible" ;;
         es-ES:msg_cert_key_mismatch) echo "la clave privada no coincide con el certificado" ;;
         es-ES:msg_cert_file_unreadable) printf "El archivo del certificado falta, está vacío o no se puede leer: %s\n" "$@" ;;
         es-ES:msg_cert_key_unreadable) printf "El archivo de la clave privada falta, está vacío o no se puede leer: %s\n" "$@" ;;
@@ -2180,7 +2180,7 @@ msg() {
         id-ID:msg_arch) printf "Arsitektur: %s\n" "$@" ;;
         id-ID:msg_os_check_failed) echo "Gagal memeriksa sistem operasi, silakan hubungi penulisnya!" ;;
         id-ID:msg_os_release) printf "Rilis sistem operasi adalah: %s\n" "$@" ;;
-        id-ID:msg_cert_not_pem) echo "Sertifikat atau kunci privat bukan berkas PEM RSA yang dapat dibaca" ;;
+        id-ID:msg_cert_not_pem) echo "Sertifikat atau kunci privat bukan berkas PEM yang dapat dibaca" ;;
         id-ID:msg_cert_key_mismatch) echo "Kunci privat tidak cocok dengan sertifikat" ;;
         id-ID:msg_cert_file_unreadable) printf "File sertifikat hilang, kosong, atau tidak dapat dibaca: %s\n" "$@" ;;
         id-ID:msg_cert_key_unreadable) printf "File kunci privat hilang, kosong, atau tidak dapat dibaca: %s\n" "$@" ;;
@@ -2449,7 +2449,7 @@ msg() {
         uk-UA:msg_arch) printf "Архітектура: %s\n" "$@" ;;
         uk-UA:msg_os_check_failed) echo "Не вдалося визначити операційну систему, зверніться до автора!" ;;
         uk-UA:msg_os_release) printf "Версія операційної системи: %s\n" "$@" ;;
-        uk-UA:msg_cert_not_pem) echo "сертифікат або закритий ключ не є читабельним RSA PEM-файлом" ;;
+        uk-UA:msg_cert_not_pem) echo "сертифікат або закритий ключ не є читабельним PEM-файлом" ;;
         uk-UA:msg_cert_key_mismatch) echo "закритий ключ не відповідає сертифікату" ;;
         uk-UA:msg_cert_file_unreadable) printf "Файл сертифіката відсутній, порожній або недоступний для читання: %s\n" "$@" ;;
         uk-UA:msg_cert_key_unreadable) printf "Файл закритого ключа відсутній, порожній або недоступний для читання: %s\n" "$@" ;;
@@ -2718,7 +2718,7 @@ msg() {
         tr-TR:msg_arch) printf "Mimari: %s\n" "$@" ;;
         tr-TR:msg_os_check_failed) echo "Sistem işletim sistemi kontrol edilemedi, lütfen yazarla iletişime geçin!" ;;
         tr-TR:msg_os_release) printf "İşletim sistemi sürümü şudur: %s\n" "$@" ;;
-        tr-TR:msg_cert_not_pem) echo "Sertifika veya özel anahtar okunabilir bir RSA PEM dosyası değil" ;;
+        tr-TR:msg_cert_not_pem) echo "Sertifika veya özel anahtar okunabilir bir PEM dosyası değil" ;;
         tr-TR:msg_cert_key_mismatch) echo "Özel anahtar sertifikayla eşleşmiyor" ;;
         tr-TR:msg_cert_file_unreadable) printf "Sertifika dosyası eksik, boş veya okunamıyor: %s\n" "$@" ;;
         tr-TR:msg_cert_key_unreadable) printf "Özel anahtar dosyası eksik, boş veya okunamıyor: %s\n" "$@" ;;
@@ -2987,7 +2987,7 @@ msg() {
         pt-BR:msg_arch) printf "Arquitetura: %s\n" "$@" ;;
         pt-BR:msg_os_check_failed) echo "Falha ao verificar o sistema operacional, entre em contato com o autor!" ;;
         pt-BR:msg_os_release) printf "A versão do sistema operacional é: %s\n" "$@" ;;
-        pt-BR:msg_cert_not_pem) echo "o certificado ou a chave privada não é um arquivo RSA PEM legível" ;;
+        pt-BR:msg_cert_not_pem) echo "o certificado ou a chave privada não é um arquivo PEM legível" ;;
         pt-BR:msg_cert_key_mismatch) echo "a chave privada não corresponde ao certificado" ;;
         pt-BR:msg_cert_file_unreadable) printf "O arquivo do certificado está ausente, vazio ou ilegível: %s\n" "$@" ;;
         pt-BR:msg_cert_key_unreadable) printf "O arquivo da chave privada está ausente, vazio ou ilegível: %s\n" "$@" ;;
@@ -3256,7 +3256,7 @@ msg() {
         *:msg_arch) printf "Arch: %s\n" "$@" ;;
         *:msg_os_check_failed) echo "Failed to check the system OS, please contact the author!" ;;
         *:msg_os_release) printf "The OS release is: %s\n" "$@" ;;
-        *:msg_cert_not_pem) echo "certificate or private key is not a readable RSA PEM file" ;;
+        *:msg_cert_not_pem) echo "certificate or private key is not a readable PEM file" ;;
         *:msg_cert_key_mismatch) echo "private key does not match the certificate" ;;
         *:msg_cert_file_unreadable) printf "certificate file is missing, empty or unreadable: %s\n" "$@" ;;
         *:msg_cert_key_unreadable) printf "private key file is missing, empty or unreadable: %s\n" "$@" ;;
@@ -3736,14 +3736,17 @@ is_port_in_use() {
 # HTTP. Check that here instead of discovering it after the install.
 verify_panel_cert() {
     local cert="$1" key="$2"
-    local cert_mod key_mod
-    cert_mod=$(openssl x509 -noout -modulus -in "$cert" 2> /dev/null)
-    key_mod=$(openssl rsa -noout -modulus -in "$key" 2> /dev/null)
-    if [[ -z "$cert_mod" || -z "$key_mod" ]]; then
+    local cert_pub key_pub
+    # -modulus reads RSA only, so it rejected acme.sh's default ec-256 pair;
+    # public keys compare alike for RSA, ECDSA and Ed25519. stdin is closed so
+    # an encrypted key fails instead of stopping to ask for its passphrase.
+    cert_pub=$(openssl x509 -noout -pubkey -in "$cert" 2> /dev/null)
+    key_pub=$(openssl pkey -pubout -in "$key" < /dev/null 2> /dev/null)
+    if [[ -z "$cert_pub" || -z "$key_pub" ]]; then
         echo "$(msg msg_cert_not_pem)"
         return 1
     fi
-    if [[ "$cert_mod" != "$key_mod" ]]; then
+    if [[ "$cert_pub" != "$key_pub" ]]; then
         echo "$(msg msg_cert_key_mismatch)"
         return 1
     fi
