@@ -228,3 +228,16 @@ jobs:
       - name: Audit
         run: npm audit --omit=dev --audit-level=high
         working-directory: frontend
+
+  # install.sh ships a 13-language message catalogue and a certificate apply
+  # path; both fail silently in production, so they are checked on every commit.
+  # The container smoke test (deploy/test/smoke-noninteractive.sh) needs network
+  # and a release tag, so it stays in release.yml.
+  installer:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@v7
+      - name: Language catalogue and menu
+        run: bash deploy/test/install-lang-test.sh
+      - name: Certificate apply
+        run: bash deploy/test/cert-apply-test.sh

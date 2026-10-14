@@ -219,9 +219,13 @@ The complete list lives in the environment-variables reference on the [documenta
 
 ## Supported Languages
 
-The panel UI is available in 13 languages:
+The panel UI is available in 13 languages, and the install script prompts in the
+same 13:
 
 English · فارسی · العربية · 中文（简体） · 中文（繁體） · Español · Русский · Українська · Türkçe · Tiếng Việt · 日本語 · Bahasa Indonesia · Português (Brasil)
+
+The installer asks for a language before it touches the system. An unattended
+install answers with a locale code instead — `EASYXRAY_LANG=zh-CN`.
 
 ## Contributing
 
