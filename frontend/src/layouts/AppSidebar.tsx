@@ -383,7 +383,7 @@ export default function AppSidebar() {
       >
         <div className="sider-brand">
           <div className="brand-block">
-            <span className="brand-text">{railCollapsed ? '3X' : 'EasyXray'}</span>
+            <span className="brand-text">{railCollapsed ? 'EX' : 'EasyXray'}</span>
           </div>
           {!railCollapsed && (
             <div className="brand-actions">
