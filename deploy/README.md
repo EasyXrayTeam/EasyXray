@@ -8,13 +8,18 @@ session secret). Works on amd64 and arm64.
 | --- | --- | --- |
 | [`cloud-init/`](cloud-init/) | Generic cloud-init user-data (unattended `install.sh`) | Any cloud, no image build |
 | [`marketplace/hetzner/`](marketplace/hetzner/) | Hetzner Cloud notes | Hetzner deployments |
-| [`test/`](test/) | Container smoke test | Verifying the install path |
+| [`test/`](test/) | Unit tests for the installer's message catalogue and certificate helpers, plus a container smoke test | Verifying the install path |
 
 ## How it works
 
 `install.sh` runs unattended when `EASYXRAY_NONINTERACTIVE=1` or stdin is not a TTY.
 Each instance installs and configures itself with random credentials. See
 [`cloud-init/README.md`](cloud-init/README.md).
+
+The installer speaks the panel's 13 languages and asks for one before it touches
+the system. With no TTY there is nobody to ask, so it stays in English unless
+`EASYXRAY_LANG` names a locale (`EASYXRAY_LANG=zh-CN`); the same variable sets the
+preselected answer at the prompt.
 
 ## Unattended install knobs
 
