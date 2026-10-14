@@ -94,7 +94,6 @@ else
 fi
 easyxray_service="${EASYXRAY_SERVICE:=/etc/systemd/system}"
 log_folder="${EASYXRAY_LOG_FOLDER:=/var/log/easyxray}"
-fail2ban_dir="${EASYXRAY_FAIL2BAN_DIR:=/etc/fail2ban}"
 mkdir -p "${log_folder}"
 # The jail and its log files carry the brand, so they were renamed from upstream's
 # `3x-ipl`/`3xipl*`; iplimit_migrate_legacy converts a host installed before that.
@@ -2425,10 +2424,10 @@ remove_iplimit() {
     read -rp "Choose an option: " num
     case "$num" in
         1)
-            rm -f "${fail2ban_dir}/filter.d/${iplimit_jail}.conf"
-            rm -f "${fail2ban_dir}/action.d/${iplimit_jail}.conf"
-            rm -f "${fail2ban_dir}/jail.d/${iplimit_jail}.conf"
-            rm -f "${fail2ban_dir}/jail.d/${iplimit_jail}-backend.conf"
+            rm -f "/etc/fail2ban/filter.d/${iplimit_jail}.conf"
+            rm -f "/etc/fail2ban/action.d/${iplimit_jail}.conf"
+            rm -f "/etc/fail2ban/jail.d/${iplimit_jail}.conf"
+            rm -f "/etc/fail2ban/jail.d/${iplimit_jail}-backend.conf"
             if [[ $release == "alpine" ]]; then
                 rc-service fail2ban restart
             else
@@ -2530,19 +2529,19 @@ create_iplimit_jails() {
     local bantime="${1:-30}"
 
     # Uncomment 'allowipv6 = auto' in fail2ban.conf
-    sed -i 's/#allowipv6 = auto/allowipv6 = auto/g' "${fail2ban_dir}/fail2ban.conf"
+    sed -i 's/#allowipv6 = auto/allowipv6 = auto/g' "/etc/fail2ban/fail2ban.conf"
 
     # Debian 12+ / Ubuntu 22.04+ log sshd to the journal only; a jail.d override
     # survives package upgrades. Only the stock 'backend = auto' is overridden.
     if [[ ( "${release}" == "debian" && ${os_version} -ge 12 ) || ( "${release}" == "ubuntu" && ${os_version} -ge 2200 ) ]] &&
-        sed -n '0,/action =/p' "${fail2ban_dir}/jail.conf" | grep -q '^backend = auto'; then
-        cat << EOF > "${fail2ban_dir}/jail.d/${iplimit_jail}-backend.conf"
+        sed -n '0,/action =/p' "/etc/fail2ban/jail.conf" | grep -q '^backend = auto'; then
+        cat << EOF > "/etc/fail2ban/jail.d/${iplimit_jail}-backend.conf"
 [DEFAULT]
 backend = systemd
 EOF
     fi
 
-    cat << EOF > "${fail2ban_dir}/jail.d/${iplimit_jail}.conf"
+    cat << EOF > "/etc/fail2ban/jail.d/${iplimit_jail}.conf"
 [${iplimit_jail}]
 enabled=true
 backend=auto
@@ -2554,7 +2553,7 @@ findtime=32
 bantime=${bantime}m
 EOF
 
-    cat << EOF > "${fail2ban_dir}/filter.d/${iplimit_jail}.conf"
+    cat << EOF > "/etc/fail2ban/filter.d/${iplimit_jail}.conf"
 [Definition]
 datepattern = ^%%Y/%%m/%%d %%H:%%M:%%S
 failregex   = \[LIMIT_IP\]\s*Email\s*=\s*<F-USER>.+</F-USER>\s*\|\|\s*Disconnecting OLD IP\s*=\s*<ADDR>\s*\|\|\s*Timestamp\s*=\s*\d+
@@ -2573,7 +2572,7 @@ EOF
     local exempt_ports="${ssh_ports}"
     [[ -n "${panel_port}" ]] && exempt_ports="${exempt_ports},${panel_port}"
 
-    cat << EOF > "${fail2ban_dir}/action.d/${iplimit_jail}.conf"
+    cat << EOF > "/etc/fail2ban/action.d/${iplimit_jail}.conf"
 [INCLUDES]
 before = iptables-allports.conf
 
@@ -2607,8 +2606,8 @@ EOF
 
 iplimit_remove_conflicts() {
     local jail_files=(
-        "${fail2ban_dir}/jail.conf"
-        "${fail2ban_dir}/jail.local"
+        "/etc/fail2ban/jail.conf"
+        "/etc/fail2ban/jail.local"
     )
     local jail_names=("${iplimit_jail}" "${iplimit_legacy_jail}")
 
@@ -2630,13 +2629,13 @@ iplimit_remove_conflicts() {
 iplimit_migrate_legacy() {
     local migrated=0
 
-    if [[ -f "${fail2ban_dir}/jail.d/${iplimit_legacy_jail}.conf" ]]; then
+    if [[ -f "/etc/fail2ban/jail.d/${iplimit_legacy_jail}.conf" ]]; then
         # Stop it first: that runs its actionstop, which is what removes the chain.
         fail2ban-client stop "${iplimit_legacy_jail}" &> /dev/null || true
-        rm -f "${fail2ban_dir}/jail.d/${iplimit_legacy_jail}.conf" \
-            "${fail2ban_dir}/jail.d/${iplimit_legacy_jail}-backend.conf" \
-            "${fail2ban_dir}/filter.d/${iplimit_legacy_jail}.conf" \
-            "${fail2ban_dir}/action.d/${iplimit_legacy_jail}.conf"
+        rm -f "/etc/fail2ban/jail.d/${iplimit_legacy_jail}.conf" \
+            "/etc/fail2ban/jail.d/${iplimit_legacy_jail}-backend.conf" \
+            "/etc/fail2ban/filter.d/${iplimit_legacy_jail}.conf" \
+            "/etc/fail2ban/action.d/${iplimit_legacy_jail}.conf"
         migrated=1
     fi
 
