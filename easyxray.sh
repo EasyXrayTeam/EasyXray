@@ -95,8 +95,13 @@ fi
 easyxray_service="${EASYXRAY_SERVICE:=/etc/systemd/system}"
 log_folder="${EASYXRAY_LOG_FOLDER:=/var/log/easyxray}"
 mkdir -p "${log_folder}"
-iplimit_log_path="${log_folder}/3xipl.log"
-iplimit_banned_log_path="${log_folder}/3xipl-banned.log"
+# The jail and its log files carry the brand, so they were renamed from upstream's
+# `3x-ipl`/`3xipl*`; iplimit_migrate_legacy converts a host installed before that.
+iplimit_jail="easyxray-ipl"
+iplimit_legacy_jail="3x-ipl"
+iplimit_log_path="${log_folder}/${iplimit_jail}.log"
+iplimit_banned_log_path="${log_folder}/${iplimit_jail}-banned.log"
+iplimit_banned_prev_log_path="${log_folder}/${iplimit_jail}-banned.prev.log"
 
 confirm() {
     if [[ $# > 1 ]]; then
@@ -2212,7 +2217,7 @@ iplimit_main() {
         3)
             confirm "Proceed with Unbanning everyone from IP Limit jail?" "y"
             if [[ $? == 0 ]]; then
-                fail2ban-client reload --restart --unban 3x-ipl
+                fail2ban-client reload --restart --unban ${iplimit_jail}
                 truncate -s 0 "${iplimit_banned_log_path}"
                 echo -e "${green}All users Unbanned successfully.${plain}"
                 iplimit_main
@@ -2229,7 +2234,7 @@ iplimit_main() {
             read -rp "Enter the IP address you want to ban: " ban_ip
             ip_validation
             if [[ $ban_ip =~ $ipv4_regex || $ban_ip =~ $ipv6_regex ]]; then
-                fail2ban-client set 3x-ipl banip "$ban_ip"
+                fail2ban-client set ${iplimit_jail} banip "$ban_ip"
                 echo -e "${green}IP Address ${ban_ip} has been banned successfully.${plain}"
             else
                 echo -e "${red}Invalid IP address format! Please try again.${plain}"
@@ -2240,7 +2245,7 @@ iplimit_main() {
             read -rp "Enter the IP address you want to unban: " unban_ip
             ip_validation
             if [[ $unban_ip =~ $ipv4_regex || $unban_ip =~ $ipv6_regex ]]; then
-                fail2ban-client set 3x-ipl unbanip "$unban_ip"
+                fail2ban-client set ${iplimit_jail} unbanip "$unban_ip"
                 echo -e "${green}IP Address ${unban_ip} has been unbanned successfully.${plain}"
             else
                 echo -e "${red}Invalid IP address format! Please try again.${plain}"
@@ -2292,7 +2297,7 @@ setup_fail2ban_iplimit() {
         # minimal server images (Debian 12+, Ubuntu 24+, fresh RHEL-family).
         # Without `nft` in PATH the default sshd jail fails to ban with
         #   stderr: '/bin/sh: 1: nft: not found'
-        # even though our own 3x-ipl jail uses iptables. Bundling the binary
+        # even though our own IP limit jail uses iptables. Bundling the binary
         # at install time prevents that confusing log spam for new installs.
         case "${release}" in
             ubuntu)
@@ -2363,6 +2368,9 @@ setup_fail2ban_iplimit() {
 
     echo -e "${green}Configuring IP Limit...${plain}\n"
 
+    # update.sh calls this on every update, so a pre-rename host converts here.
+    iplimit_migrate_legacy
+
     # make sure there's no conflict for jail files
     iplimit_remove_conflicts
 
@@ -2416,9 +2424,10 @@ remove_iplimit() {
     read -rp "Choose an option: " num
     case "$num" in
         1)
-            rm -f /etc/fail2ban/filter.d/3x-ipl.conf
-            rm -f /etc/fail2ban/action.d/3x-ipl.conf
-            rm -f /etc/fail2ban/jail.d/3x-ipl.conf
+            rm -f "/etc/fail2ban/filter.d/${iplimit_jail}.conf"
+            rm -f "/etc/fail2ban/action.d/${iplimit_jail}.conf"
+            rm -f "/etc/fail2ban/jail.d/${iplimit_jail}.conf"
+            rm -f "/etc/fail2ban/jail.d/${iplimit_jail}-backend.conf"
             if [[ $release == "alpine" ]]; then
                 rc-service fail2ban restart
             else
@@ -2496,12 +2505,12 @@ show_banlog() {
 
     if [[ -f "$system_log" ]]; then
         echo -e "${green}Recent system ban activities from fail2ban.log:${plain}"
-        grep "3x-ipl" "$system_log" | grep -E "Ban|Unban" | tail -n 10 || echo -e "${yellow}No recent system ban activities found${plain}"
+        grep "${iplimit_jail}" "$system_log" | grep -E "Ban|Unban" | tail -n 10 || echo -e "${yellow}No recent system ban activities found${plain}"
         echo ""
     fi
 
     if [[ -f "${iplimit_banned_log_path}" ]]; then
-        echo -e "${green}3X-IPL ban log entries:${plain}"
+        echo -e "${green}EasyXray-IPL ban log entries:${plain}"
         if [[ -s "${iplimit_banned_log_path}" ]]; then
             grep -v "INIT" "${iplimit_banned_log_path}" | tail -n 10 || echo -e "${yellow}No ban entries found${plain}"
         else
@@ -2512,7 +2521,7 @@ show_banlog() {
     fi
 
     echo -e "\n${green}Current jail status:${plain}"
-    fail2ban-client status 3x-ipl || echo -e "${yellow}Unable to get jail status${plain}"
+    fail2ban-client status ${iplimit_jail} || echo -e "${yellow}Unable to get jail status${plain}"
 }
 
 create_iplimit_jails() {
@@ -2520,31 +2529,31 @@ create_iplimit_jails() {
     local bantime="${1:-30}"
 
     # Uncomment 'allowipv6 = auto' in fail2ban.conf
-    sed -i 's/#allowipv6 = auto/allowipv6 = auto/g' /etc/fail2ban/fail2ban.conf
+    sed -i 's/#allowipv6 = auto/allowipv6 = auto/g' "/etc/fail2ban/fail2ban.conf"
 
     # Debian 12+ / Ubuntu 22.04+ log sshd to the journal only; a jail.d override
     # survives package upgrades. Only the stock 'backend = auto' is overridden.
     if [[ ( "${release}" == "debian" && ${os_version} -ge 12 ) || ( "${release}" == "ubuntu" && ${os_version} -ge 2200 ) ]] &&
-        sed -n '0,/action =/p' /etc/fail2ban/jail.conf | grep -q '^backend = auto'; then
-        cat << EOF > /etc/fail2ban/jail.d/3x-ipl-backend.conf
+        sed -n '0,/action =/p' "/etc/fail2ban/jail.conf" | grep -q '^backend = auto'; then
+        cat << EOF > "/etc/fail2ban/jail.d/${iplimit_jail}-backend.conf"
 [DEFAULT]
 backend = systemd
 EOF
     fi
 
-    cat << EOF > /etc/fail2ban/jail.d/3x-ipl.conf
-[3x-ipl]
+    cat << EOF > "/etc/fail2ban/jail.d/${iplimit_jail}.conf"
+[${iplimit_jail}]
 enabled=true
 backend=auto
-filter=3x-ipl
-action=3x-ipl
+filter=${iplimit_jail}
+action=${iplimit_jail}
 logpath=${iplimit_log_path}
 maxretry=1
 findtime=32
 bantime=${bantime}m
 EOF
 
-    cat << EOF > /etc/fail2ban/filter.d/3x-ipl.conf
+    cat << EOF > "/etc/fail2ban/filter.d/${iplimit_jail}.conf"
 [Definition]
 datepattern = ^%%Y/%%m/%%d %%H:%%M:%%S
 failregex   = \[LIMIT_IP\]\s*Email\s*=\s*<F-USER>.+</F-USER>\s*\|\|\s*Disconnecting OLD IP\s*=\s*<ADDR>\s*\|\|\s*Timestamp\s*=\s*\d+
@@ -2563,7 +2572,7 @@ EOF
     local exempt_ports="${ssh_ports}"
     [[ -n "${panel_port}" ]] && exempt_ports="${exempt_ports},${panel_port}"
 
-    cat << EOF > /etc/fail2ban/action.d/3x-ipl.conf
+    cat << EOF > "/etc/fail2ban/action.d/${iplimit_jail}.conf"
 [INCLUDES]
 before = iptables-allports.conf
 
@@ -2597,17 +2606,54 @@ EOF
 
 iplimit_remove_conflicts() {
     local jail_files=(
-        /etc/fail2ban/jail.conf
-        /etc/fail2ban/jail.local
+        "/etc/fail2ban/jail.conf"
+        "/etc/fail2ban/jail.local"
     )
+    local jail_names=("${iplimit_jail}" "${iplimit_legacy_jail}")
 
     for file in "${jail_files[@]}"; do
-        # Check for [3x-ipl] config in jail file then remove it
-        if test -f "${file}" && grep -qw '3x-ipl' ${file}; then
-            sed -i "/\[3x-ipl\]/,/^$/d" ${file}
-            echo -e "${yellow}Removing conflicts of [3x-ipl] in jail (${file})!${plain}\n"
+        # An older release pasted the whole jail into jail.conf; a leftover section
+        # would recreate the jail on the next fail2ban start, so drop either name.
+        for jail in "${jail_names[@]}"; do
+            if test -f "${file}" && grep -qw "${jail}" ${file}; then
+                sed -i "/\[${jail}\]/,/^$/d" ${file}
+                echo -e "${yellow}Removing conflicts of [${jail}] in jail (${file})!${plain}\n"
+            fi
+        done
+    done
+}
+
+# A host installed before the rename carries the old jail, its four conf files and
+# the 3xipl*.log files. Left alone it keeps a jail fail2ban reads from a file the
+# panel no longer writes, plus an f2b-3x-ipl chain whose actionstop never runs.
+iplimit_migrate_legacy() {
+    local migrated=0
+
+    if [[ -f "/etc/fail2ban/jail.d/${iplimit_legacy_jail}.conf" ]]; then
+        # Stop it first: that runs its actionstop, which is what removes the chain.
+        fail2ban-client stop "${iplimit_legacy_jail}" &> /dev/null || true
+        rm -f "/etc/fail2ban/jail.d/${iplimit_legacy_jail}.conf" \
+            "/etc/fail2ban/jail.d/${iplimit_legacy_jail}-backend.conf" \
+            "/etc/fail2ban/filter.d/${iplimit_legacy_jail}.conf" \
+            "/etc/fail2ban/action.d/${iplimit_legacy_jail}.conf"
+        migrated=1
+    fi
+
+    # The old log files spelled the jail without its hyphen (`3xipl.log`). mv, not
+    # touch: the inode survives, so a panel holding the log open keeps writing here
+    # rather than into a file fail2ban no longer reads.
+    local legacy_logs=("3xipl.log" "3xipl-banned.log" "3xipl-banned.prev.log")
+    local new_logs=("${iplimit_log_path}" "${iplimit_banned_log_path}" "${iplimit_banned_prev_log_path}")
+    local i
+    for i in "${!legacy_logs[@]}"; do
+        if [[ -f "${log_folder}/${legacy_logs[$i]}" && ! -e "${new_logs[$i]}" ]]; then
+            mv "${log_folder}/${legacy_logs[$i]}" "${new_logs[$i]}"
+            migrated=1
         fi
     done
+
+    [[ ${migrated} -eq 1 ]] && echo -e "${green}Migrated the pre-rename IP limit jail to ${iplimit_jail}.${plain}\n"
+    return 0
 }
 
 SSH_port_forwarding() {
