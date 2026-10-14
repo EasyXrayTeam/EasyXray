@@ -76,10 +76,10 @@
 bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh)
 ```
 
-لتثبيت إصدار محدّد، أضف وسمه (مثل `v1.0.0`):
+لتثبيت إصدار محدّد، أضف وسمه (مثل `v1.0.3`):
 
 ```bash
-bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh) v1.0.0
+bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh) v1.0.3
 ```
 
 ولتثبيت بناء **dev** المتجدّد (أحدث إصدار تجريبي يُنتَج مع كل commit على فرع `main`، وليس إصدارًا مستقرًا) مرّر `dev-latest`:

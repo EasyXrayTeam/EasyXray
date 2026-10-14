@@ -76,10 +76,10 @@ Las capturas siguientes muestran la interfaz actual de EasyXray. El diseño y la
 bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh)
 ```
 
-Para instalar una versión concreta, añade su etiqueta (por ejemplo `v1.0.0`):
+Para instalar una versión concreta, añade su etiqueta (por ejemplo `v1.0.3`):
 
 ```bash
-bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh) v1.0.0
+bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh) v1.0.3
 ```
 
 Para instalar la compilación **dev** continua (la prepublicación más reciente de cada commit en `main`, no una versión estable), pasa `dev-latest`:

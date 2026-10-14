@@ -76,10 +76,10 @@ The screenshots below show the current EasyXray interface. The panel's layout an
 bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh)
 ```
 
-To install a specific version, append its tag (e.g. `v1.0.1`):
+To install a specific version, append its tag (e.g. `v1.0.3`):
 
 ```bash
-bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh) v1.0.1
+bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh) v1.0.3
 ```
 
 To install the rolling **dev** build (the latest per-commit pre-release from `main`, not a stable release), pass `dev-latest`:

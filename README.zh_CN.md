@@ -76,10 +76,10 @@
 bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh)
 ```
 
-如需安装指定版本，在命令后附上对应的标签（例如 `v1.0.0`）：
+如需安装指定版本，在命令后附上对应的标签（例如 `v1.0.3`）：
 
 ```bash
-bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh) v1.0.0
+bash <(curl -Ls https://raw.githubusercontent.com/EasyXrayTeam/EasyXray/main/install.sh) v1.0.3
 ```
 
 如需安装滚动更新的 **dev** 版本（`main` 分支上每次提交产出的预发布包，并非稳定版），传入 `dev-latest`：
