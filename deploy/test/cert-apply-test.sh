@@ -40,8 +40,19 @@ gen_cert() { # gen_cert <cn> <key-out> <cert-out>
         -keyout "$2" -out "$3" -days 30 2> /dev/null
 }
 
+# acme.sh issues ec-256 by default, so the ECC pair below is what a real domain
+# install hands to the panel.
+gen_ec_cert() { # gen_ec_cert <cn> <key-out> <cert-out>
+    printf '[req]\ndistinguished_name=dn\nprompt=no\n[dn]\nCN=%s\n' "$1" > "${TMP}/subj.cnf"
+    openssl ecparam -genkey -name prime256v1 -noout -out "$2" 2> /dev/null
+    openssl req -x509 -new -key "$2" -config "${TMP}/subj.cnf" -out "$3" -days 30 2> /dev/null
+}
+
 gen_cert cert-apply-test "${TMP}/key.pem" "${TMP}/cert.pem"
 gen_cert cert-apply-test-other "${TMP}/other.pem" "${TMP}/other.crt"
+gen_ec_cert cert-apply-test "${TMP}/ec-key.pem" "${TMP}/ec-cert.pem"
+gen_ec_cert cert-apply-test-other "${TMP}/ec-other.pem" "${TMP}/ec-other.crt"
+openssl pkcs8 -topk8 -nocrypt -in "${TMP}/ec-key.pem" -out "${TMP}/ec-key-pkcs8.pem" 2> /dev/null
 printf 'not a pem\n' > "${TMP}/junk.pem"
 
 # A stand-in for the easyxray CLI. STUB_MODE decides whether `cert` records the
@@ -86,6 +97,21 @@ if verify_panel_cert "${TMP}/junk.pem" "${TMP}/key.pem" 2> /dev/null; then
 fi
 if verify_panel_cert "${TMP}/missing.pem" "${TMP}/key.pem" 2> /dev/null; then
     fail "a missing certificate was accepted"
+fi
+# acme.sh's default ec-256 pair used to be rejected here as "not an RSA PEM",
+# which aborted every domain install right after the panel refused to start.
+verify_panel_cert "${TMP}/ec-cert.pem" "${TMP}/ec-key.pem" 2> /dev/null ||
+    fail "an ECC pair (acme.sh's default ec-256) was rejected"
+verify_panel_cert "${TMP}/ec-cert.pem" "${TMP}/ec-key-pkcs8.pem" 2> /dev/null ||
+    fail "an ECC pair with a PKCS#8 key was rejected"
+if verify_panel_cert "${TMP}/ec-cert.pem" "${TMP}/ec-other.pem" 2> /dev/null; then
+    fail "an ECC certificate with another ECC key was accepted"
+fi
+if verify_panel_cert "${TMP}/ec-cert.pem" "${TMP}/key.pem" 2> /dev/null; then
+    fail "an ECC certificate with an RSA key was accepted"
+fi
+if verify_panel_cert "${TMP}/cert.pem" "${TMP}/ec-key.pem" 2> /dev/null; then
+    fail "an RSA certificate with an ECC key was accepted"
 fi
 
 echo "== apply_panel_cert: the CLI stores the paths =="
