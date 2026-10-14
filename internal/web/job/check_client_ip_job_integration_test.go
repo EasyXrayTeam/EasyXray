@@ -345,7 +345,7 @@ func TestProcessObserved_StaleEmailIsSkippedAndOrphanDropped(t *testing.T) {
 	}
 }
 
-// readIpLimitLogPath reads the 3xipl.log path the same way the job
+// readIpLimitLogPath reads the easyxray-ipl.log path the same way the job
 // does via xray.GetIPLimitLogPath but without importing xray here
 // just for the path helper (which would pull a lot more deps into the
 // test binary). The env-derived log folder is deterministic.
@@ -354,7 +354,7 @@ func readIpLimitLogPath() string {
 	if folder == "" {
 		folder = filepath.Join(".", "log")
 	}
-	return filepath.Join(folder, "3xipl.log")
+	return filepath.Join(folder, "easyxray-ipl.log")
 }
 
 func contains(haystack, needle string) bool {

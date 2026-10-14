@@ -327,12 +327,39 @@ assignment needs a `v1.0.1`.
   and `frontend/src/test/app-sidebar.test.tsx` pins that. The guard earns its
   place now that upstream is merged periodically: a sync is exactly how the old
   literal would come back.
-- **The IP-limit surfaces still carry the upstream name.** `easyxray.sh` prints
-  `3X-IPL ban log entries:`, and the fail2ban jail, filter and action are named
+- **The IP-limit surfaces carried the upstream name.** `easyxray.sh` printed
+  `3X-IPL ban log entries:`, and the fail2ban jail, filter and action were named
   `3x-ipl` (created by `setup_fail2ban`, duplicated in `DockerEntrypoint.sh`, and
   queried by the CLI's `fail2ban-client status 3x-ipl`). The heading is cosmetic;
   the jail name is not — renaming it rewrites fail2ban configuration that already
-  exists on installed hosts, so it is left as §9 item 7 rather than changed here.
+  exists on installed hosts, so it was recorded as §9 item 6 and renamed in §3.12
+  together with the migration that item calls for.
+
+### 3.12 The IP-limit runtime identifiers
+
+| Old (upstream)                  | New (EasyXray)                  |
+| ------------------------------- | ------------------------------- |
+| jail / filter / action `3x-ipl` | `easyxray-ipl`                  |
+| `3xipl.log`                     | `easyxray-ipl.log`              |
+| `3xipl-banned.log`              | `easyxray-ipl-banned.log`       |
+| `3xipl-banned.prev.log`         | `easyxray-ipl-banned.prev.log`  |
+| `3X-IPL ban log entries:`       | `EasyXray-IPL ban log entries:` |
+
+The `f2b-3x-ipl` iptables chain follows the jail name, so it becomes
+`f2b-easyxray-ipl`. `easyxray.sh` derives every path from one jail-name variable;
+`3x-ipl` and `3xipl*` remain only inside the migration below.
+
+Per §C's runtime-migration rules this is a migration, not a string swap:
+`easyxray.sh`'s `iplimit_migrate_legacy` stops the legacy jail **before** deleting
+its conf files (stopping is what runs `actionstop`, which removes the chain),
+removes all four confs, and `mv`s the three logs so their contents survive.
+`setup_fail2ban_iplimit` calls it, and `update.sh` reaches that on every update,
+so an existing host converts instead of keeping a jail that reads a file nothing
+writes. `DockerEntrypoint.sh` mirrors it for a container's surviving writable
+layer. Two limits worth knowing: an old binary recreates `3xipl.log` by path in
+the seconds before it restarts, leaving an orphan the new binary ignores; and a
+host that never updates keeps the old jail, which still works against the old log
+until it does.
 
 ---
 
@@ -496,10 +523,10 @@ development machine.
    be given a sidecar-protocol inbound as a node. The `v1.0.0` release stays up
    as published rather than being edited or withdrawn — it is a truthful record
    of what shipped that day.
-6. **The IP-limit fail2ban names are still upstream's** (§3.11). Renaming
-   `3x-ipl` touches `setup_fail2ban` in `install.sh` and `easyxray.sh`,
-   `DockerEntrypoint.sh`, and the CLI's `fail2ban-client status` query, and needs
+6. **The IP-limit fail2ban names** (§3.11) — **closed by §3.12**. Renaming
+   `3x-ipl` touched `setup_fail2ban` in `install.sh` and `easyxray.sh`,
+   `DockerEntrypoint.sh`, and the CLI's `fail2ban-client status` query, and needed
    a migration that rewrites an already-installed host's `jail.d`, `filter.d` and
    `action.d` files and reloads fail2ban. That is a deliberate, user-visible
-   change on deployed panels, so it was left for a decision instead of being
-   bundled with the rail fix.
+   change on deployed panels, so it was held for a decision instead of being
+   bundled with the rail fix; it now ships with that migration.

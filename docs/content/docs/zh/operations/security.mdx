@@ -25,8 +25,9 @@ Docker 安装时通过 `EASYXRAY_ENABLE_FAIL2BAN=true` 启用）。
 可从 `easyxray` 菜单（**22 — IP Limit Management**）进行管理：安装/配置、修改封锁时长
 （默认 **30 分钟**）、封锁/解封某个 IP、查看封锁日志，以及检查状态。其底层机制如下：
 
-- 该 jail 名为 **`3x-ipl`**；封锁日志位于 `/var/log/easyxray/3xipl.log` 与
-  `/var/log/easyxray/3xipl-banned.log`（也可通过 `easyxray banlog` 查看）。
+- 该 jail 名为 **`easyxray-ipl`**；封锁日志位于 `/var/log/easyxray/easyxray-ipl.log` 与
+  `/var/log/easyxray/easyxray-ipl-banned.log`（也可通过 `easyxray banlog` 查看）。改动名称前
+  安装的主机在更新时会自动完成迁移。
 - 封锁覆盖所有 TCP/UDP，**但不包括**你的 SSH 端口和面板端口，因此封锁不会把你
   锁在服务器或面板之外。
 
